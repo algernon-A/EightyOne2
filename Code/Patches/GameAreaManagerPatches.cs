@@ -148,8 +148,10 @@ namespace EightyOne2
         [HarmonyPatch(nameof(GameAreaManager.MaxAreaCount), MethodType.Getter)]
         [HarmonyPrefix]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static bool MaxAreaCount(GameAreaManager __instance, out int __result)
+        public static bool MaxAreaCountPrefix(GameAreaManager __instance, out int __result)
         {
+            // TODO: Transpile.
+
             // Echoes game code.
             if (__instance.m_maxAreaCount == 0)
             {
@@ -244,7 +246,7 @@ namespace EightyOne2
         }
 
         /// <summary>
-        /// Harmony transpiler for GameAreaManager.CalculateTilePrice to update code constants.
+        /// Harmony transpiler for GameAreaManager.BeginOverlayImpl to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
@@ -279,7 +281,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(GameAreaManager.CalculateTilePrice), new Type[] { typeof(int) }, new ArgumentType[] { ArgumentType.Normal })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CalculateTilePriceTranpiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
+        private static IEnumerable<CodeInstruction> CalculateTilePriceTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
 
         /// <summary>
         /// Harmony Prefix for GameAreaManager.CanUnlock to ensure all tiles can be unlocked.
@@ -578,15 +580,75 @@ namespace EightyOne2
         }
 
         /// <summary>
-        /// Harmony transpiler for GameAreaManager.UpdateData to update code constants and calls to GetStartTile.
-        /// TODO: Need to recalculate start tile here.
+        /// Harmony transpiler for GameAreaManager.UpdateData to update code constants and starting tile conversion.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(GameAreaManager.UpdateData))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> UpdateDataTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceGetStartTile(ReplaceAreaConstants(instructions), original);
+        private static IEnumerable<CodeInstruction> UpdateDataTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            // Need to skip initial mode check to avoid false positives in update codes.
+            bool transpiling = false;
+
+            MethodInfo targetMethod = AccessTools.Method(typeof(GameAreaManager), nameof(GameAreaManager.GetStartTile));
+            MethodInfo replacementMethod = AccessTools.Method(typeof(GameAreaManagerPatches), nameof(GameAreaManagerPatches.GetStartTile));
+            FieldInfo startTileField = AccessTools.Field(typeof(GameAreaManager), "m_startTile");
+
+            // Iterate through all instructions in original method.
+            IEnumerator<CodeInstruction> instructionsEnumerator = instructions.GetEnumerator();
+            while (instructionsEnumerator.MoveNext())
+            {
+                CodeInstruction instruction = instructionsEnumerator.Current;
+
+                // Skip 'header'.
+                if (!transpiling)
+                {
+                    // Trigger is first stfld instruction at 0042.
+                    if (instruction.opcode == OpCodes.Stfld)
+                    {
+                        transpiling = true;
+
+                        // At this point also insert a call to our start tile adjustment method, and store the result.
+                        yield return instruction;
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return new CodeInstruction(OpCodes.Dup);
+                        yield return new CodeInstruction(OpCodes.Ldfld, startTileField);
+                        yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GameAreaManagerPatches), nameof(AdjustStartingTile)));
+                        yield return new CodeInstruction(OpCodes.Stfld, startTileField);
+                        continue;
+                    }
+                }
+                else
+                {
+                    // Look for and update any relevant constants.
+                    if (instruction.LoadsConstant(GameAreaGridResolution))
+                    {
+                        // Grid width, i.e. 5 -> 9.  Need to replace opcode here as well due to larger constant.
+                        instruction.opcode = OpCodes.Ldc_I4;
+                        instruction.operand = ExpandedAreaGridResolution;
+                    }
+                    else if (instruction.opcode == OpCodes.Call && instruction.operand == targetMethod)
+                    {
+                        // Append m_startTile field value to call.
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return new CodeInstruction(OpCodes.Ldfld, startTileField);
+
+                        // Replace target method call.
+                        instruction.operand = replacementMethod;
+                    }
+                    else if (instruction.opcode == OpCodes.Ldloc_S && instruction.operand is LocalBuilder localBuilder && localBuilder.LocalIndex == 14)
+                    {
+                        // Skip ldloc.s 14 and following add.
+                        Logging.Message("skipping ldloc.s 14");
+                        instructionsEnumerator.MoveNext();
+                        continue;
+                    }
+                }
+
+                yield return instruction;
+            }
+        }
 
         /// <summary>
         /// Harmony transpiler for GameAreaManager.UnlockArea to update code constants.
@@ -738,6 +800,22 @@ namespace EightyOne2
 
                 yield return instruction;
             }
+        }
+
+        /// <summary>
+        /// Adjusts the starting tile coordinates from 25 to 81 tile cooredinates.
+        /// </summary>
+        /// <param name="startTile">Original (25-tile) starting coordinates.</param>
+        /// <returns>81 tile coordinates.</returns>
+        private static int AdjustStartingTile(int startTile)
+        {
+            // Convert original tile number to (original) x and z.
+            int x = startTile % GameAreaGridResolution;
+            int z = startTile / GameAreaGridResolution;
+
+            // Adjust for margin.
+            startTile = ((z + 2) * ExpandedAreaGridResolution) + x + 2;
+            return startTile;
         }
     }
 }

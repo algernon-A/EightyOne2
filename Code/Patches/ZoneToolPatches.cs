@@ -15,6 +15,7 @@ namespace EightyOne2
     /// Harmomy patches for the game's zone tool to implement 81 tiles functionality.
     /// </summary>
     [HarmonyPatch(typeof(ZoneTool))]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Harmony")]
     internal class ZoneToolPatches
     {
         /// <summary>
