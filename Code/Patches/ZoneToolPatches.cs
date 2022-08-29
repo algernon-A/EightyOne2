@@ -50,10 +50,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(
-            "CalculateFillBuffer",
-            new Type[] { typeof(Vector3), typeof(Vector3), typeof(ItemClass.Zone), typeof(bool), typeof(bool) },
-            new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch("CalculateFillBuffer", new Type[] { typeof(Vector3), typeof(Vector3), typeof(ItemClass.Zone), typeof(bool), typeof(bool) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> CalculateFillBufferTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceZoneConstants(instructions);
     }

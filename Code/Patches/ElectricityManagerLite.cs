@@ -63,10 +63,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(
-            nameof(ElectricityManager.TryDumpElectricity),
-            new Type[] { typeof(Vector3), typeof(int), typeof(int) },
-            new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch(nameof(ElectricityManager.TryDumpElectricity), new Type[] { typeof(Vector3), typeof(int), typeof(int) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> TryDumpElectricityTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
 

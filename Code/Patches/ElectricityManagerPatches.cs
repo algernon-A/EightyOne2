@@ -727,7 +727,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(ElectricityManager.TryDumpElectricity), new Type[] { typeof(Vector3), typeof(int), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch(nameof(ElectricityManager.TryDumpElectricity), new Type[] { typeof(Vector3), typeof(int), typeof(int) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> TryDumpElectricity1Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
 
@@ -736,7 +736,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch("TryDumpElectricity", new Type[] { typeof(int), typeof(int), typeof(int), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch("TryDumpElectricity", new Type[] { typeof(int), typeof(int), typeof(int), typeof(int) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> TryDumpElectricity2Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
 

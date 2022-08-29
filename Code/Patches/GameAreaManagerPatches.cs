@@ -279,7 +279,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.CalculateTilePrice), new Type[] { typeof(int) }, new ArgumentType[] { ArgumentType.Normal })]
+        [HarmonyPatch(nameof(GameAreaManager.CalculateTilePrice), new Type[] { typeof(int) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> CalculateTilePriceTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
 
@@ -440,7 +440,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.PointOutOfArea), new Type[] { typeof(Vector3) }, new ArgumentType[] { ArgumentType.Normal })]
+        [HarmonyPatch(nameof(GameAreaManager.PointOutOfArea), new Type[] { typeof(Vector3) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> PointOutOfArea1Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
 
@@ -449,7 +449,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.PointOutOfArea), new Type[] { typeof(Vector3), typeof(float) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch(nameof(GameAreaManager.PointOutOfArea), new Type[] { typeof(Vector3), typeof(float) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> PointOutOfArea2Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
 
@@ -467,7 +467,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.SetStartTile), new Type[] { typeof(int), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch(nameof(GameAreaManager.SetStartTile), new Type[] { typeof(int), typeof(int) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> SetStartTileTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
 
