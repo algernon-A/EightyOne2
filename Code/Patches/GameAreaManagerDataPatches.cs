@@ -8,6 +8,7 @@ namespace EightyOne2
     using System.Collections.Generic;
     using System.Reflection.Emit;
     using HarmonyLib;
+    using static GameAreaManagerPatches;
 
     /// <summary>
     /// Harmony patches for the game area manager's data handling to implement 81 tiles functionality.
@@ -31,7 +32,7 @@ namespace EightyOne2
                 if (instruction.opcode == OpCodes.Ret)
                 {
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GameAreaManagerDataPatches), nameof(GameAreaManagerDataPatches.CustomDeserialize)));
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GameAreaManagerDataPatches), nameof(CustomDeserialize)));
                 }
 
                 yield return instruction;
@@ -46,20 +47,20 @@ namespace EightyOne2
         private static void CustomDeserialize(GameAreaManager instance)
         {
             // New area grid for 81 tiles.
-            int[] newAreaGrid = new int[GameAreaManagerPatches.ExpandedMaxAreaCount];
+            int[] newAreaGrid = new int[ExpandedMaxAreaCount];
 
             // Convert 25-tile data into 81-tile equivalent locations.
-            for (int z = 0; z < GameAreaManagerPatches.GameAreaGridResolution; ++z)
+            for (int z = 0; z < GameAreaGridResolution; ++z)
             {
-                for (int x = 0; x < GameAreaManagerPatches.GameAreaGridResolution; ++x)
+                for (int x = 0; x < GameAreaGridResolution; ++x)
                 {
-                    int gridSquare = instance.m_areaGrid[(z * GameAreaManagerPatches.GameAreaGridResolution) + x];
-                    newAreaGrid[((z + 2) * GameAreaManagerPatches.ExpandedAreaGridResolution) + x + 2] = gridSquare;
+                    int gridSquare = instance.m_areaGrid[(z * GameAreaGridResolution) + x];
+                    newAreaGrid[((z + 2) * ExpandedAreaGridResolution) + x + 2] = gridSquare;
                 }
             }
 
             // Replace existing fields with 81 tiles replacements.
-            instance.m_areaCount = GameAreaManagerPatches.ExpandedMaxAreaCount;
+            instance.m_areaCount = ExpandedMaxAreaCount;
             instance.m_areaGrid = newAreaGrid;
         }
     }
