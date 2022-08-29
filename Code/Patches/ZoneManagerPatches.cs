@@ -19,14 +19,14 @@ namespace EightyOne2
         // Zone grid resolution.
         private const int GameZoneGridResolution = ZoneManager.ZONEGRID_RESOLUTION;
         private const int ExpandedZoneGridResolution = GameZoneGridResolution * 9 / 5;
-        private const int GameZoneGridHalfResolution = GameZoneGridResolution / 2;
-        private const int ExpandedZoneGridHalfResolution = ExpandedZoneGridResolution / 2;
         private const int GameZoneGridArraySize = GameZoneGridResolution * GameZoneGridResolution;
         private const int ExpandedZoneGridArraySize = ExpandedZoneGridResolution * ExpandedZoneGridResolution;
 
-        // Limits.
+        // Derived values.
         private const int GameZoneGridMax = GameZoneGridResolution - 1;
         private const int ExpandedZoneGridMax = ExpandedZoneGridResolution - 1;
+        private const float GameZoneGridHalfResolution = GameZoneGridResolution / 2f;
+        private const float ExpandedZoneGridHalfResolution = ExpandedZoneGridResolution / 2f;
 
         /// <summary>
         /// Replaces any references to default constants in the provided code with updated 81 tile values.
@@ -42,10 +42,10 @@ namespace EightyOne2
                     // Zone grid resolution, i.e. 150 -> 270.
                     instruction.operand = ExpandedZoneGridResolution;
                 }
-                else if (instruction.LoadsConstant(GameZoneGridMax - 1))
+                else if (instruction.LoadsConstant(GameZoneGridMax))
                 {
                     // Zone grid resolution limit, i.e. 149 -> 269.
-                    instruction.operand = ExpandedZoneGridMax - 1;
+                    instruction.operand = ExpandedZoneGridMax;
                 }
                 else if (instruction.LoadsConstant(GameZoneGridHalfResolution))
                 {
