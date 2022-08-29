@@ -14,7 +14,7 @@ namespace EightyOne2
     /// <summary>
     /// Harmomy patches for the game's electricity manager to implement 81 tiles functionality.
     /// </summary>
-    [HarmonyPatch(typeof(ElectricityManager))]
+    //[HarmonyPatch(typeof(ElectricityManager))]
     internal static class ElectricityManagerLite
     {
         // 68.85 (instead of 38.25).
