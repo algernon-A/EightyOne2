@@ -46,12 +46,23 @@ namespace EightyOne2
 
         // Derived constants.
         private const int GameDistrictGridArraySize = GameDistrictGridResolution * GameDistrictGridResolution;
+        private const int GameDistrictGridArrayQuarterSize = (GameDistrictGridResolution * GameDistrictGridResolution) / 4;
+        private const int ExpandedDistrictGridArrayQuarterSize = (ExpandedDistrictGridResolution * ExpandedDistrictGridResolution) / 4;
         private const float GameDistrictAreaSize = GameDistrictGridResolution * DISTRICTGRID_CELL_SIZE;
         private const float ExpandedDistrictAreaSize = ExpandedDistrictGridResolution * DISTRICTGRID_CELL_SIZE;
 
         // Limits.
         private const int GameDistrictGridMax = GameDistrictGridResolution - 1;
         private const int ExpandedDistrictGridMax = ExpandedDistrictGridResolution - 1;
+
+        /// <summary>
+        /// Harmony transpiler for DistrictManager.HighlightPolicy setter to update code constants.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(DistrictManager.HighlightPolicy), MethodType.Setter)]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> HighlightPolicySetterTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.Awake to update texture size constants.
@@ -144,13 +155,13 @@ namespace EightyOne2
         private static IEnumerable<CodeInstruction> GetParkTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
-        /// Harmony transpiler for DistrictManager.GetGetParkArea to update code constants.
+        /// Harmony transpiler for DistrictManager.GetParkArea to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetParkArea))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetGetParkAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> GetParkAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.ModifyCell to update code constants.
@@ -325,7 +336,7 @@ namespace EightyOne2
                     }
                     while (instruction.opcode != OpCodes.Call);
 
-                    // Insert custom code: (woldPos.x / 19.2f) + 450f, 0f, 899.
+                    // Insert custom code: (int)((woldPos.x / 19.2f) + 450f), 0f, 899.
                     yield return new CodeInstruction(OpCodes.Ldarga_S, 0);
                     yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Vector3), nameof(Vector3.x)));
                     yield return new CodeInstruction(OpCodes.Ldc_R4, DISTRICTGRID_CELL_SIZE);
@@ -340,7 +351,7 @@ namespace EightyOne2
                     yield return instruction;
                     yield return new CodeInstruction(OpCodes.Stloc_2);
 
-                    // Same again for worldPos.y.
+                    // Same again for worldPos.z.
                     // Skip original code until the call to Mathf.Clamp.
                     do
                     {
@@ -349,9 +360,9 @@ namespace EightyOne2
                     }
                     while (instruction.opcode != OpCodes.Call);
 
-                    // Insert custom code: (woldPos.y / 19.2f) + 450f, 0f, 899.
+                    // Insert custom code: (int)((woldPos.z / 19.2f)) + 450f, 0f, 899.
                     yield return new CodeInstruction(OpCodes.Ldarga_S, 0);
-                    yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Vector3), nameof(Vector3.y)));
+                    yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Vector3), nameof(Vector3.z)));
                     yield return new CodeInstruction(OpCodes.Ldc_R4, DISTRICTGRID_CELL_SIZE);
                     yield return new CodeInstruction(OpCodes.Div);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, ExpandedDistrictGridHalfResolution);
@@ -362,15 +373,15 @@ namespace EightyOne2
 
                     // then just resume normal processing.
                 }
-                else if (instruction.LoadsConstant(65536f))
+                else if (instruction.LoadsConstant(GameDistrictGridArrayQuarterSize))
                 {
-                    // Halfgrid squared, i.e 256 * 256 -> 400 * 400.
-                    instruction.operand = 160000f;
+                    // Halfgrid squared, i.e 256 * 256 -> 450 * 450.
+                    instruction.operand = ExpandedDistrictGridArrayQuarterSize;
                 }
                 else if (instruction.LoadsConstant(128f))
                 {
                     // Quarter district grid resolution, i.e. 128 -> 225.
-                    instruction.operand = 225f;
+                    instruction.operand = 450f;
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridResolution))
                 {
@@ -381,6 +392,37 @@ namespace EightyOne2
                 {
                     // Maximum iteration value: district grid resolution - 1 , i.e. 511 -> 899.
                     instruction.operand = ExpandedDistrictGridMax;
+                }
+
+                yield return instruction;
+            }
+        }
+
+        /// <summary>
+        /// Harmony transpiler for DistrictManager.UnsetCityPolicy to update code constants.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(DistrictManager.UnsetCityPolicy))]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> UnsetCityPolicyTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+
+        /// <summary>
+        /// Harmony transpiler for DistrictManager.UpdateNames to update code constants.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch("UpdateNames")]
+        [HarmonyTranspiler]
+        internal static IEnumerable<CodeInstruction> UpdateNamesTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            // Inverse floating-point constants.
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.LoadsConstant(GameDistrictAreaSize))
+                {
+                    // Grid size in metres, i.e. 9830.4f -> 17280.
+                    instruction.operand = ExpandedDistrictAreaSize;
                 }
 
                 yield return instruction;
@@ -420,10 +462,10 @@ namespace EightyOne2
                     // District grid resolution - 2 , i.e. 510 -> 898.
                     instruction.operand = ExpandedDistrictGridResolution - 2;
                 }
-                else if (instruction.LoadsConstant(65536))
+                else if (instruction.LoadsConstant(GameDistrictGridArrayQuarterSize))
                 {
-                    // Halfgrid squared, i.e 256 * 256 -> 400 * 400.
-                    instruction.operand = 160000;
+                    // Halfgrid squared, i.e 256 * 256 -> 450 * 450.
+                    instruction.operand = ExpandedDistrictGridArrayQuarterSize;
                 }
 
                 yield return instruction;
@@ -438,15 +480,6 @@ namespace EightyOne2
         [HarmonyPatch(nameof(DistrictManager.SetCityPolicy))]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> SetCityPolicyTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
-
-        /// <summary>
-        /// Harmony transpiler for DistrictManager.UnsetCityPolicy to update code constants.
-        /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(DistrictManager.UnsetCityPolicy))]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> UnsetCityPolicyTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Replaces any references to default constants in the provided code with updated 81 tile values.
