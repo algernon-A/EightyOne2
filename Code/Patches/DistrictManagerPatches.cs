@@ -8,6 +8,7 @@ namespace EightyOne2
     using System;
     using System.Collections.Generic;
     using System.Reflection.Emit;
+    using ColossalFramework;
     using HarmonyLib;
     using UnityEngine;
     using static DistrictManager;
@@ -15,7 +16,8 @@ namespace EightyOne2
     /// <summary>
     /// Harmony patches for the district manager to implement 81 tiles functionality.
     /// </summary>
-    [HarmonyPatch(typeof(DistrictManager))]
+    //[HarmonyPatch(typeof(DistrictManager))]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
     internal static class DistrictManagerPatches
     {
         /// <summary>
@@ -46,14 +48,21 @@ namespace EightyOne2
 
         // Derived constants.
         private const int GameDistrictGridArraySize = GameDistrictGridResolution * GameDistrictGridResolution;
-        private const int GameDistrictGridArrayQuarterSize = (GameDistrictGridResolution * GameDistrictGridResolution) / 4;
-        private const int ExpandedDistrictGridArrayQuarterSize = (ExpandedDistrictGridResolution * ExpandedDistrictGridResolution) / 4;
-        private const float GameDistrictAreaSize = GameDistrictGridResolution * DISTRICTGRID_CELL_SIZE;
-        private const float ExpandedDistrictAreaSize = ExpandedDistrictGridResolution * DISTRICTGRID_CELL_SIZE;
+        private const int GameDistrictGridArrayQuarterSize = (int)GameDistrictGridHalfResolution * (int)GameDistrictGridHalfResolution;
+        private const int ExpandedDistrictGridArrayQuarterSize = (int)ExpandedDistrictGridHalfResolution * (int)ExpandedDistrictGridHalfResolution;
+        private const float GameDistrictAreaDistance = GameDistrictGridResolution * DISTRICTGRID_CELL_SIZE;
+        private const float ExpandedDistrictAreaDistance = ExpandedDistrictGridResolution * DISTRICTGRID_CELL_SIZE;
+        private const float GameDistrictAreaHalfDistance = GameDistrictGridHalfResolution * DISTRICTGRID_CELL_SIZE;
+        private const float ExpandedDistrictAreaHalfDistance = ExpandedDistrictGridHalfResolution * DISTRICTGRID_CELL_SIZE;
 
         // Limits.
         private const int GameDistrictGridMax = GameDistrictGridResolution - 1;
         private const int ExpandedDistrictGridMax = ExpandedDistrictGridResolution - 1;
+
+        // Equivalents of private game arrays using expanded field sizes.
+        private static uint[] s_distanceBuffer = new uint[ExpandedDistrictGridArrayQuarterSize];
+        private static uint[] s_indexBuffer = new uint[ExpandedDistrictGridArrayQuarterSize];
+        private static TempDistrictData[] s_tempData = new TempDistrictData[128];
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.HighlightPolicy setter to update code constants.
@@ -103,15 +112,15 @@ namespace EightyOne2
             // Inverse floating-point constants.
             foreach (CodeInstruction instruction in instructions)
             {
-                if (instruction.LoadsConstant(1f / GameDistrictAreaSize))
+                if (instruction.LoadsConstant(1f / GameDistrictAreaDistance))
                 {
                     // 0.000101725258f.
-                    instruction.operand = 1f / ExpandedDistrictAreaSize;
+                    instruction.operand = 1f / ExpandedDistrictAreaDistance;
                 }
-                else if (instruction.LoadsConstant(GameDistrictAreaSize))
+                else if (instruction.LoadsConstant(GameDistrictAreaDistance))
                 {
                     // Grid size in metres, i.e. 9830.4f -> 17280.
-                    instruction.operand = ExpandedDistrictAreaSize;
+                    instruction.operand = ExpandedDistrictAreaDistance;
                 }
 
                 yield return instruction;
@@ -252,61 +261,186 @@ namespace EightyOne2
         private static IEnumerable<CodeInstruction> MoveParkTreesTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
-        /// Harmony transpiler for DistrictManager.NamesModified to update code constants.
+        /// Pre-emptive Harmony prefix for DistrictManager.NamesModified to implement 81 tiles functionality using upsided fields and constants.
         /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <returns>Modified ILCode.</returns>
+        /// <param name="__instance">DistrictManager instance.</param>
+        /// <param name="___m_namesModified">DistrictManager private field m_namesModified.</param>
+        /// <returns>Always false (never execute original method).</returns>
         [HarmonyPatch(nameof(DistrictManager.NamesModified), new Type[] { })]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> NamesModified1Transpiler(IEnumerable<CodeInstruction> instructions) => NamesModifiedTranspiler(instructions);
-
-        /// <summary>
-        /// Harmony transpiler for DistrictManager.NamesModified to update code constants.
-        /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(DistrictManager.NamesModified), new Type[] { typeof(Cell[]) })]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> NamesModified12ranspiler(IEnumerable<CodeInstruction> instructions)
+        [HarmonyPrefix]
+        private static bool NamesModified1Prefix(DistrictManager __instance, ref bool ___m_namesModified)
         {
-            // Two different replacements for 0xFF.
-            int ffCount = 0;
-
-            // Look for and update any relevant constants.
-            foreach (CodeInstruction instruction in instructions)
+            NamesModified2Prefix(__instance.m_districtGrid);
+            Vector3 vector = default;
+            for (int i = 0; i < 128; i++)
             {
-                if (instruction.LoadsConstant(0xFF))
-                {
-                    // Want to replace 255 as district grid half-resolution, except for the third occurrence, which is a bitmask.
-                    if (++ffCount != 3)
-                    {
-                        // District grid half-resolution, i.e. 256 -> 450.
-                        instruction.operand = (int)ExpandedDistrictGridHalfResolution;
-                    }
-                    else
-                    {
-                        // 0xFF mask for district grid half width, i.e. 0xFF->0x1FF.
-                        instruction.operand = 0x1FF;
-                    }
-                }
-                else if (instruction.LoadsConstant(GameDistrictAreaSize / 2f))
-                {
-                    // District grid half-size, i.e. 4915.2f -> 8640f.
-                    instruction.operand = (int)ExpandedDistrictGridHalfResolution;
-                }
-
-                yield return instruction;
+                uint bestLocation = s_tempData[i].m_bestLocation;
+                vector.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                vector.y = 0f;
+                vector.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                vector.y = Singleton<TerrainManager>.instance.SampleRawHeightSmoothWithWater(vector, timeLerp: false, 0f);
+                __instance.m_districts.m_buffer[i].m_nameLocation = vector;
             }
+
+            ___m_namesModified = true;
+
+            // Don't execute original method.
+            return false;
         }
 
         /// <summary>
-        /// Harmony transpiler for DistrictManager.ParkNamesModified to update code constants.
+        /// Pre-emptive Harmony prefix for DistrictManager.NamesModified to implement 81 tiles functionality using upsided fields and constants.
         /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <returns>Modified ILCode.</returns>
+        /// <param name="grid">District cell grid.</param>
+        /// <returns>Always false (never execute original method).</returns>
+        [HarmonyPatch(nameof(DistrictManager.NamesModified), new Type[] { typeof(Cell[]) })]
+        [HarmonyPrefix]
+        private static bool NamesModified2Prefix(Cell[] grid)
+        {
+            // Reverse-engineering and figuring this one out was a right pain.
+
+            // Reset distance buffer.
+            for (int i = 0; i < s_distanceBuffer.Length; ++i)
+            {
+                s_distanceBuffer[i] = 0;
+            }
+
+            // Reset temporary data.
+            for (int i = 0; i < 128; ++i)
+            {
+                s_tempData[i] = default;
+            }
+
+            // Constants.
+            const int gridMargin = 2;
+            const int doubleGridResolution = ExpandedDistrictGridResolution * 2;
+            const int HalfGridResolutionMax = (int)ExpandedDistrictGridHalfResolution - 1;
+
+            // Populate distance and index buffers to calculate district average positions.
+            int currentBufferIndex = 0;
+            for (int z = 0; z < ExpandedDistrictGridHalfResolution; ++z)
+            {
+                for (int x = 0; x < ExpandedDistrictGridHalfResolution; ++x)
+                {
+                    int gridIndex = (z * doubleGridResolution) + (x * gridMargin);
+                    byte district = grid[gridIndex].m_district1;
+                    if (district != 0 && (
+                        x == 0
+                        || z == 0
+                        || x == HalfGridResolutionMax
+                        || z == HalfGridResolutionMax
+                        || grid[gridIndex - doubleGridResolution].m_district1 != district
+                        || grid[gridIndex - gridMargin].m_district1 != district
+                        || grid[gridIndex + gridMargin].m_district1 != district
+                        || grid[gridIndex + doubleGridResolution].m_district1 != district))
+                    {
+                        uint bufferIndex = (uint)((z * (int)ExpandedDistrictGridHalfResolution) + x);
+                        s_distanceBuffer[bufferIndex] = 1;
+                        s_indexBuffer[currentBufferIndex] = bufferIndex;
+                        currentBufferIndex = (currentBufferIndex + 1) & 0xFFFF;
+                        s_tempData[district].m_averageX += x;
+                        s_tempData[district].m_averageZ += z;
+                        ++s_tempData[district].m_divider;
+                    }
+                }
+            }
+
+            // Update district averages based on number of records.
+            for (int i = 0; i < 128; ++i)
+            {
+                int divider = s_tempData[i].m_divider;
+                if (divider != 0)
+                {
+                    s_tempData[i].m_averageX = (s_tempData[i].m_averageX + (divider >> 1)) / divider;
+                    s_tempData[i].m_averageZ = (s_tempData[i].m_averageZ + (divider >> 1)) / divider;
+                }
+            }
+
+            // Determine best location for name.
+            int nextBufferIndex = 0;
+            while (nextBufferIndex != currentBufferIndex)
+            {
+                uint bufferIndex = s_indexBuffer[nextBufferIndex];
+                nextBufferIndex = (nextBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
+                uint x = bufferIndex % (int)ExpandedDistrictGridHalfResolution;
+                uint z = bufferIndex / (int)ExpandedDistrictGridHalfResolution;
+                uint gridIndex = (uint)((z * doubleGridResolution) + (x * gridMargin));
+                byte district = grid[gridIndex].m_district1;
+                int deltaX = (int)x - s_tempData[district].m_averageX;
+                int deltaZ = (int)z - s_tempData[district].m_averageZ;
+
+                // Best score - closest match.
+                int bestScore = ExpandedDistrictGridArraySize - ((ExpandedDistrictGridArraySize / 2) / (int)s_distanceBuffer[bufferIndex]) - (deltaX * deltaX) - (deltaZ * deltaZ);
+                if (bestScore > s_tempData[district].m_bestScore)
+                {
+                    s_tempData[district].m_bestScore = bestScore;
+                    s_tempData[district].m_bestLocation = bufferIndex;
+                }
+
+                uint previousBufferIndex = bufferIndex - 1;
+                if (x > 0 && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex - gridMargin].m_district1 == district)
+                {
+                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
+                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
+                }
+
+                previousBufferIndex = bufferIndex + 1;
+                if (x < HalfGridResolutionMax && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex + gridMargin].m_district1 == district)
+                {
+                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
+                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
+                }
+
+                previousBufferIndex = bufferIndex - (int)ExpandedDistrictGridHalfResolution;
+                if (z > 0 && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex - doubleGridResolution].m_district1 == district)
+                {
+                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
+                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
+                }
+
+                previousBufferIndex = bufferIndex + (int)ExpandedDistrictGridHalfResolution;
+                if (z < HalfGridResolutionMax && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex + doubleGridResolution].m_district1 == district)
+                {
+                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
+                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
+                }
+            }
+
+            // Don't execute original method.
+            return false;
+        }
+
+        /// <summary>
+        /// Pre-emptive Harmony prefix for DistrictManager.ParkNamesModified to implement 81 tiles functionality using upsided fields and constants.
+        /// </summary>
+        /// <param name="__instance">DistrictManager instance.</param>
+        /// <param name="___m_namesModified">DistrictManager private field m_namesModified.</param>
+        /// <returns>Always false (never execute original method).</returns>
         [HarmonyPatch(nameof(DistrictManager.ParkNamesModified))]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> ParkNamesModifiedTranspiler(IEnumerable<CodeInstruction> instructions) => NamesModifiedTranspiler(instructions);
+        [HarmonyPrefix]
+        private static bool ParkNamesModifiedPrefix(DistrictManager __instance, ref bool ___m_namesModified)
+        {
+            NamesModified2Prefix(__instance.m_parkGrid);
+            Vector3 vector = default;
+            for (int i = 0; i < 128; i++)
+            {
+                uint bestLocation = s_tempData[i].m_bestLocation;
+                vector.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                vector.y = 0f;
+                vector.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                vector.y = Singleton<TerrainManager>.instance.SampleRawHeightSmoothWithWater(vector, timeLerp: false, 0f);
+                __instance.m_parks.m_buffer[i].m_nameLocation = vector;
+            }
+
+            ___m_namesModified = true;
+
+            // Don't execute original method.
+            return false;
+        }
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.SampleDistrict to update code constants.
@@ -419,10 +553,10 @@ namespace EightyOne2
             // Inverse floating-point constants.
             foreach (CodeInstruction instruction in instructions)
             {
-                if (instruction.LoadsConstant(GameDistrictAreaSize))
+                if (instruction.LoadsConstant(GameDistrictAreaDistance))
                 {
                     // Grid size in metres, i.e. 9830.4f -> 17280.
-                    instruction.operand = ExpandedDistrictAreaSize;
+                    instruction.operand = ExpandedDistrictAreaDistance;
                 }
 
                 yield return instruction;
@@ -526,14 +660,31 @@ namespace EightyOne2
                     // 0xFF mask for district grid half width, i.e. 0xFF->0x1FF.
                     instruction.operand = 0x1FF;
                 }
-                else if (instruction.LoadsConstant(GameDistrictAreaSize / 2f))
+                else if (instruction.LoadsConstant(GameDistrictAreaDistance / 2f))
                 {
                     // District grid half-size, i.e. 4915.2f -> 8640f.
-                    instruction.operand = ExpandedDistrictAreaSize / 2f;
+                    instruction.operand = ExpandedDistrictAreaDistance / 2f;
                 }
 
                 yield return instruction;
             }
+        }
+
+        /// <summary>
+        /// Mirror of game DistrictManager.TempDistrictData private struct, with short fields expanded to int..
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Mirror game naming")]
+        private struct TempDistrictData
+        {
+            public int m_averageX;
+
+            public int m_averageZ;
+
+            public int m_bestScore;
+
+            public int m_divider;
+
+            public uint m_bestLocation;
         }
     }
 }
