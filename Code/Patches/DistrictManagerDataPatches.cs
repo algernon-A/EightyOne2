@@ -22,19 +22,20 @@ namespace EightyOne2
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.Data.Deserialize to insert call to custom deserialize method.
-        /// Done this way instead of via PostFix as we need the original GameAreaManager instance (Harmomy Postfix will only give GameAreaManager.Data instance).
+        /// Done this way instead of via Postfix as we need the original GameAreaManager instance (Harmomy Postfix will only give GameAreaManager.Data instance).
+        /// Also need private GameAreaManager.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(Data.Deserialize))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> DeserializeTranspiler(IEnumerable<CodeInstruction> instructions)
+        internal static IEnumerable<CodeInstruction> DeserializeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            // Insert call to our custom method immediately before the end of the target method (final ret).
             foreach (CodeInstruction instruction in instructions)
             {
                 if (instruction.opcode == OpCodes.Ret)
                 {
+                    // Insert call to our custom post-deserialize method immediately before the end of the target method (final ret).
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DistrictManagerDataPatches), nameof(CustomDeserialize)));
                 }
@@ -54,16 +55,51 @@ namespace EightyOne2
             Cell[] newDistrictGrid = new Cell[ExpandedDistrictGridArraySize];
             Cell[] newParkGrid = new Cell[ExpandedDistrictGridArraySize];
 
+            // Populate arrays.
+            // Yes, this does mean that we'll end up overwriting ~32% of this,
+            // but reliability is more important than shaving off a couple of milliseconds on a first-time load.
+            for (int i = 0; i < newDistrictGrid.Length; ++i)
+            {
+                // Initial values per DistrictManager.Awake().
+                newDistrictGrid[i] = new Cell
+                {
+                    m_district1 = 0,
+                    m_district2 = 1,
+                    m_district3 = 2,
+                    m_district4 = 3,
+                    m_alpha1 = byte.MaxValue,
+                    m_alpha2 = 0,
+                    m_alpha3 = 0,
+                    m_alpha4 = 0,
+                };
+
+                // Initial values per DistrictManager.Awake().
+                newParkGrid[i] = new Cell
+                {
+                    m_district1 = 0,
+                    m_district2 = 1,
+                    m_district3 = 2,
+                    m_district4 = 3,
+                    m_alpha1 = byte.MaxValue,
+                    m_alpha2 = 0,
+                    m_alpha3 = 0,
+                    m_alpha4 = 0,
+                };
+            }
+
             // Convert 25-tile data into 81-tile equivalent locations.
             for (int z = 0; z < GameDistrictGridResolution; ++z)
             {
                 for (int x = 0; x < GameDistrictGridResolution; ++x)
                 {
-                    Cell districtGridCell = instance.m_districtGrid[(z * GameDistrictGridResolution) + x];
-                    newDistrictGrid[((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset] = districtGridCell;
+                    int gameGridIndex = (z * GameDistrictGridResolution) + x;
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
 
-                    Cell parkGridCell = instance.m_districtGrid[(z * GameDistrictGridResolution) + x];
-                    newParkGrid[((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset] = parkGridCell;
+                    Cell districtGridCell = instance.m_districtGrid[gameGridIndex];
+                    newDistrictGrid[expandedGridIndex] = districtGridCell;
+
+                    Cell parkGridCell = instance.m_parkGrid[gameGridIndex];
+                    newParkGrid[expandedGridIndex] = parkGridCell;
                 }
             }
 

@@ -16,35 +16,45 @@ namespace EightyOne2
     /// <summary>
     /// Harmony patches for the district manager to implement 81 tiles functionality.
     /// </summary>
-    //[HarmonyPatch(typeof(DistrictManager))]
+    [HarmonyPatch(typeof(DistrictManager))]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
     internal static class DistrictManagerPatches
     {
         /// <summary>
-        /// Game district grid width and height.
+        /// Game district grid width and height = 512.
         /// Logically, the game grid should be 500 using the given cell size (19.2), but they've gone with 512.   Not sure if rounding or overlap.
         /// </summary>
         internal const int GameDistrictGridResolution = DISTRICTGRID_RESOLUTION;
 
         /// <summary>
-        /// Expanded district grid width and height.
+        /// Expanded district grid width and height = 900.
         /// </summary>
         internal const int ExpandedDistrictGridResolution = 900;
 
         /// <summary>
-        /// Expanded district grid array size.
+        /// Expanded district grid array size = 900 * 900 = 810000.
         /// </summary>
         internal const int ExpandedDistrictGridArraySize = ExpandedDistrictGridResolution * ExpandedDistrictGridResolution;
 
         /// <summary>
-        /// Game electricty grid half-resolution.
+        /// Game district grid half-resolution = 512 / 2 = 256.
         /// </summary>
         internal const float GameDistrictGridHalfResolution = GameDistrictGridResolution / 2;
 
         /// <summary>
-        /// Expanded electricty grid half-resolution.
+        /// Expanded district grid half-resolution = 900 / 2 = 450.
         /// </summary>
         internal const float ExpandedDistrictGridHalfResolution = ExpandedDistrictGridResolution / 2;
+
+        /// <summary>
+        /// Game district grid maximum bound (length - 1) = 512 - 1 = 511.
+        /// </summary>
+        internal const int GameDistrictGridMax = GameDistrictGridResolution - 1;
+
+        /// <summary>
+        /// Expanded district grid maximum bound (length - 1) = 900 - 1 = 899.
+        /// </summary>
+        internal const int ExpandedDistrictGridMax = ExpandedDistrictGridResolution - 1;
 
         // Derived constants.
         private const int GameDistrictGridArraySize = GameDistrictGridResolution * GameDistrictGridResolution;
@@ -55,14 +65,10 @@ namespace EightyOne2
         private const float GameDistrictAreaHalfDistance = GameDistrictGridHalfResolution * DISTRICTGRID_CELL_SIZE;
         private const float ExpandedDistrictAreaHalfDistance = ExpandedDistrictGridHalfResolution * DISTRICTGRID_CELL_SIZE;
 
-        // Limits.
-        private const int GameDistrictGridMax = GameDistrictGridResolution - 1;
-        private const int ExpandedDistrictGridMax = ExpandedDistrictGridResolution - 1;
-
         // Equivalents of private game arrays using expanded field sizes.
-        private static uint[] s_distanceBuffer = new uint[ExpandedDistrictGridArrayQuarterSize];
-        private static uint[] s_indexBuffer = new uint[ExpandedDistrictGridArrayQuarterSize];
-        private static TempDistrictData[] s_tempData = new TempDistrictData[128];
+        private static readonly uint[] DistanceBuffer = new uint[ExpandedDistrictGridArrayQuarterSize];
+        private static readonly uint[] IndexBuffer = new uint[ExpandedDistrictGridArrayQuarterSize];
+        private static readonly TempDistrictData[] TempData = new TempDistrictData[128];
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.HighlightPolicy setter to update code constants.
@@ -71,7 +77,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.HighlightPolicy), MethodType.Setter)]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> HighlightPolicySetterTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        internal static IEnumerable<CodeInstruction> HighlightPolicySetterTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.Awake to update texture size constants.
@@ -80,14 +86,14 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("Awake")]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
+        internal static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            // Targeting the m_colorBuffer init.
             int skippedCount = 0;
             foreach (CodeInstruction instruction in ReplaceDistrictConstants(instructions))
             {
                 if (instruction.LoadsConstant(GameDistrictGridArraySize))
                 {
+                    // Targeting the m_colorBuffer init.
                     // Skip first two instances assigning m_districtGrid and m_parkGrid.
                     if (++skippedCount > 2)
                     {
@@ -95,7 +101,20 @@ namespace EightyOne2
                         instruction.operand = ExpandedDistrictGridArraySize;
                     }
                 }
+                else if (instruction.LoadsConstant(GameDistrictGridResolution))
+                {
+                    // District grid resolution, i.e. 512 -> 900.
+                    // Used for texture sizes.
+                    instruction.operand = ExpandedDistrictGridResolution;
+                }
+                else if (instruction.LoadsConstant(GameDistrictGridMax))
+                {
+                    // Maximum iteration value: district grid resolution - 1 , i.e. 511 -> 899.
+                    // Used to set initial district/park modified area max.
+                    instruction.operand = ExpandedDistrictGridMax;
+                }
 
+                // Don't care about GameDistrictGridArrayQuarterSize, as m_distanceBuffer and m_indexBuffer are replaced by our custom static version.
                 yield return instruction;
             }
         }
@@ -107,7 +126,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("BeginOverlayImpl")]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> BeginOverlayImplTranspiler(IEnumerable<CodeInstruction> instructions)
+        internal static IEnumerable<CodeInstruction> BeginOverlayImplTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Inverse floating-point constants.
             foreach (CodeInstruction instruction in instructions)
@@ -134,7 +153,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetDistrict), new Type[] { typeof(int), typeof(int) })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetDistrict1Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        internal static IEnumerable<CodeInstruction> GetDistrict1Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetDistrict to update code constants.
@@ -143,7 +162,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetDistrict), new Type[] { typeof(Vector3) })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetDistrict2Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        internal static IEnumerable<CodeInstruction> GetDistrict2Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetDistrictArea to update code constants.
@@ -152,7 +171,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetDistrictArea))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetDistrictAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        internal static IEnumerable<CodeInstruction> GetDistrictAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetPark to update code constants.
@@ -161,7 +180,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetPark))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetParkTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        internal static IEnumerable<CodeInstruction> GetParkTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetParkArea to update code constants.
@@ -170,7 +189,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetParkArea))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetParkAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        internal static IEnumerable<CodeInstruction> GetParkAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.ModifyCell to update code constants.
@@ -179,7 +198,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.ModifyCell))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> ModifyCellTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        internal static IEnumerable<CodeInstruction> ModifyCellTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.ModifyParkCell to update code constants.
@@ -188,7 +207,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.ModifyParkCell))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> ModifyParkCellTranspiler(IEnumerable<CodeInstruction> instructions)
+        internal static IEnumerable<CodeInstruction> ModifyParkCellTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Custom job due to false postives with the standard replacer from alpha calculations.
             int replacedCount = 0;
@@ -274,7 +293,7 @@ namespace EightyOne2
             Vector3 vector = default;
             for (int i = 0; i < 128; i++)
             {
-                uint bestLocation = s_tempData[i].m_bestLocation;
+                uint bestLocation = TempData[i].m_bestLocation;
                 vector.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
                 vector.y = 0f;
                 vector.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
@@ -300,15 +319,15 @@ namespace EightyOne2
             // Reverse-engineering and figuring this one out was a right pain.
 
             // Reset distance buffer.
-            for (int i = 0; i < s_distanceBuffer.Length; ++i)
+            for (int i = 0; i < DistanceBuffer.Length; ++i)
             {
-                s_distanceBuffer[i] = 0;
+                DistanceBuffer[i] = 0;
             }
 
             // Reset temporary data.
             for (int i = 0; i < 128; ++i)
             {
-                s_tempData[i] = default;
+                TempData[i] = default;
             }
 
             // Constants.
@@ -335,12 +354,12 @@ namespace EightyOne2
                         || grid[gridIndex + doubleGridResolution].m_district1 != district))
                     {
                         uint bufferIndex = (uint)((z * (int)ExpandedDistrictGridHalfResolution) + x);
-                        s_distanceBuffer[bufferIndex] = 1;
-                        s_indexBuffer[currentBufferIndex] = bufferIndex;
+                        DistanceBuffer[bufferIndex] = 1;
+                        IndexBuffer[currentBufferIndex] = bufferIndex;
                         currentBufferIndex = (currentBufferIndex + 1) & 0xFFFF;
-                        s_tempData[district].m_averageX += x;
-                        s_tempData[district].m_averageZ += z;
-                        ++s_tempData[district].m_divider;
+                        TempData[district].m_averageX += x;
+                        TempData[district].m_averageZ += z;
+                        ++TempData[district].m_divider;
                     }
                 }
             }
@@ -348,11 +367,11 @@ namespace EightyOne2
             // Update district averages based on number of records.
             for (int i = 0; i < 128; ++i)
             {
-                int divider = s_tempData[i].m_divider;
+                int divider = TempData[i].m_divider;
                 if (divider != 0)
                 {
-                    s_tempData[i].m_averageX = (s_tempData[i].m_averageX + (divider >> 1)) / divider;
-                    s_tempData[i].m_averageZ = (s_tempData[i].m_averageZ + (divider >> 1)) / divider;
+                    TempData[i].m_averageX = (TempData[i].m_averageX + (divider >> 1)) / divider;
+                    TempData[i].m_averageZ = (TempData[i].m_averageZ + (divider >> 1)) / divider;
                 }
             }
 
@@ -360,52 +379,52 @@ namespace EightyOne2
             int nextBufferIndex = 0;
             while (nextBufferIndex != currentBufferIndex)
             {
-                uint bufferIndex = s_indexBuffer[nextBufferIndex];
+                uint bufferIndex = IndexBuffer[nextBufferIndex];
                 nextBufferIndex = (nextBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
                 uint x = bufferIndex % (int)ExpandedDistrictGridHalfResolution;
                 uint z = bufferIndex / (int)ExpandedDistrictGridHalfResolution;
                 uint gridIndex = (uint)((z * doubleGridResolution) + (x * gridMargin));
                 byte district = grid[gridIndex].m_district1;
-                int deltaX = (int)x - s_tempData[district].m_averageX;
-                int deltaZ = (int)z - s_tempData[district].m_averageZ;
+                int deltaX = (int)x - TempData[district].m_averageX;
+                int deltaZ = (int)z - TempData[district].m_averageZ;
 
                 // Best score - closest match.
-                int bestScore = ExpandedDistrictGridArraySize - ((ExpandedDistrictGridArraySize / 2) / (int)s_distanceBuffer[bufferIndex]) - (deltaX * deltaX) - (deltaZ * deltaZ);
-                if (bestScore > s_tempData[district].m_bestScore)
+                int bestScore = ExpandedDistrictGridArraySize - ((ExpandedDistrictGridArraySize / 2) / (int)DistanceBuffer[bufferIndex]) - (deltaX * deltaX) - (deltaZ * deltaZ);
+                if (bestScore > TempData[district].m_bestScore)
                 {
-                    s_tempData[district].m_bestScore = bestScore;
-                    s_tempData[district].m_bestLocation = bufferIndex;
+                    TempData[district].m_bestScore = bestScore;
+                    TempData[district].m_bestLocation = bufferIndex;
                 }
 
                 uint previousBufferIndex = bufferIndex - 1;
-                if (x > 0 && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex - gridMargin].m_district1 == district)
+                if (x > 0 && DistanceBuffer[previousBufferIndex] == 0 && grid[gridIndex - gridMargin].m_district1 == district)
                 {
-                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
-                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    DistanceBuffer[previousBufferIndex] = DistanceBuffer[bufferIndex] + 1;
+                    IndexBuffer[currentBufferIndex] = previousBufferIndex;
                     currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
                 }
 
                 previousBufferIndex = bufferIndex + 1;
-                if (x < HalfGridResolutionMax && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex + gridMargin].m_district1 == district)
+                if (x < HalfGridResolutionMax && DistanceBuffer[previousBufferIndex] == 0 && grid[gridIndex + gridMargin].m_district1 == district)
                 {
-                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
-                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    DistanceBuffer[previousBufferIndex] = DistanceBuffer[bufferIndex] + 1;
+                    IndexBuffer[currentBufferIndex] = previousBufferIndex;
                     currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
                 }
 
                 previousBufferIndex = bufferIndex - (int)ExpandedDistrictGridHalfResolution;
-                if (z > 0 && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex - doubleGridResolution].m_district1 == district)
+                if (z > 0 && DistanceBuffer[previousBufferIndex] == 0 && grid[gridIndex - doubleGridResolution].m_district1 == district)
                 {
-                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
-                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    DistanceBuffer[previousBufferIndex] = DistanceBuffer[bufferIndex] + 1;
+                    IndexBuffer[currentBufferIndex] = previousBufferIndex;
                     currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
                 }
 
                 previousBufferIndex = bufferIndex + (int)ExpandedDistrictGridHalfResolution;
-                if (z < HalfGridResolutionMax && s_distanceBuffer[previousBufferIndex] == 0 && grid[gridIndex + doubleGridResolution].m_district1 == district)
+                if (z < HalfGridResolutionMax && DistanceBuffer[previousBufferIndex] == 0 && grid[gridIndex + doubleGridResolution].m_district1 == district)
                 {
-                    s_distanceBuffer[previousBufferIndex] = s_distanceBuffer[bufferIndex] + 1;
-                    s_indexBuffer[currentBufferIndex] = previousBufferIndex;
+                    DistanceBuffer[previousBufferIndex] = DistanceBuffer[bufferIndex] + 1;
+                    IndexBuffer[currentBufferIndex] = previousBufferIndex;
                     currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
                 }
             }
@@ -428,7 +447,7 @@ namespace EightyOne2
             Vector3 vector = default;
             for (int i = 0; i < 128; i++)
             {
-                uint bestLocation = s_tempData[i].m_bestLocation;
+                uint bestLocation = TempData[i].m_bestLocation;
                 vector.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
                 vector.y = 0f;
                 vector.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
@@ -548,7 +567,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("UpdateNames")]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> UpdateNamesTranspiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> UpdateNamesTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Inverse floating-point constants.
             foreach (CodeInstruction instruction in instructions)
