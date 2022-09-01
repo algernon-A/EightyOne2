@@ -356,7 +356,7 @@ namespace EightyOne2
                         uint bufferIndex = (uint)((z * (int)ExpandedDistrictGridHalfResolution) + x);
                         DistanceBuffer[bufferIndex] = 1;
                         IndexBuffer[currentBufferIndex] = bufferIndex;
-                        currentBufferIndex = (currentBufferIndex + 1) & 0xFFFF;
+                        currentBufferIndex = (currentBufferIndex + 1) % ExpandedDistrictGridArrayQuarterSize;
                         TempData[district].m_averageX += x;
                         TempData[district].m_averageZ += z;
                         ++TempData[district].m_divider;
