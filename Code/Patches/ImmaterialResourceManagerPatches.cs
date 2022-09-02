@@ -8,6 +8,8 @@ namespace EightyOne2
     using System;
     using System.Collections.Generic;
     using System.Reflection.Emit;
+    using System.Runtime.CompilerServices;
+    using AlgernonCommons;
     using HarmonyLib;
     using UnityEngine;
     using static ImmaterialResourceManager;
@@ -41,25 +43,6 @@ namespace EightyOne2
         // Derived constants.
         private const float GameImmaterialResourceGridHalfResolution = GameImmaterialResourceGridResolution / 2f;
         private const float ExpandedImmaterialResourceGridHalfResolution = ExpandedImmaterialResourceGridResolution / 2f;
-
-        // Simulation step counter.
-        private static int s_simulationStep = 0;
-
-        /// <summary>
-        /// Gets the current simulation step counter, resetting it to zero if needed.
-        /// </summary>
-        private static int SimulationStepCounter
-        {
-            get
-            {
-                if (s_simulationStep > ExpandedImmaterialResourceGridMax)
-                {
-                    s_simulationStep = 0;
-                }
-
-                return s_simulationStep++;
-            }
-        }
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AddLocalResource to update code constants.
@@ -191,6 +174,7 @@ namespace EightyOne2
                 yield return instruction;
             }
         }
+
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.CalculateLocalResources to update code constants.
         /// </summary>
@@ -271,7 +255,7 @@ namespace EightyOne2
         private static IEnumerable<CodeInstruction> CheckResourceTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
 
         /// <summary>
-        /// Harmony transpiler for ImmaterialResourceManager.SimulationStepImpl to reframe simulation step processing.
+        /// Harmony transpiler for ImmaterialResourceManager.SimulationStepImpl to reframe simulation step processing by calling our custom method.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
@@ -279,41 +263,25 @@ namespace EightyOne2
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> SimulationStepImplTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            // Replace 256, and override num2 (z), num3 (min x), num 4 (max x)
-
-            // Look for and update any relevant constants.
-            IEnumerator<CodeInstruction> instructionsEnumerator = instructions.GetEnumerator();
-            while (instructionsEnumerator.MoveNext())
-            {
-                CodeInstruction instruction = instructionsEnumerator.Current;
-
-                if (instruction.LoadsConstant(GameImmaterialResourceGridResolution))
-                {
-                    // Immaterial resource resolution, i.e. 256 -> 450.
-                    instruction.operand = ExpandedImmaterialResourceGridResolution;
-                }
-                else if (instruction.opcode == OpCodes.Stloc_1)
-                {
-                    yield return instruction;
-
-                    // Insert custom code here.
-                    yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(ImmaterialResourceManagerPatches), nameof(SimulationStepCounter)));
-                    yield return new CodeInstruction(OpCodes.Stloc_2);
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return new CodeInstruction(OpCodes.Stloc_3);
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_S, ExpandedImmaterialResourceGridMax);
-
-                    // Then skip everything until next stloc.s (which will be stloc.s 4).
-                    do
-                    {
-                        instructionsEnumerator.MoveNext();
-                        instruction = instructionsEnumerator.Current;
-                    }
-                    while (instruction.opcode != OpCodes.Stloc_S);
-                }
-
-                yield return instruction;
-            }
+            // Replace with call to our custom method, loading private array fields as arguments.
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldarg_1);
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ImmaterialResourceManager), "m_localTempResources"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ImmaterialResourceManager), "m_localFinalResources"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ImmaterialResourceManager), "m_globalTempResources"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ImmaterialResourceManager), "m_globalFinalResources"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ImmaterialResourceManager), "m_totalTempResources"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ImmaterialResourceManager), "m_totalFinalResources"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ImmaterialResourceManager), "m_totalTempResourcesMul"));
+            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ImmaterialResourceManagerPatches), nameof(SimulationStepImpl)));
+            yield return new CodeInstruction(OpCodes.Ret);
         }
 
         /// <summary>
@@ -421,6 +389,148 @@ namespace EightyOne2
 
                 yield return instruction;
             }
+        }
+
+        /// <summary>
+        /// Custom SimulationStepImpl code to ensure the larger array is still processed within the simulation frame.
+        /// The entire grid needs to be updated every 255 frames.
+        /// I tried spreading it out over more, but that just leads to constant fluctuations - the game really does need it all done at once.
+        /// And no, changing the statistics calculation framing doesn't change that.
+        /// </summary>
+        /// <param name="instance">ImmagterialResourceManager instance.</param>
+        /// <param name="subStep">Simulation sub-step.</param>
+        /// <param name="m_localTempResources">ImmagterialResourceManager private array m_localTempResources.</param>
+        /// <param name="m_localFinalResources">ImmagterialResourceManager private array m_localFinalResources.</param>
+        /// <param name="m_globalTempResources">ImmagterialResourceManager private array m_globalTempResources.</param>
+        /// <param name="m_globalFinalResources">ImmagterialResourceManager private array m_globalFinalResources.</param>
+        /// <param name="m_totalTempResources">ImmagterialResourceManager private array m_totalTempResources.</param>
+        /// <param name="m_totalFinalResources">ImmagterialResourceManager private array m_totalFinalResources.</param>
+        /// <param name="m_totalTempResourcesMul">ImmagterialResourceManager private array m_totalTempResourcesMul.</param>
+        private static void SimulationStepImpl(
+            ImmaterialResourceManager instance,
+            int subStep,
+            ushort[] m_localTempResources,
+            ushort[] m_localFinalResources,
+            int[] m_globalTempResources,
+            int[] m_globalFinalResources,
+            int[] m_totalTempResources,
+            int[] m_totalFinalResources,
+            long[] m_totalTempResourcesMul)
+        {
+            // Based on game code.
+            if (subStep == 0 || subStep == 1000)
+            {
+                return;
+            }
+
+            // Going to process two rows per frame (compared to one in base game).
+            // This does mean that all processing will take place over frames 0 - 225 inclusive,
+            // With nothing being done on frames 226-254 (255 is the final step calculations).
+            // A bit unbalanced, but given the comparatively low workload here, it wasn't worth getting too fancy.
+            uint subFrameIndex = ColossalFramework.Singleton<SimulationManager>.instance.m_currentFrameIndex & 0xFF;
+            int startZ = (int)subFrameIndex * 2;
+            int endZ = startZ + 1;
+
+            // For recording changed areas.
+            int minX = -1;
+            int maxX = -1;
+
+            // Bounds check to stop processing past frame 225.
+            if (endZ < ExpandedImmaterialResourceGridResolution)
+            {
+                // Iterate through all selected Z rows.
+                for (int z = startZ; z <= endZ; ++z)
+                {
+                    // Iterate through each cell in row.
+                    for (int x = 0; x < ExpandedImmaterialResourceGridResolution; ++x)
+                    {
+                        int gridIndex = ((z * ExpandedImmaterialResourceGridResolution) + x) * RESOURCE_COUNT;
+                        if (CalculateLocalResources(x, z, m_localTempResources, m_globalFinalResources, m_localFinalResources, gridIndex))
+                        {
+                            // Local resource levels have been changed.
+                            if (minX == -1)
+                            {
+                                // Store the starting X value of the changed area if no change has been flagged.
+                                minX = x;
+                            }
+
+                            // Update the ending X value of the changed area.
+                            maxX = x;
+                        }
+
+                        // Update temp arrays.
+                        int mulIndex = m_localFinalResources[gridIndex + 16];
+                        for (int i = 0; i < RESOURCE_COUNT; ++i)
+                        {
+                            int finalResourceTotal = m_localFinalResources[gridIndex + i];
+                            m_totalTempResources[i] += finalResourceTotal;
+                            m_totalTempResourcesMul[i] += finalResourceTotal * mulIndex;
+                            m_localTempResources[gridIndex + i] = 0;
+                        }
+                    }
+                }
+            }
+
+            // Calculate statistics on final frame of step.
+            if (subFrameIndex == 255)
+            {
+                CalculateTotalResources(m_totalTempResources, m_totalTempResourcesMul, m_totalFinalResources);
+                StatisticsManager statisticsManager = ColossalFramework.Singleton<StatisticsManager>.instance;
+                StatisticBase statisticBase = statisticsManager.Acquire<StatisticArray>(StatisticType.ImmaterialResource);
+                for (int i = 0; i < RESOURCE_COUNT; ++i)
+                {
+                    m_globalFinalResources[i] = m_globalTempResources[i];
+                    m_globalTempResources[i] = 0;
+                    m_totalTempResources[i] = 0;
+                    m_totalTempResourcesMul[i] = 0L;
+                    statisticBase.Acquire<StatisticInt32>(i, 29).Set(m_totalFinalResources[i]);
+                }
+            }
+
+            // If any local resource levels were changed, update the relevant areas.
+            if (minX != -1)
+            {
+                instance.AreaModified(minX, startZ, maxX, endZ);
+            }
+        }
+
+        /// <summary>
+        /// Harmony reverse patch for ImmaterialResouceMananger.CalculateLocalResources to access private method of original instance.
+        /// </summary>
+        /// <param name="x">ImmaterialResouceMananger grid X-coordinate.</param>
+        /// <param name="z">ImmaterialResouceMananger grid Z-coordinate.</param>
+        /// <param name="buffer">Local resource buffer.</param>
+        /// <param name="global">Global resource buffer.</param>
+        /// <param name="target">Target resource buffer.</param>
+        /// <param name="index">ImmaterialResouceMananger grid index.</param>
+        /// <returns>True if local resources have changed, false otherwise.</returns>
+        /// <exception cref="NotImplementedException">Harmony reverse patch wasn't applied.</exception>
+        [HarmonyReversePatch(HarmonyReversePatchType.Snapshot)]
+        [HarmonyPatch("CalculateLocalResources")]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool CalculateLocalResources(int x, int z, ushort[] buffer, int[] global, ushort[] target, int index)
+        {
+
+            string message = "CalculateLocalResources reverse Harmony patch wasn't applied";
+            Logging.Error(message, x, z, buffer, global, target, index);
+            throw new NotImplementedException(message);
+        }
+
+        /// <summary>
+        /// Harmony reverse patch for ImmaterialResouceMananger.CalculateTotalResources to access private method of original instance.
+        /// </summary>
+        /// <param name="buffer">Resource buffer.</param>
+        /// <param name="bufferMul">Buffer multipliers.</param>
+        /// <param name="target">Target resource buffer.</param>
+        /// <exception cref="NotImplementedException">Harmony reverse patch wasn't applied.</exception>
+        [HarmonyReversePatch(HarmonyReversePatchType.Snapshot)]
+        [HarmonyPatch("CalculateTotalResources")]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void CalculateTotalResources(int[] buffer, long[] bufferMul, int[] target)
+        {
+            string message = "CalculateTotalResources reverse Harmony patch wasn't applied";
+            Logging.Error(message, buffer, bufferMul, target);
+            throw new NotImplementedException(message);
         }
     }
 }
