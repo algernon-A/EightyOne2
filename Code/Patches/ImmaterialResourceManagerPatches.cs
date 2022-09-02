@@ -505,11 +505,14 @@ namespace EightyOne2
         /// <param name="index">ImmaterialResouceMananger grid index.</param>
         /// <returns>True if local resources have changed, false otherwise.</returns>
         /// <exception cref="NotImplementedException">Harmony reverse patch wasn't applied.</exception>
-        [HarmonyReversePatch(HarmonyReversePatchType.Snapshot)]
+        [HarmonyReversePatch(HarmonyReversePatchType.Original)]
         [HarmonyPatch("CalculateLocalResources")]
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool CalculateLocalResources(int x, int z, ushort[] buffer, int[] global, ushort[] target, int index)
         {
+            // Transpile original code with our transpiler.
+            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => CalculateLocalResourcesTranspiler(instructions);
+            _ = Transpiler(null);
 
             string message = "CalculateLocalResources reverse Harmony patch wasn't applied";
             Logging.Error(message, x, z, buffer, global, target, index);
