@@ -6,7 +6,9 @@
 namespace EightyOne2
 {
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Reflection.Emit;
+    using ColossalFramework.IO;
     using HarmonyLib;
     using static DistrictManager;
     using static DistrictManagerPatches;
@@ -37,6 +39,60 @@ namespace EightyOne2
                     // Insert call to our custom post-deserialize method immediately before the end of the target method (final ret).
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DistrictManagerDataPatches), nameof(CustomDeserialize)));
+                }
+
+                yield return instruction;
+            }
+        }
+
+        /// <summary>
+        /// Harmony transpiler for DistrictManager.Data.Serialize to insert call to custom serialize method at the correct spots (serialization of cell arrays).
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(Data.Serialize))]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> SerializeTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            // Tag methods.
+            MethodInfo beginWrite = AccessTools.Method(typeof(EncodedArray.Byte), nameof(EncodedArray.Byte.BeginWrite));
+            MethodInfo endWrite = AccessTools.Method(typeof(EncodedArray.Byte), nameof(EncodedArray.Byte.EndWrite));
+            MethodInfo customSerialize = AccessTools.Method(typeof(DistrictManagerDataPatches), nameof(CustomSerialize));
+
+            // Transpiling counter.
+            int beginWriteCount = 0;
+
+            IEnumerator<CodeInstruction> instructionEnumerator = instructions.GetEnumerator();
+            while (instructionEnumerator.MoveNext())
+            {
+                CodeInstruction instruction = instructionEnumerator.Current;
+
+                // Skip first call, which is varsity colors.
+                if (instruction.Calls(beginWrite) && beginWriteCount++ > 0)
+                {
+                    yield return instruction;
+
+                    // Insert call to custom method, keeping EncodedArray.Byte instance on top of stack.
+                    yield return new CodeInstruction(OpCodes.Dup);
+
+                    // First pass is districtGrid (local 3), second is parkGrid (local 4).
+                    if (beginWriteCount == 2)
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc_3);
+                    }
+                    else
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc_S, 4);
+                    }
+
+                    yield return new CodeInstruction(OpCodes.Call, customSerialize);
+
+                    // Skip forward until we find the call to EndWrite.
+                    do
+                    {
+                        instructionEnumerator.MoveNext();
+                        instruction = instructionEnumerator.Current;
+                    } while (!instruction.Calls(endWrite));
                 }
 
                 yield return instruction;
@@ -105,6 +161,89 @@ namespace EightyOne2
             // Replace existing fields with 81 tiles replacements.
             instance.m_districtGrid = newDistrictGrid;
             instance.m_parkGrid = newParkGrid;
+        }
+
+        /// <summary>
+        /// Performs deserialization activites when loading game data.
+        /// Saves the 25-tile subset of 81-tile data.
+        /// </summary>
+        /// <param name="encodedArray">Encoded array to write to.</param>
+        /// <param name="districtCellArray">District cell array to write.</param>
+        private static void CustomSerialize(EncodedArray.Byte encodedArray, Cell[] districtCellArray)
+        {
+
+            // Get 25-tile subset of 81-tile data.
+            // Serialization is by field at a time.
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_district1);
+                }
+            }
+
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_district2);
+                }
+            }
+
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_district3);
+                }
+            }
+
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_district4);
+                }
+            }
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_alpha1);
+                }
+            }
+
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_alpha2);
+                }
+            }
+
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_alpha3);
+                }
+            }
+
+            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            {
+                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                {
+                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+                    encodedArray.Write(districtCellArray[expandedGridIndex].m_alpha4);
+                }
+            }
         }
     }
 }

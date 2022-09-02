@@ -77,7 +77,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.HighlightPolicy), MethodType.Setter)]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> HighlightPolicySetterTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> HighlightPolicySetterTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.Awake to update texture size constants.
@@ -86,7 +86,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("Awake")]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             int skippedCount = 0;
             foreach (CodeInstruction instruction in ReplaceDistrictConstants(instructions))
@@ -126,7 +126,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("BeginOverlayImpl")]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> BeginOverlayImplTranspiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> BeginOverlayImplTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Inverse floating-point constants.
             foreach (CodeInstruction instruction in instructions)
@@ -153,7 +153,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetDistrict), new Type[] { typeof(int), typeof(int) })]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> GetDistrict1Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> GetDistrict1Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetDistrict to update code constants.
@@ -162,7 +162,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetDistrict), new Type[] { typeof(Vector3) })]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> GetDistrict2Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> GetDistrict2Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetDistrictArea to update code constants.
@@ -171,7 +171,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetDistrictArea))]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> GetDistrictAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> GetDistrictAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetPark to update code constants.
@@ -180,7 +180,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetPark))]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> GetParkTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> GetParkTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetParkArea to update code constants.
@@ -189,7 +189,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.GetParkArea))]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> GetParkAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> GetParkAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.ModifyCell to update code constants.
@@ -198,7 +198,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.ModifyCell))]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> ModifyCellTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
+        private static IEnumerable<CodeInstruction> ModifyCellTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictConstants(instructions);
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.ModifyParkCell to update code constants.
@@ -207,7 +207,7 @@ namespace EightyOne2
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(DistrictManager.ModifyParkCell))]
         [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> ModifyParkCellTranspiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> ModifyParkCellTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Custom job due to false postives with the standard replacer from alpha calculations.
             int replacedCount = 0;

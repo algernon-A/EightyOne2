@@ -6,7 +6,9 @@
 namespace EightyOne2
 {
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Reflection.Emit;
+    using ColossalFramework.IO;
     using HarmonyLib;
     using static ImmaterialResourceManager;
     using static ImmaterialResourceManagerPatches;
@@ -51,6 +53,61 @@ namespace EightyOne2
         }
 
         /// <summary>
+        /// Harmony transpiler for ImmaterialResourceManager.Data.Serialize to insert call to custom serialize method at the correct spot.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(Data.Serialize))]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> SerializeTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            // Tag methods.
+            MethodInfo beginWrite = AccessTools.Method(typeof(EncodedArray.UShort), nameof(EncodedArray.UShort.BeginWrite));
+            MethodInfo endWrite = AccessTools.Method(typeof(EncodedArray.UShort), nameof(EncodedArray.UShort.EndWrite));
+            MethodInfo customSerialize = AccessTools.Method(typeof(ImmaterialResourceManagerDataPatches), nameof(CustomSerialize));
+
+            // Transpiling counter.
+            int beginWriteCount = 0;
+
+            IEnumerator<CodeInstruction> instructionEnumerator = instructions.GetEnumerator();
+            while (instructionEnumerator.MoveNext())
+            {
+                CodeInstruction instruction = instructionEnumerator.Current;
+
+                // Skip first call, which is varsity colors.
+                if (instruction.Calls(beginWrite))
+                {
+                    yield return instruction;
+
+                    // Insert call to custom method, keeping EncodedArray.Byte instance on top of stack.
+                    yield return new CodeInstruction(OpCodes.Dup);
+
+                    // First pass is localFinalResources (local 1), second is localTempResources (local 5).
+                    if (beginWriteCount++ == 0)
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc_1);
+                    }
+                    else
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc_S, 5);
+                    }
+
+                    yield return new CodeInstruction(OpCodes.Call, customSerialize);
+
+                    // Skip forward until we find the call to EndWrite.
+                    do
+                    {
+                        instructionEnumerator.MoveNext();
+                        instruction = instructionEnumerator.Current;
+                    }
+                    while (!instruction.Calls(endWrite));
+                }
+
+                yield return instruction;
+            }
+        }
+
+        /// <summary>
         /// Performs deserialization activites when loading game data.
         /// Converts loaded data into 81 tiles format and ensures correct 81-tile array sizes.
         /// </summary>
@@ -82,6 +139,31 @@ namespace EightyOne2
             // Replace existing array fields with 81 tiles replacements.
             m_localFinalResources = newLocalFinalResourcesArray;
             m_localTempResources = newLocalTempResourcesArray;
+        }
+
+        /// <summary>
+        /// Performs deserialization activites when loading game data.
+        /// Saves the 25-tile subset of 81-tile data.
+        /// </summary>
+        /// <param name="encodedArray">Encoded array to write to.</param>
+        /// <param name="localResourceArray">Local resource array to write.</param>
+        private static void CustomSerialize(EncodedArray.UShort encodedArray, ushort[] localResourceArray)
+        {
+            // Get 25-tile subset of 81-tile data.
+            // Serialization is by field at a time.
+            for (int z = 0; z < GameImmaterialResourceGridResolution; ++z)
+            {
+                for (int x = 0; x < GameImmaterialResourceGridResolution; ++x)
+                {
+                    int expandedGridIndex = (((z + CellConversionOffset) * ExpandedImmaterialResourceGridResolution) + x + CellConversionOffset) * RESOURCE_COUNT;
+
+                    // Iterate through all local resources.
+                    for (int i = 0; i < RESOURCE_COUNT; ++i)
+                    {
+                        encodedArray.Write(localResourceArray[expandedGridIndex + i]);
+                    }
+                }
+            }
         }
     }
 }

@@ -6,14 +6,17 @@
 namespace EightyOne2
 {
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Reflection.Emit;
+    using ColossalFramework.IO;
     using HarmonyLib;
+    using static GameAreaManager;
     using static GameAreaManagerPatches;
 
     /// <summary>
     /// Harmony patches for the game area manager's data handling to implement 81 tiles functionality.
     /// </summary>
-    [HarmonyPatch(typeof(GameAreaManager.Data))]
+    [HarmonyPatch(typeof(Data))]
     internal static class GameAreaManagerDataPatches
     {
         /// <summary>
@@ -22,7 +25,7 @@ namespace EightyOne2
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.Data.Deserialize))]
+        [HarmonyPatch(nameof(Data.Deserialize))]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> DeserializeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -33,6 +36,46 @@ namespace EightyOne2
                 {
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GameAreaManagerDataPatches), nameof(CustomDeserialize)));
+                }
+
+                yield return instruction;
+            }
+        }
+
+        /// <summary>
+        /// Harmony transpiler for GameAreaManager.Data.Serialize to insert call to custom serialize method at the correct spot.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(Data.Serialize))]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> SerializeTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            MethodInfo beginWrite = AccessTools.Method(typeof(EncodedArray.Byte), nameof(EncodedArray.Byte.BeginWrite));
+            MethodInfo endWrite = AccessTools.Method(typeof(EncodedArray.Byte), nameof(EncodedArray.Byte.EndWrite));
+            MethodInfo customSerialize = AccessTools.Method(typeof(GameAreaManagerDataPatches), nameof(CustomSerialize));
+
+            IEnumerator<CodeInstruction> instructionEnumerator = instructions.GetEnumerator();
+            while (instructionEnumerator.MoveNext())
+            {
+                CodeInstruction instruction = instructionEnumerator.Current;
+
+                // Skip first call, which is varsity colors.
+                if (instruction.Calls(beginWrite))
+                {
+                    yield return instruction;
+
+                    // Insert call to custom method, keeping EncodedArray.Byte instance on top of stack.
+                    yield return new CodeInstruction(OpCodes.Dup);
+                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return new CodeInstruction(OpCodes.Call, customSerialize);
+
+                    // Skip forward until we find the call to EndWrite.
+                    do
+                    {
+                        instructionEnumerator.MoveNext();
+                        instruction = instructionEnumerator.Current;
+                    } while (!instruction.Calls(endWrite));
                 }
 
                 yield return instruction;
@@ -62,6 +105,26 @@ namespace EightyOne2
             // Replace existing fields with 81 tiles replacements.
             instance.m_areaCount = ExpandedMaxAreaCount;
             instance.m_areaGrid = newAreaGrid;
+        }
+
+        /// <summary>
+        /// Performs deserialization activites when loading game data.
+        /// Saves the 25-tile subset of 81-tile data.
+        /// </summary>
+        /// <param name="encodedArray">Encoded array to write to.</param>
+        /// <param name="instance">GameAreaManager instance.</param>
+        private static void CustomSerialize(EncodedArray.Byte encodedArray, GameAreaManager instance)
+        {
+            // Get 25-tile subset of 81-tile data.
+            // Serialization is by field at a time.
+            for (int z = 0; z < GameAreaGridResolution; ++z)
+            {
+                for (int x = 0; x < GameAreaGridResolution; ++x)
+                {
+                    int expandedGridSquare = ((z + 2) * ExpandedAreaGridResolution) + x + 2;
+                    encodedArray.Write((byte)instance.m_areaGrid[expandedGridSquare]);
+                }
+            }
         }
     }
 }
