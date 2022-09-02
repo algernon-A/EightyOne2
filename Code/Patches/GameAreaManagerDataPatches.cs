@@ -40,7 +40,7 @@ namespace EightyOne2
         }
 
         /// <summary>
-        /// Peforms deserialization activites when loading game data.
+        /// Performs deserialization activites when loading game data.
         /// Converts loaded data into 81 tiles format and ensures correct 81-tile array sizes.
         /// </summary>
         /// <param name="instance">GameAreaManager instance.</param>

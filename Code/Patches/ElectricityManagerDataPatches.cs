@@ -31,7 +31,7 @@ namespace EightyOne2
 
         /// <summary>
         /// Harmony transpiler for ElectricityManager.Data.Deserialize to insert call to custom deserialize method.
-        /// Done this way instead of via PostFix as we need the original ElectricityManager instance (Harmomy Postfix will only give GameAreaManager.Data instance).
+        /// Done this way instead of via PostFix as we need the original ElectricityManager instance (Harmomy Postfix will only give ElectricityManager.Data instance).
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
@@ -70,7 +70,7 @@ namespace EightyOne2
         }
 
         /// <summary>
-        /// Peforms deserialization activites when loading game data.
+        /// Performs deserialization activites when loading game data.
         /// Converts loaded data into 81 tiles format and ensures correct 81-tile array sizes.
         /// </summary>
         /// <param name="electricityGrid">ElectricityManager m_electricityGrid array.</param>

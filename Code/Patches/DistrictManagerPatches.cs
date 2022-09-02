@@ -37,14 +37,14 @@ namespace EightyOne2
         internal const int ExpandedDistrictGridArraySize = ExpandedDistrictGridResolution * ExpandedDistrictGridResolution;
 
         /// <summary>
-        /// Game district grid half-resolution = 512 / 2 = 256.
+        /// Game district grid half-resolution = 512 / 2f = 256f.
         /// </summary>
-        internal const float GameDistrictGridHalfResolution = GameDistrictGridResolution / 2;
+        internal const float GameDistrictGridHalfResolution = GameDistrictGridResolution / 2f;
 
         /// <summary>
-        /// Expanded district grid half-resolution = 900 / 2 = 450.
+        /// Expanded district grid half-resolution = 900 / 2f = 450f.
         /// </summary>
-        internal const float ExpandedDistrictGridHalfResolution = ExpandedDistrictGridResolution / 2;
+        internal const float ExpandedDistrictGridHalfResolution = ExpandedDistrictGridResolution / 2f;
 
         /// <summary>
         /// Game district grid maximum bound (length - 1) = 512 - 1 = 511.
