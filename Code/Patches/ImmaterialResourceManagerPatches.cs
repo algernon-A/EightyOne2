@@ -23,26 +23,32 @@ namespace EightyOne2
         /// <summary>
         /// Game immaterial resource grid width and height = 256 (exact 25-tile boundary is 250).
         /// </summary>
-        private const int GameImmaterialResourceGridResolution = RESOURCEGRID_RESOLUTION;
+        internal const int GameImmaterialResourceGridResolution = RESOURCEGRID_RESOLUTION;
 
         /// <summary>
         /// Expanded immaterial resource grid width and height = 450 (9-tile width of 17280 divided by grid size of 38.4).
         /// </summary>
-        private const int ExpandedImmaterialResourceGridResolution = 450;
+        internal const int ExpandedImmaterialResourceGridResolution = 450;
 
         /// <summary>
-        /// Game district grid maximum bound (length - 1) = 256 - 1 = 255.
+        /// Game immaterial resource grid half-resolution = 256 / 2f = 128f.
+        /// </summary>
+        internal const float GameImmaterialResourceGridHalfResolution = GameImmaterialResourceGridResolution / 2f;
+
+        /// <summary>
+        /// Expanded immaterial resource grid half-resolution = 450 / 2f = 225f.
+        /// </summary>
+        internal const float ExpandedImmaterialResourceGridHalfResolution = ExpandedImmaterialResourceGridResolution / 2f;
+
+        /// <summary>
+        /// Game immaterial resource grid maximum bound (length - 1) = 256 - 1 = 255.
         /// </summary>
         private const int GameImmaterialResourceGridMax = GameImmaterialResourceGridResolution - 1;
 
         /// <summary>
-        /// Expanded district grid maximum bound (length - 1) = 450 - 1 = 449.
+        /// Expanded immaterial resource grid maximum bound (length - 1) = 450 - 1 = 449.
         /// </summary>
         private const int ExpandedImmaterialResourceGridMax = ExpandedImmaterialResourceGridResolution - 1;
-
-        // Derived constants.
-        private const float GameImmaterialResourceGridHalfResolution = GameImmaterialResourceGridResolution / 2f;
-        private const float ExpandedImmaterialResourceGridHalfResolution = ExpandedImmaterialResourceGridResolution / 2f;
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AddLocalResource to update code constants.
@@ -140,10 +146,6 @@ namespace EightyOne2
         {
             bool replacing255 = false;
 
-            // Array sizes.
-            const int gameArraySize = RESOURCE_COUNT * GameImmaterialResourceGridResolution * GameImmaterialResourceGridResolution;
-            const int expandedArraySize = RESOURCE_COUNT * ExpandedImmaterialResourceGridResolution * ExpandedImmaterialResourceGridResolution;
-
             // Look for and update any relevant constants.
             foreach (CodeInstruction instruction in instructions)
             {
@@ -164,11 +166,6 @@ namespace EightyOne2
                     {
                         replacing255 = true;
                     }
-                }
-                else if (instruction.LoadsConstant(gameArraySize))
-                {
-                    // Resource array size. i.e. 1900544 -> 5872500
-                    instruction.operand = expandedArraySize;
                 }
 
                 yield return instruction;
