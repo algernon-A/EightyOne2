@@ -79,20 +79,6 @@ namespace EightyOne2
                     // Immaterial resource resolution, i.e. 256 -> 450.
                     instruction.operand = ExpandedImmaterialResourceGridResolution;
                 }
-                else if (instruction.LoadsConstant(GameImmaterialResourceGridMax))
-                {
-                    // Maximum iteration value: immaterial resource resolution - 1 , i.e. 255 -> 449.
-                    instruction.operand = ExpandedImmaterialResourceGridMax;
-                    yield return instruction;
-
-                    // Check for any '& 0xFF' that need to be converted.
-                    instructionsEnumerator.MoveNext();
-                    instruction = instructionsEnumerator.Current;
-                    if (instruction.opcode == OpCodes.And)
-                    {
-                        instruction.opcode = OpCodes.Rem;
-                    }
-                }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
                     // Immaterial resource half-resolution - 1 , i.e. 128f -> 225f.
