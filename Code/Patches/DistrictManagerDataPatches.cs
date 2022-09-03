@@ -92,7 +92,8 @@ namespace EightyOne2
                     {
                         instructionEnumerator.MoveNext();
                         instruction = instructionEnumerator.Current;
-                    } while (!instruction.Calls(endWrite));
+                    }
+                    while (!instruction.Calls(endWrite));
                 }
 
                 yield return instruction;
@@ -171,7 +172,6 @@ namespace EightyOne2
         /// <param name="districtCellArray">District cell array to write.</param>
         private static void CustomSerialize(EncodedArray.Byte encodedArray, Cell[] districtCellArray)
         {
-
             // Get 25-tile subset of 81-tile data.
             // Serialization is by field at a time.
             for (int z = 0; z < GameDistrictGridResolution; ++z)
@@ -209,6 +209,7 @@ namespace EightyOne2
                     encodedArray.Write(districtCellArray[expandedGridIndex].m_district4);
                 }
             }
+
             for (int z = 0; z < GameDistrictGridResolution; ++z)
             {
                 for (int x = 0; x < GameDistrictGridResolution; ++x)

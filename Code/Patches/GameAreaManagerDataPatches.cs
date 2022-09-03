@@ -75,7 +75,8 @@ namespace EightyOne2
                     {
                         instructionEnumerator.MoveNext();
                         instruction = instructionEnumerator.Current;
-                    } while (!instruction.Calls(endWrite));
+                    }
+                    while (!instruction.Calls(endWrite));
                 }
 
                 yield return instruction;
