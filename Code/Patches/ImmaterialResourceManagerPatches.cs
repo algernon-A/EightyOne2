@@ -7,9 +7,11 @@ namespace EightyOne2
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
     using AlgernonCommons;
+    using AlgernonCommons.Patching;
     using HarmonyLib;
     using UnityEngine;
     using static ImmaterialResourceManager;
@@ -54,72 +56,51 @@ namespace EightyOne2
         /// Harmony transpiler for ImmaterialResourceManager.AddLocalResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("AddLocalResource")]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AddLocalResourceTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> AddLocalResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AddLocalResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(ImmaterialResourceManager.AddObstructedResource))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AddObstructedResourceTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            // Look for and update any relevant constants.
-            IEnumerator<CodeInstruction> instructionsEnumerator = instructions.GetEnumerator();
-            while (instructionsEnumerator.MoveNext())
-            {
-                CodeInstruction instruction = instructionsEnumerator.Current;
-
-                if (instruction.LoadsConstant(GameImmaterialResourceGridResolution))
-                {
-                    // Immaterial resource resolution, i.e. 256 -> 450.
-                    instruction.operand = ExpandedImmaterialResourceGridResolution;
-                }
-                else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
-                {
-                    // Immaterial resource half-resolution - 1 , i.e. 128f -> 225f.
-                    instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
-                }
-                else if (instruction.LoadsConstant(GameImmaterialResourceGridMax - 2))
-                {
-                    // Maximum iteration value: immaterial resource resolution - 3 , i.e. 253 -> 447.
-                    instruction.operand = ExpandedImmaterialResourceGridMax - 2;
-                }
-
-                yield return instruction;
-            }
-        }
+        private static IEnumerable<CodeInstruction> AddObstructedResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceLocalImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AddParkResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(ImmaterialResourceManager.AddParkResource))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AddParkResourceTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> AddParkResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AddResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(ImmaterialResourceManager.AddResource), new Type[] { typeof(Resource), typeof(int), typeof(Vector3), typeof(float) })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AddResourceTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceLocalImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> AddResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceLocalImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AreaModified to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(ImmaterialResourceManager.AreaModified))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AreaModifiedTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> AreaModifiedTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.Awake to update code constants.
@@ -162,11 +143,14 @@ namespace EightyOne2
         /// Harmony transpiler for ImmaterialResourceManager.CalculateLocalResources to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("CalculateLocalResources")]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CalculateLocalResourcesTranspiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> CalculateLocalResourcesTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Logging.Message("transpiling ", PatcherBase.PrintMethod(original));
+
             // Need to avoid false positive with 255 (used as resource rate).
             // Look for and update any relevant constants.
             foreach (CodeInstruction instruction in instructions)
@@ -175,16 +159,19 @@ namespace EightyOne2
                 {
                     // Immaterial resource resolution, i.e. 256 -> 450.
                     instruction.operand = ExpandedImmaterialResourceGridResolution;
+                    Logging.Message("replaced ", GameImmaterialResourceGridResolution, " with ", ExpandedImmaterialResourceGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
                     // Immaterial resource half-resolution - 1 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
+                    Logging.Message("replaced ", GameImmaterialResourceGridHalfResolution, " with ", ExpandedImmaterialResourceGridHalfResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridMax - 1))
                 {
                     // Maximum iteration value: immaterial resource resolution - 2 , i.e. 254 -> 448.
                     instruction.operand = ExpandedImmaterialResourceGridMax - 1;
+                    Logging.Message("replaced ", GameImmaterialResourceGridMax - 1, " with ", ExpandedImmaterialResourceGridMax - 1);
                 }
 
                 // TOOD: may need to have custom code for this, ushort[] buffer needs to be uint[] maybe?
@@ -199,43 +186,47 @@ namespace EightyOne2
         /// Harmony transpiler for ImmaterialResourceManager.CheckLocalResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(
             nameof(ImmaterialResourceManager.CheckLocalResource),
             new Type[] { typeof(Resource), typeof(Vector3), typeof(int) },
             new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CheckLocalResource1Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> CheckLocalResource1Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.CheckLocalResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(
             nameof(ImmaterialResourceManager.CheckLocalResource),
             new Type[] { typeof(Resource), typeof(Vector3), typeof(float), typeof(int) },
             new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CheckLocalResource2Transpiler(IEnumerable<CodeInstruction> instructions) => ReplaceLocalImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> CheckLocalResource2Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceLocalImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.CheckLocalResources to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(ImmaterialResourceManager.CheckLocalResources))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CheckLocalResourcesTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> CheckLocalResourcesTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.CheckResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(ImmaterialResourceManager.CheckResource))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CheckResourceTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> CheckResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.SimulationStepImpl to reframe simulation step processing by calling our custom method.
@@ -309,18 +300,22 @@ namespace EightyOne2
         /// Harmony transpiler for ImmaterialResourceManager.UpdateTexture to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("UpdateTexture")]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> UpdateTextureTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceImmaterialResourceConstants(instructions);
+        private static IEnumerable<CodeInstruction> UpdateTextureTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Replaces any references to default constants in the provided code with updated 81 tile values.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
-        private static IEnumerable<CodeInstruction> ReplaceImmaterialResourceConstants(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> ReplaceImmaterialResourceConstants(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Logging.Message("transpiling ", PatcherBase.PrintMethod(original));
+
             // Look for and update any relevant constants.
             foreach (CodeInstruction instruction in instructions)
             {
@@ -328,16 +323,19 @@ namespace EightyOne2
                 {
                     // Immaterial resource resolution, i.e. 256 -> 450.
                     instruction.operand = ExpandedImmaterialResourceGridResolution;
+                    Logging.Message("replaced ", GameImmaterialResourceGridResolution, " with ", ExpandedImmaterialResourceGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridMax))
                 {
                     // Maximum iteration value: immaterial resource resolution - 1 , i.e. 255 -> 449.
                     instruction.operand = ExpandedImmaterialResourceGridMax;
+                    Logging.Message("replaced ", GameImmaterialResourceGridMax, " with ", ExpandedImmaterialResourceGridMax);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
                     // Maximum iteration value: immaterial resource resolution - 1 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
+                    Logging.Message("replaced ", GameImmaterialResourceGridHalfResolution, " with ", ExpandedImmaterialResourceGridHalfResolution);
                 }
 
                 yield return instruction;
@@ -348,9 +346,12 @@ namespace EightyOne2
         /// Replaces any references to default constants in the provided code with updated 81 tile values (version for methods with bounds - 2).
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
-        private static IEnumerable<CodeInstruction> ReplaceLocalImmaterialResourceConstants(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> ReplaceLocalImmaterialResourceConstants(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Logging.Message("transpiling ", PatcherBase.PrintMethod(original));
+
             // Look for and update any relevant constants.
             foreach (CodeInstruction instruction in instructions)
             {
@@ -358,16 +359,19 @@ namespace EightyOne2
                 {
                     // Immaterial resource resolution, i.e. 256 -> 450.
                     instruction.operand = ExpandedImmaterialResourceGridResolution;
+                    Logging.Message("replaced ", GameImmaterialResourceGridResolution, " with ", ExpandedImmaterialResourceGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
                     // Immaterial resource half-resolution - 1 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
+                    Logging.Message("replaced ", GameImmaterialResourceGridHalfResolution, " with ", ExpandedImmaterialResourceGridHalfResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridMax - 2))
                 {
                     // Maximum iteration value: immaterial resource resolution - 3 , i.e. 253 -> 447.
                     instruction.operand = ExpandedImmaterialResourceGridMax - 2;
+                    Logging.Message("replaced ", GameImmaterialResourceGridMax, " with ", ExpandedImmaterialResourceGridMax);
                 }
 
                 yield return instruction;
@@ -494,8 +498,8 @@ namespace EightyOne2
         private static bool CalculateLocalResources(int x, int z, ushort[] buffer, int[] global, ushort[] target, int index)
         {
             // Transpile original code with our transpiler.
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => CalculateLocalResourcesTranspiler(instructions);
-            _ = Transpiler(null);
+            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => CalculateLocalResourcesTranspiler(instructions, original);
+            _ = Transpiler(null, AccessTools.Method(typeof(ImmaterialResourceManager), "CalculateLocalResources"));
 
             string message = "CalculateLocalResources reverse Harmony patch wasn't applied";
             Logging.Error(message, x, z, buffer, global, target, index);

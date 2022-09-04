@@ -6,6 +6,7 @@
 namespace EightyOne2
 {
     using System.Collections.Generic;
+    using System.Reflection;
     using HarmonyLib;
     using static ZoneManagerPatches;
 
@@ -19,9 +20,10 @@ namespace EightyOne2
         /// Harmony transpiler for BuildingTool.SimulationStep to replace hardcoded game constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(BuildingTool.SimulationStep))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> SimulationStepTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceZoneConstants(instructions);
+        private static IEnumerable<CodeInstruction> SimulationStepTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceZoneConstants(instructions, original);
     }
 }

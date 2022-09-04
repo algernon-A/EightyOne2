@@ -7,6 +7,7 @@ namespace EightyOne2
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using HarmonyLib;
     using UnityEngine;
     using static ZoneManagerPatches;
@@ -22,36 +23,40 @@ namespace EightyOne2
         /// Harmony transpiler for ZoneTool.ApplyBrush to replace hardcoded game constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("ApplyBrush", new Type[] { }, new ArgumentType[] { })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> ApplyBrushTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceZoneConstants(instructions);
+        private static IEnumerable<CodeInstruction> ApplyBrushTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceZoneConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ZoneTool.ApplyFill to replace hardcoded game constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("ApplyFill")]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> ApplyFillTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceZoneConstants(instructions);
+        private static IEnumerable<CodeInstruction> ApplyFillTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceZoneConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ZoneTool.ApplyZoning to replace hardcoded game constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("ApplyZoning", new Type[] { }, new ArgumentType[] { })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> ApplyZoningTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceZoneConstants(instructions);
+        private static IEnumerable<CodeInstruction> ApplyZoningTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceZoneConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ZoneTool.CalculateFillBuffer to replace hardcoded game constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("CalculateFillBuffer", new Type[] { typeof(Vector3), typeof(Vector3), typeof(ItemClass.Zone), typeof(bool), typeof(bool) })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CalculateFillBufferTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceZoneConstants(instructions);
+        private static IEnumerable<CodeInstruction> CalculateFillBufferTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceZoneConstants(instructions, original);
     }
 }
