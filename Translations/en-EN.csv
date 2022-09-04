@@ -15,3 +15,6 @@
 "HARMONY_MOD_CONFLICT","Another mod may be trying to apply a conflicting Harmony patch","Possible cause of Harmony error - two mods trying to patch the same thing at once."
 "MOD_DESCRIPTION","Unlocks all 81 game area tiles.","Mod description displayed in content manager."
 "SET_LANGUAGE","Set language"
+"UNLOCK","Area unlocking"
+"UNLOCK_25","Unlock central 25 tile area","Button in options panel - unlocks 25-tile area"
+"UNLOCK_ALL","Unlock all areas","Button in options panel - unlocks all game areas"
