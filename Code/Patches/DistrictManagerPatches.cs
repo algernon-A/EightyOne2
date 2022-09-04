@@ -233,6 +233,7 @@ namespace EightyOne2
                 {
                     // District grid resolution, i.e. 512 -> 900.
                     instruction.operand = ExpandedDistrictGridResolution;
+                    Logging.Message("replaced ", GameDistrictGridResolution, " with ", ExpandedDistrictGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridHalfResolution))
                 {
@@ -240,6 +241,7 @@ namespace EightyOne2
                     if (replacedCount < 2)
                     {
                         instruction.operand = ExpandedDistrictGridHalfResolution;
+                        Logging.Message("replaced ", GameDistrictGridHalfResolution, " with ", ExpandedDistrictGridHalfResolution);
                         ++replacedCount;
                     }
                 }
@@ -547,26 +549,31 @@ namespace EightyOne2
                     yield return new CodeInstruction(OpCodes.Ldc_I4, ExpandedDistrictGridMax);
 
                     // then just resume normal processing.
+                    Logging.Message("inserted custom code");
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridArrayQuarterSize))
                 {
                     // Halfgrid squared, i.e 256 * 256 -> 450 * 450.
                     instruction.operand = ExpandedDistrictGridArrayQuarterSize;
+                    Logging.Message("replaced ", GameDistrictGridArrayQuarterSize, " with ", ExpandedDistrictGridArrayQuarterSize);
                 }
                 else if (instruction.LoadsConstant(128f))
                 {
                     // Quarter district grid resolution, i.e. 128 -> 225.
-                    instruction.operand = 450f;
+                    instruction.operand = 225f;
+                    Logging.Message("replaced 128f with 225f");
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridResolution))
                 {
                     // District grid resolution, i.e. 512 -> 900.
                     instruction.operand = ExpandedDistrictGridResolution;
+                    Logging.Message("replaced ", GameDistrictGridResolution, " with ", ExpandedDistrictGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridMax))
                 {
                     // Maximum iteration value: district grid resolution - 1 , i.e. 511 -> 899.
                     instruction.operand = ExpandedDistrictGridMax;
+                    Logging.Message("replaced ", GameDistrictGridMax, " with ", ExpandedDistrictGridMax);
                 }
 
                 yield return instruction;
@@ -602,6 +609,7 @@ namespace EightyOne2
                 {
                     // Grid size in metres, i.e. 9830.4f -> 17280.
                     instruction.operand = ExpandedDistrictAreaDistance;
+                    Logging.Message("replaced ", GameDistrictAreaDistance, " with ", ExpandedDistrictAreaDistance);
                 }
 
                 yield return instruction;
@@ -628,26 +636,31 @@ namespace EightyOne2
                     // Area grid resolution, i.e. 5->9.
                     instruction.opcode = OpCodes.Ldc_I4;
                     instruction.operand = GameAreaManagerPatches.ExpandedAreaGridResolution;
+                    Logging.Message("replaced ", GameAreaManagerPatches.GameAreaGridResolution, " with ", GameAreaManagerPatches.ExpandedAreaGridResolution);
                 }
                 else if (instruction.LoadsConstant((int)GameDistrictGridHalfResolution))
                 {
                     // District grid half-resolution, i.e. 256 -> 450.
                     instruction.operand = (int)ExpandedDistrictGridHalfResolution;
+                    Logging.Message("replaced ", GameDistrictGridHalfResolution, " with ", ExpandedDistrictGridHalfResolution);
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridResolution))
                 {
                     // District grid resolution, i.e. 512 -> 900.
                     instruction.operand = ExpandedDistrictGridResolution;
+                    Logging.Message("replaced ", GameDistrictGridResolution, " with ", ExpandedDistrictGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridResolution - 2))
                 {
                     // District grid resolution - 2 , i.e. 510 -> 898.
                     instruction.operand = ExpandedDistrictGridResolution - 2;
+                    Logging.Message("replaced ", GameDistrictGridResolution - 2, " with ", ExpandedDistrictGridResolution - 2);
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridArrayQuarterSize))
                 {
                     // Halfgrid squared, i.e 256 * 256 -> 450 * 450.
                     instruction.operand = ExpandedDistrictGridArrayQuarterSize;
+                    Logging.Message("replaced ", GameDistrictGridArrayQuarterSize, " with ", ExpandedDistrictGridArrayQuarterSize);
                 }
 
                 yield return instruction;
@@ -691,7 +704,7 @@ namespace EightyOne2
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridHalfResolution))
                 {
-                    // District grid half-resolution, i.e. 256 -> 450.
+                    // District grid half-resolution, i.e. 256f -> 450f.
                     instruction.operand = ExpandedDistrictGridHalfResolution;
                     Logging.Message("replaced ", GameDistrictGridHalfResolution, " with ", ExpandedDistrictGridHalfResolution);
                 }
