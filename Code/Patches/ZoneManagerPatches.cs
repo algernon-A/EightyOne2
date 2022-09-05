@@ -19,11 +19,23 @@ namespace EightyOne2
     [HarmonyPatch(typeof(ZoneManager))]
     internal class ZoneManagerPatches
     {
-        // Zone grid resolution.
+        /// <summary>
+        /// Expanded zone grid array size = 270 * 270 = 72900.
+        /// </summary>
+        internal const int ExpandedZoneGridArraySize = ExpandedZoneGridResolution * ExpandedZoneGridResolution;
+
+        /// <summary>
+        /// Game zone grid width and height = 150.
+        /// </summary>
         private const int GameZoneGridResolution = ZoneManager.ZONEGRID_RESOLUTION;
+
+        /// <summary>
+        /// Expanded zone grid width and height = 270.
+        /// </summary>
         private const int ExpandedZoneGridResolution = GameZoneGridResolution * 9 / 5;
+
+        // Game zone grid array size.
         private const int GameZoneGridArraySize = GameZoneGridResolution * GameZoneGridResolution;
-        private const int ExpandedZoneGridArraySize = ExpandedZoneGridResolution * ExpandedZoneGridResolution;
 
         // Derived values.
         private const int GameZoneGridMax = GameZoneGridResolution - 1;
@@ -57,7 +69,7 @@ namespace EightyOne2
                 }
                 else if (instruction.LoadsConstant(GameZoneGridHalfResolution))
                 {
-                    // Zone grid half resolution, i.e. 75 -> 135.
+                    // Zone grid half resolution, i.e. 75f -> 135f.
                     instruction.operand = ExpandedZoneGridHalfResolution;
                     Logging.Message("replaced ", GameZoneGridHalfResolution, " with ", ExpandedZoneGridHalfResolution);
                 }
