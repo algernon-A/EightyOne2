@@ -6,6 +6,7 @@
 namespace EightyOne2
 {
     using System;
+    using ColossalFramework;
     using HarmonyLib;
     using UnityEngine;
 
@@ -22,8 +23,26 @@ namespace EightyOne2
         // Centralised sewage pool (care for a swim?).
         private static int s_sewagePool = 0;
 
+        // Centralised heating pool.
+        private static int s_heatingPool = 0;
+
         // Water pollution level (global).
         private static byte s_waterPollution = 0;
+
+        /// <summary>
+        /// Pre-emptive Harmony prefix patch to WaterManager.CheckHeating to implement 'no pipes' functionality.
+        /// </summary>
+        /// <param name="heating">Set to true if heating is available, false otherwise.</param>
+        /// <returns>Always false (pre-empt original game method).</returns>
+        [HarmonyPatch(nameof(WaterManager.CheckHeating))]
+        [HarmonyPrefix]
+        public static bool CheckHeatingPrefix(out bool heating)
+        {
+            heating = s_heatingPool > 0;
+
+            // Always pre-empt original method.
+            return false;
+        }
 
         /// <summary>
         /// Pre-emptive Harmony prefix patch to WaterManager.CheckWater to implement 'no pipes' functionality.
@@ -33,6 +52,7 @@ namespace EightyOne2
         /// <param name="waterPollution">Current water pollution level.</param>
         /// <returns>Always false (pre-empt original game method).</returns>
         [HarmonyPatch(nameof(WaterManager.CheckWater))]
+        [HarmonyPrefix]
         public static bool CheckWaterPrefix(out bool water, out bool sewage, out byte waterPollution)
         {
             water = s_waterPool > 0;
@@ -40,6 +60,24 @@ namespace EightyOne2
 
             // Return zero for water pollution if no water.
             waterPollution = s_waterPool > 0 ? s_waterPollution : byte.MinValue;
+
+            // Always pre-empt original method.
+            return false;
+        }
+
+        /// <summary>
+        /// Pre-emptive Harmony prefix patch to WaterManager.TryDumpHeating to implement 'no pipes' functionality.
+        /// </summary>
+        /// <param name="__result">Original method result (sewage removal dumped 'to' grid).</param>
+        /// <param name="rate">Water production rate.</param>
+        /// <param name="max">Maximum water production rate.</param>
+        /// <returns>Always false (pre-empt original game method).</returns>
+        [HarmonyPatch(nameof(WaterManager.TryDumpHeating))]
+        [HarmonyPrefix]
+        public static bool TryDumpHeatingPrefix(ref int __result, int rate, int max)
+        {
+            __result = Mathf.Clamp(rate, 0, max);
+            s_heatingPool += __result;
 
             // Always pre-empt original method.
             return false;
@@ -102,6 +140,28 @@ namespace EightyOne2
 
             // TODO: implement pollution scaling.
             s_waterPollution = waterPollution;
+
+            // Always pre-empt original method.
+            return false;
+        }
+
+        /// <summary>
+        /// Pre-emptive Harmony prefix patch to WaterManager.TryFetchHeating to implement 'no pipes' functionality.
+        /// </summary>
+        /// <param name="__result">Original method result (sewage removal 'fetched' from grid).</param>
+        /// <param name="rate">Electricity production rate.</param>
+        /// <param name="max">Maximum electricity production rate.</param>
+        /// <param name="connected">Whether or not the building is considered connected to the heating network (controlls complaint display).</param>
+        /// <returns>Always false (pre-empt original game method).</returns>
+        [HarmonyPatch(nameof(WaterManager.TryFetchHeating))]
+        [HarmonyPrefix]
+        public static bool TryFetchHeatingPrefix(ref int __result, int rate, int max, out bool connected)
+        {
+            __result = Math.Min(Math.Min(rate, max), s_heatingPool);
+            s_heatingPool -= __result;
+
+            // Assign connected status (true if we have any current heating capacity).
+            connected = Singleton<DistrictManager>.instance.m_districts.m_buffer[0].GetHeatingCapacity() > 0;
 
             // Always pre-empt original method.
             return false;
