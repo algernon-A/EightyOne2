@@ -311,15 +311,15 @@ namespace EightyOne2.Patches
         private static bool NamesModified1Prefix(DistrictManager __instance, ref bool ___m_namesModified)
         {
             NamesModified2Prefix(__instance.m_districtGrid);
-            Vector3 vector = default;
-            for (int i = 0; i < 128; i++)
+            Vector3 worldPos = default;
+            for (int i = 0; i < 128; ++i)
             {
                 uint bestLocation = TempData[i].m_bestLocation;
-                vector.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
-                vector.y = 0f;
-                vector.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
-                vector.y = Singleton<TerrainManager>.instance.SampleRawHeightSmoothWithWater(vector, timeLerp: false, 0f);
-                __instance.m_districts.m_buffer[i].m_nameLocation = vector;
+                worldPos.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                worldPos.y = 0f;
+                worldPos.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                worldPos.y = Singleton<TerrainManager>.instance.SampleRawHeightSmoothWithWater(worldPos, timeLerp: false, 0f);
+                __instance.m_districts.m_buffer[i].m_nameLocation = worldPos;
             }
 
             ___m_namesModified = true;
@@ -465,15 +465,15 @@ namespace EightyOne2.Patches
         private static bool ParkNamesModifiedPrefix(DistrictManager __instance, ref bool ___m_namesModified)
         {
             NamesModified2Prefix(__instance.m_parkGrid);
-            Vector3 vector = default;
-            for (int i = 0; i < 128; i++)
+            Vector3 worldPos = default;
+            for (int i = 0; i < 128; ++i)
             {
                 uint bestLocation = TempData[i].m_bestLocation;
-                vector.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
-                vector.y = 0f;
-                vector.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
-                vector.y = Singleton<TerrainManager>.instance.SampleRawHeightSmoothWithWater(vector, timeLerp: false, 0f);
-                __instance.m_parks.m_buffer[i].m_nameLocation = vector;
+                worldPos.x = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation % ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                worldPos.y = 0f;
+                worldPos.z = (DISTRICTGRID_CELL_SIZE * (float)(bestLocation / ExpandedDistrictGridHalfResolution) * 2f) - ExpandedDistrictAreaHalfDistance;
+                worldPos.y = Singleton<TerrainManager>.instance.SampleRawHeightSmoothWithWater(worldPos, timeLerp: false, 0f);
+                __instance.m_parks.m_buffer[i].m_nameLocation = worldPos;
             }
 
             ___m_namesModified = true;
