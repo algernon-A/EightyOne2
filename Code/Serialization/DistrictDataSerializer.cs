@@ -5,6 +5,7 @@
 
 namespace EightyOne2.Serialization
 {
+    using System;
     using System.IO;
     using AlgernonCommons;
     using ColossalFramework.IO;
@@ -56,7 +57,7 @@ namespace EightyOne2.Serialization
                 using (MemoryStream stream = new MemoryStream(data))
                 {
                     // Deserialise extended district data..
-                    DataSerializer.Deserialize<DistrictDataContainer>(stream, DataSerializer.Mode.Memory);
+                    DataSerializer.Deserialize<DistrictDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
                     Logging.Message("read expanded district data length ", stream.Length);
                 }
             }
@@ -66,5 +67,12 @@ namespace EightyOne2.Serialization
                 Logging.Message("no expanded district data read");
             }
         }
+
+        /// <summary>
+        /// Legacy container type converter.
+        /// </summary>
+        /// <param name="legacyTypeName">Legacy type name (ignored).</param>
+        /// <returns>DistrictDataContainer type.</returns>
+        private Type LegacyTypeConverter(string legacyTypeName) => typeof(DistrictDataContainer);
     }
 }

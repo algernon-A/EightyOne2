@@ -5,6 +5,7 @@
 
 namespace EightyOne2.Serialization
 {
+    using System;
     using System.IO;
     using AlgernonCommons;
     using ColossalFramework.IO;
@@ -56,7 +57,7 @@ namespace EightyOne2.Serialization
                 using (MemoryStream stream = new MemoryStream(data))
                 {
                     // Deserialise extended district data..
-                    DataSerializer.Deserialize<GameAreaDataContainer>(stream, DataSerializer.Mode.Memory);
+                    DataSerializer.Deserialize<GameAreaDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
                     Logging.Message("read expanded game area data length ", stream.Length);
                 }
             }
@@ -66,5 +67,12 @@ namespace EightyOne2.Serialization
                 Logging.Message("no expanded game area data read");
             }
         }
+
+        /// <summary>
+        /// Legacy container type converter.
+        /// </summary>
+        /// <param name="legacyTypeName">Legacy type name (ignored).</param>
+        /// <returns>DistrictDataContainer type.</returns>
+        private Type LegacyTypeConverter(string legacyTypeName) => typeof(GameAreaDataContainer);
     }
 }
