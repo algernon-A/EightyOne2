@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace EightyOne2
+namespace EightyOne2.Patches
 {
     using System.Collections.Generic;
     using System.Reflection;
@@ -42,6 +42,30 @@ namespace EightyOne2
                 }
 
                 yield return instruction;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new district cell array with correct initial values.
+        /// </summary>
+        /// <param name="districtCellArray">Array to initialize.</param>
+        internal static void InitializeDistrictCellArray(Cell[] districtCellArray)
+        {
+            // Properly initialize each cell.
+            for (int i = 0; i < districtCellArray.Length; ++i)
+            {
+                // Initial values per DistrictManager.Awake().
+                districtCellArray[i] = new Cell
+                {
+                    m_district1 = 0,
+                    m_district2 = 1,
+                    m_district3 = 2,
+                    m_district4 = 3,
+                    m_alpha1 = byte.MaxValue,
+                    m_alpha2 = 0,
+                    m_alpha3 = 0,
+                    m_alpha4 = 0,
+                };
             }
         }
 
@@ -111,37 +135,11 @@ namespace EightyOne2
             Cell[] newDistrictGrid = new Cell[ExpandedDistrictGridArraySize];
             Cell[] newParkGrid = new Cell[ExpandedDistrictGridArraySize];
 
-            // Populate arrays.
+            // Initialize arrays to proper defaults.
             // Yes, this does mean that we'll end up overwriting ~32% of this,
             // but reliability is more important than shaving off a couple of milliseconds on a first-time load.
-            for (int i = 0; i < newDistrictGrid.Length; ++i)
-            {
-                // Initial values per DistrictManager.Awake().
-                newDistrictGrid[i] = new Cell
-                {
-                    m_district1 = 0,
-                    m_district2 = 1,
-                    m_district3 = 2,
-                    m_district4 = 3,
-                    m_alpha1 = byte.MaxValue,
-                    m_alpha2 = 0,
-                    m_alpha3 = 0,
-                    m_alpha4 = 0,
-                };
-
-                // Initial values per DistrictManager.Awake().
-                newParkGrid[i] = new Cell
-                {
-                    m_district1 = 0,
-                    m_district2 = 1,
-                    m_district3 = 2,
-                    m_district4 = 3,
-                    m_alpha1 = byte.MaxValue,
-                    m_alpha2 = 0,
-                    m_alpha3 = 0,
-                    m_alpha4 = 0,
-                };
-            }
+            InitializeDistrictCellArray(newDistrictGrid);
+            InitializeDistrictCellArray(newParkGrid);
 
             // Convert 25-tile data into 81-tile equivalent locations.
             for (int z = 0; z < GameDistrictGridResolution; ++z)
@@ -165,7 +163,7 @@ namespace EightyOne2
         }
 
         /// <summary>
-        /// Performs deserialization activites when loading game data.
+        /// Performs serialization activites when saving game data.
         /// Saves the 25-tile subset of 81-tile data.
         /// </summary>
         /// <param name="encodedArray">Encoded array to write to.</param>

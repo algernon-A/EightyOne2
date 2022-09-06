@@ -5,12 +5,12 @@
 
 namespace EightyOne2
 {
-    using System.Collections;
     using AlgernonCommons;
     using AlgernonCommons.Translation;
     using AlgernonCommons.UI;
     using ColossalFramework;
     using ColossalFramework.UI;
+    using EightyOne2.Patches;
     using ICities;
 
     /// <summary>
