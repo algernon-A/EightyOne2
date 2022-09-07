@@ -46,6 +46,7 @@ namespace EightyOne2.Serialization
         /// </summary>
         public override void OnLoadData()
         {
+            // Deserialization is done at DistrictManager.Deserialize (inserted by transpiler).
         }
     }
 }
