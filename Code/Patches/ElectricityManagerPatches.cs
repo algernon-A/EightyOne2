@@ -17,40 +17,40 @@ namespace EightyOne2.Patches
     /// <summary>
     /// Harmomy patches for the game's electricity manager to implement 81 tiles functionality.
     /// </summary>
-    // [HarmonyPatch(typeof(ElectricityManager))]
+    [HarmonyPatch(typeof(ElectricityManager))]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1311:Static readonly fields should begin with upper-case letter", Justification = "Dotnet style")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1311:Static readonly fields should begin with upper-case letter", Justification = "Dotnet runtime style")]
     internal static class ElectricityManagerPatches
     {
         /// <summary>
-        /// Game electricity grid array size.
+        /// Game electricity grid array size (256 * 256 = 65,536).
         /// </summary>
-        internal const int GameElectricyGridSize = ELECTRICITYGRID_RESOLUTION * ELECTRICITYGRID_RESOLUTION;
+        internal const int GameElectricyGridArraySize = ELECTRICITYGRID_RESOLUTION * ELECTRICITYGRID_RESOLUTION;
 
         /// <summary>
-        /// Expanded electricity grid array size.
+        /// Expanded electricity grid array size (462 * 462 = 213444).
         /// </summary>
-        internal const int ExpandedElectricityGridSize = ExpandedElectricityGridResolution * ExpandedElectricityGridResolution;
+        internal const int ExpandedElectricityGridArraySize = ExpandedElectricityGridResolution * ExpandedElectricityGridResolution;
 
         /// <summary>
-        /// Game electricity grid height and width.
+        /// Game electricity grid height and width (256).
         /// </summary>
         internal const int GameElectricyGridResolution = ELECTRICITYGRID_RESOLUTION;
 
         /// <summary>
-        /// Expanded electricity grid height and width.
+        /// Expanded electricity grid height and width (462).
         /// </summary>
         internal const int ExpandedElectricityGridResolution = 462;
 
         /// <summary>
-        /// Game electricty grid half-resolution.
+        /// Game electricty grid half-resolution (128f).
         /// </summary>
-        internal const int GameElectricyGridHalfResolution = GameElectricyGridResolution / 2;
+        internal const float GameElectricyGridHalfResolution = GameElectricyGridResolution / 2;
 
         /// <summary>
-        /// Expanded electricty grid half-resolution.
+        /// Expanded electricty grid half-resolution (231f).
         /// </summary>
-        internal const int ExpandedElectricityGridHalfResolution = ExpandedElectricityGridResolution / 2;
+        internal const float ExpandedElectricityGridHalfResolution = ExpandedElectricityGridResolution / 2;
 
         // Limits.
         private const int GameElectricityGridMax = GameElectricyGridResolution - 1;
@@ -92,7 +92,7 @@ namespace EightyOne2.Patches
                 }
                 else if (instruction.LoadsConstant(GameElectricyGridHalfResolution))
                 {
-                    // Electricity grid array half-size i.e. 128->231.
+                    // Electricity grid array half-size i.e. 12f8->231f.
                     instruction.operand = ExpandedElectricityGridHalfResolution;
                 }
 
@@ -204,8 +204,8 @@ namespace EightyOne2.Patches
                 ExpandedPulseUnit pulseUnit = default;
                 pulseUnit.m_group = group;
                 pulseUnit.m_node = 0;
-                pulseUnit.m_x = (byte)x;
-                pulseUnit.m_z = (byte)z;
+                pulseUnit.m_x = (ushort)x;
+                pulseUnit.m_z = (ushort)z;
                 s_pulseUnits[___m_pulseUnitEnd] = pulseUnit;
                 if (++___m_pulseUnitEnd == s_pulseUnits.Length)
                 {
@@ -346,8 +346,8 @@ namespace EightyOne2.Patches
         [HarmonyPrefix]
         private static bool ConductToNodesPrefix(ElectricityManager __instance, ushort group, int cellX, int cellZ, int ___m_pulseGroupCount, ref int ___m_pulseUnitEnd, ref bool ___m_canContinue)
         {
-            float num = ((float)cellX - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE;
-            float num2 = ((float)cellZ - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE;
+            float num = (cellX - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE;
+            float num2 = (cellZ - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE;
             float num3 = num + ELECTRICITYGRID_CELL_SIZE;
             float num4 = num2 + ELECTRICITYGRID_CELL_SIZE;
             int num5 = Mathf.Max((int)((num / 64f) + 135f), 0);
@@ -378,6 +378,7 @@ namespace EightyOne2.Patches
             return false;
         }
 
+        /*
         /// <summary>
         /// Harmony transpiler for ElectricityManager.ConductToNodes to replace hardcoded game constants.
         /// </summary>
@@ -386,6 +387,7 @@ namespace EightyOne2.Patches
         [HarmonyPatch("ConductToNodes")]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> ConductToNodesTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
+        */
 
         /// <summary>
         /// Pre-emptive Harmony prefix for ElectricityManager.GetRootGroup due to the complexity of transpiling this one.
@@ -415,8 +417,8 @@ namespace EightyOne2.Patches
         /// <param name="merged">Merged group ID.</param>
         /// <param name="___m_pulseGroupCount">ElectricityManager private field - m_pulseGroupCount.</param>
         /// <returns>Always false (never execute original method).</returns>
-        [HarmonyPatch("MergeGroups")]
-        [HarmonyPrefix]
+        // [HarmonyPatch("MergeGroups")]
+        // [HarmonyPrefix]
         private static bool MergeGroupsPrefix(ushort root, ushort merged, int ___m_pulseGroupCount)
         {
             ExpandedPulseGroup pulseGroup = s_pulseGroups[root];
@@ -494,6 +496,7 @@ namespace EightyOne2.Patches
                     ___m_canContinue = true;
                 }
 
+                // Net nodes.
                 NetManager netManager = Singleton<NetManager>.instance;
                 int num2 = (num * 32768) >> 7;
                 int num3 = (((num + 1) * 32768) >> 7) - 1;
@@ -755,6 +758,7 @@ namespace EightyOne2.Patches
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("UpdateElectricityMapping")]
+        [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> UpdateElectricityMappingTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Replace inverse constants.
@@ -778,6 +782,7 @@ namespace EightyOne2.Patches
             }
         }
 
+        /*
         /// <summary>
         /// Harmony transpiler for ElectricityManager.UpdateGrid to replace hardcoded game constants.
         /// </summary>
@@ -786,6 +791,135 @@ namespace EightyOne2.Patches
         [HarmonyPatch(nameof(ElectricityManager.UpdateGrid))]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> UpdateGridTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
+        */
+
+        /// <summary>
+        /// Pre-emptive Harmony prefix for ElectricityManager.UpdateGrid due to the complexity of transpiling this one.
+        /// </summary>
+        /// <param name="__instance">ElectricityManager instance.</param>
+        /// <param name="minX">Minimum x-coordinate of updated area.</param>
+        /// <param name="minZ">Minimum z-coordinate of updated area.</param>
+        /// <param name="maxX">Maximum x-coordinate of updated area.</param>
+        /// <param name="maxZ">Maximum z-coordinate of updated area.</param>
+        /// <param name="___m_electricityGrid">ElectricityManager private array - m_electricityGrid.</param>
+        /// <returns>Always false (never execute original method).</returns>
+        [HarmonyPatch(nameof(ElectricityManager.UpdateGrid))]
+        [HarmonyPrefix]
+        private static bool UpdateGridPrefix(ElectricityManager __instance, float minX, float minZ, float maxX, float maxZ, Cell[] ___m_electricityGrid)
+        {
+            int num = Mathf.Max((int)((minX / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution), 0);
+            int num2 = Mathf.Max((int)((minZ / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution), 0);
+            int num3 = Mathf.Min((int)((maxX / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution), ExpandedElectricityGridMax);
+            int num4 = Mathf.Min((int)((maxZ / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution), ExpandedElectricityGridMax);
+            for (int i = num2; i <= num4; i++)
+            {
+                int num5 = (i * ExpandedElectricityGridResolution) + num;
+                for (int j = num; j <= num3; j++)
+                {
+                    ___m_electricityGrid[num5].m_conductivity = 0;
+                    num5++;
+                }
+            }
+
+            int num6 = Mathf.Max((int)((((((float)num - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE) - 96f) / 64f) + 135f), 0);
+            int num7 = Mathf.Max((int)((((((float)num2 - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE) - 96f) / 64f) + 135f), 0);
+            int num8 = Mathf.Min((int)((((((float)num3 - ExpandedElectricityGridHalfResolution + 1f) * ELECTRICITYGRID_CELL_SIZE) + 96f) / 64f) + 135f), 269);
+            int num9 = Mathf.Min((int)((((((float)num4 - ExpandedElectricityGridHalfResolution + 1f) * ELECTRICITYGRID_CELL_SIZE) + 96f) / 64f) + 135f), 269);
+            Array16<Building> buildings = Singleton<BuildingManager>.instance.m_buildings;
+            ushort[] buildingGrid = Singleton<BuildingManager>.instance.m_buildingGrid;
+            Vector3 vector7 = default;
+            for (int k = num7; k <= num9; k++)
+            {
+                for (int l = num6; l <= num8; l++)
+                {
+                    ushort num10 = buildingGrid[(k * 270) + l];
+                    int num11 = 0;
+                    while (num10 != 0)
+                    {
+                        Building.Flags flags = buildings.m_buffer[num10].m_flags;
+                        if ((flags & (Building.Flags.Created | Building.Flags.Deleted)) == Building.Flags.Created)
+                        {
+                            buildings.m_buffer[num10].GetInfoWidthLength(out var info, out var width, out var length);
+                            if (info != null)
+                            {
+                                float num12 = info.m_buildingAI.ElectricityGridRadius();
+                                if (num12 > 0.1f)
+                                {
+                                    Vector3 position = buildings.m_buffer[num10].m_position;
+                                    float angle = buildings.m_buffer[num10].m_angle;
+                                    Vector3 vector = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+                                    Vector3 vector2 = new Vector3(vector.z, 0f, 0f - vector.x);
+                                    Vector3 vector3 = position - (width * 4 * vector) - (length * 4 * vector2);
+                                    Vector3 vector4 = position + (width * 4 * vector) - (length * 4 * vector2);
+                                    Vector3 vector5 = position + (width * 4 * vector) + (length * 4 * vector2);
+                                    Vector3 vector6 = position - (width * 4 * vector) + (length * 4 * vector2);
+                                    minX = Mathf.Min(Mathf.Min(vector3.x, vector4.x), Mathf.Min(vector5.x, vector6.x)) - num12;
+                                    maxX = Mathf.Max(Mathf.Max(vector3.x, vector4.x), Mathf.Max(vector5.x, vector6.x)) + num12;
+                                    minZ = Mathf.Min(Mathf.Min(vector3.z, vector4.z), Mathf.Min(vector5.z, vector6.z)) - num12;
+                                    maxZ = Mathf.Max(Mathf.Max(vector3.z, vector4.z), Mathf.Max(vector5.z, vector6.z)) + num12;
+                                    int num13 = Mathf.Max(num, (int)((minX / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution));
+                                    int num14 = Mathf.Min(num3, (int)((maxX / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution));
+                                    int num15 = Mathf.Max(num2, (int)((minZ / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution));
+                                    int num16 = Mathf.Min(num4, (int)((maxZ / ELECTRICITYGRID_CELL_SIZE) + ExpandedElectricityGridHalfResolution));
+                                    for (int m = num15; m <= num16; m++)
+                                    {
+                                        for (int n = num13; n <= num14; n++)
+                                        {
+                                            vector7.x = ((float)n + 0.5f - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE;
+                                            vector7.y = position.y;
+                                            vector7.z = ((float)m + 0.5f - ExpandedElectricityGridHalfResolution) * ELECTRICITYGRID_CELL_SIZE;
+                                            float num17 = Mathf.Max(0f, Mathf.Abs(Vector3.Dot(vector, vector7 - position)) - (float)(width * 4));
+                                            float num18 = Mathf.Max(0f, Mathf.Abs(Vector3.Dot(vector2, vector7 - position)) - (float)(length * 4));
+                                            float num19 = Mathf.Sqrt((num17 * num17) + (num18 * num18));
+                                            if (num19 < num12 + 19.125f)
+                                            {
+                                                float num20 = ((num12 - num19) * (2f / 153f)) + 0.25f;
+                                                int num21 = Mathf.Min(255, Mathf.RoundToInt(num20 * 255f));
+                                                int num22 = (m * ExpandedElectricityGridResolution) + n;
+                                                if (num21 > ___m_electricityGrid[num22].m_conductivity)
+                                                {
+                                                    ___m_electricityGrid[num22].m_conductivity = (byte)num21;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        num10 = buildings.m_buffer[num10].m_nextGridBuilding;
+                        if (++num11 >= 49152)
+                        {
+                            CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + Environment.StackTrace);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (int num23 = num2; num23 <= num4; num23++)
+            {
+                int num24 = (num23 * ExpandedElectricityGridResolution) + num;
+                for (int num25 = num; num25 <= num3; num25++)
+                {
+                    Cell cell = ___m_electricityGrid[num24];
+                    if (cell.m_conductivity == 0)
+                    {
+                        cell.m_currentCharge = 0;
+                        cell.m_extraCharge = 0;
+                        cell.m_pulseGroup = ushort.MaxValue;
+                        cell.m_tmpElectrified = false;
+                        cell.m_electrified = false;
+                        ___m_electricityGrid[num24] = cell;
+                    }
+
+                    num24++;
+                }
+            }
+
+            __instance.AreaModified(num, num2, num3, num4);
+            return false;
+        }
 
         /// <summary>
         /// Harmony transpiler for ElectricityManager.UpdateTexture to replace hardcoded game constants.

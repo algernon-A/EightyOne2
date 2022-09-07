@@ -18,15 +18,15 @@ namespace EightyOne2.Patches
     internal static class ElectricityManagerDataPatches
     {
         // Data conversion offset - outer margin of 25-tile data when placed in an 81-tile context.
-        private const int CellConversionOffset = ExpandedElectricityGridHalfResolution - GameElectricyGridHalfResolution;
+        private const int CellConversionOffset = (int)ExpandedElectricityGridHalfResolution - (int)GameElectricyGridHalfResolution;
 
         /// <summary>
         /// Harmony transpiler for ElectricityManager.Data.AfterDeserialize to replace hardcoded game constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        // [HarmonyPatch(nameof(Data.AfterDeserialize))]
-        // [HarmonyTranspiler]
+        [HarmonyPatch(nameof(Data.AfterDeserialize))]
+        [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> AfterDeserializeTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace EightyOne2.Patches
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        // [HarmonyPatch(nameof(Data.Deserialize))]
-        // [HarmonyTranspiler]
+        [HarmonyPatch(nameof(Data.Deserialize))]
+        [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> DeserializeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Insert call to our custom method immediately before the end of the target method (final ret).
@@ -53,8 +53,7 @@ namespace EightyOne2.Patches
                     yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ElectricityManager), "m_pulseGroups"));
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ElectricityManager), "m_pulseUnits"));
-
-                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ElectricityManagerDataPatches), nameof(ElectricityManagerDataPatches.CustomDeserialize)));
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ElectricityManagerDataPatches), nameof(CustomDeserialize)));
 
                     // Store result.
                     yield return new CodeInstruction(OpCodes.Stfld, AccessTools.Field(typeof(ElectricityManager), "m_electricityGrid"));
@@ -62,11 +61,6 @@ namespace EightyOne2.Patches
 
                 yield return instruction;
             }
-        }
-
-        private static void AfterDeserializePostfix()
-        {
-
         }
 
         /// <summary>
@@ -80,15 +74,16 @@ namespace EightyOne2.Patches
         private static Cell[] CustomDeserialize(Cell[] electricityGrid, PulseGroup[] pulseGroups, PulseUnit[] pulseUnits)
         {
             // New eelctricity grid for 81 tiles.
-            Cell[] newElectricityGrid = new Cell[ExpandedElectricityGridSize];
+            Cell[] newElectricityGrid = new Cell[ExpandedElectricityGridArraySize];
 
             // Convert 25-tile data into 81-tile equivalent locations.
             for (int z = 0; z < GameElectricyGridResolution; ++z)
             {
                 for (int x = 0; x < GameElectricyGridResolution; ++x)
                 {
-                    Cell cell = electricityGrid[(z * GameElectricyGridResolution) + x];
-                    newElectricityGrid[((z + CellConversionOffset) * ExpandedElectricityGridResolution) + x + CellConversionOffset] = cell;
+                    int oldCellIndex = (z * GameElectricyGridResolution) + x;
+                    int newCellIndex = ((z + CellConversionOffset) * ExpandedElectricityGridResolution) + x + CellConversionOffset;
+                    newElectricityGrid[newCellIndex] = electricityGrid[oldCellIndex];
                 }
             }
 
@@ -109,7 +104,7 @@ namespace EightyOne2.Patches
                 }
             }
 
-            // Convert PulseGroups.
+            // Convert PulseUnits.
             ExpandedPulseUnit[] expandedPulseUnits = PulseUnits;
             {
                 for (int i = 0; i < pulseUnits.Length; ++i)
