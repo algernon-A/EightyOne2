@@ -45,20 +45,25 @@ namespace EightyOne2.Serialization
             // Read expanded grids from savegame data.
             EncodedArray.Byte encodedArray = EncodedArray.Byte.BeginRead(serializer);
             ReadDistrictGrid(encodedArray, expandedDistrictGrid);
-            ReadDistrictGrid(encodedArray, expandedParkGrid);
-            encodedArray.EndRead();
 
-            // Legacy data repairer - version 2 of original 81 tiles mod didn't properly initialize grid cell alphas.
-            if (serializer.version == 2)
+            // Earlier versions of 81 tiles data don't have the park grid; need to initialize it.
+            if (serializer.version < 2)
             {
-                RepairCells(expandedDistrictGrid);
-                RepairCells(expandedParkGrid);
-            }
-            else if (serializer.version < 2)
-            {
-                // Earlier versions didn't have the park grid; need to initialize it.
                 DistrictManagerDataPatches.InitializeDistrictCellArray(expandedParkGrid);
             }
+            else
+            {
+                ReadDistrictGrid(encodedArray, expandedParkGrid);
+
+                // Legacy data repairer - version 2 of original 81 tiles mod didn't properly initialize grid cell alphas.
+                if (serializer.version == 2)
+                {
+                    RepairCells(expandedDistrictGrid);
+                    RepairCells(expandedParkGrid);
+                }
+            }
+
+            encodedArray.EndRead();
 
             // Populate district manager with read expanded data.
             DistrictManager districtManager = Singleton<DistrictManager>.instance;

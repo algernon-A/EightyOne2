@@ -5,10 +5,15 @@
 
 namespace EightyOne2.Patches
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Reflection;
     using System.Reflection.Emit;
+    using AlgernonCommons;
+    using ColossalFramework;
     using ColossalFramework.IO;
+    using EightyOne2.Serialization;
     using HarmonyLib;
     using static DistrictManager;
     using static DistrictManagerPatches;
@@ -19,6 +24,9 @@ namespace EightyOne2.Patches
     [HarmonyPatch(typeof(Data))]
     internal static class DistrictManagerDataPatches
     {
+        // Legacy 81 tiles data ID.
+        private const string DataID = "fakeDM";
+
         // Data conversion offset - outer margin of 25-tile data when placed in an 81-tile context.
         private const int CellConversionOffset = (int)ExpandedDistrictGridHalfResolution - (int)GameDistrictGridHalfResolution;
 
@@ -131,35 +139,49 @@ namespace EightyOne2.Patches
         /// <param name="instance">DistrictManager instance.</param>
         private static void CustomDeserialize(DistrictManager instance)
         {
-            // New area grid for 81 tiles.
-            Cell[] newDistrictGrid = new Cell[ExpandedDistrictGridArraySize];
-            Cell[] newParkGrid = new Cell[ExpandedDistrictGridArraySize];
-
-            // Initialize arrays to proper defaults.
-            // Yes, this does mean that we'll end up overwriting ~32% of this,
-            // but reliability is more important than shaving off a couple of milliseconds on a first-time load.
-            InitializeDistrictCellArray(newDistrictGrid);
-            InitializeDistrictCellArray(newParkGrid);
-
-            // Convert 25-tile data into 81-tile equivalent locations.
-            for (int z = 0; z < GameDistrictGridResolution; ++z)
+            // See if this save contains any extended 81 tiles data.
+            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(DataID, out byte[] data))
             {
-                for (int x = 0; x < GameDistrictGridResolution; ++x)
+                using (MemoryStream stream = new MemoryStream(data))
                 {
-                    int gameGridIndex = (z * GameDistrictGridResolution) + x;
-                    int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
-
-                    Cell districtGridCell = instance.m_districtGrid[gameGridIndex];
-                    newDistrictGrid[expandedGridIndex] = districtGridCell;
-
-                    Cell parkGridCell = instance.m_parkGrid[gameGridIndex];
-                    newParkGrid[expandedGridIndex] = parkGridCell;
+                    Logging.Message("Found expanded district data");
+                    DataSerializer.Deserialize<DistrictDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
                 }
             }
+            else
+            {
+                Logging.Message("No expanded district data found - coverting vanilla data");
 
-            // Replace existing fields with 81 tiles replacements.
-            instance.m_districtGrid = newDistrictGrid;
-            instance.m_parkGrid = newParkGrid;
+                // New area grid for 81 tiles.
+                Cell[] newDistrictGrid = new Cell[ExpandedDistrictGridArraySize];
+                Cell[] newParkGrid = new Cell[ExpandedDistrictGridArraySize];
+
+                // Initialize arrays to proper defaults.
+                // Yes, this does mean that we'll end up overwriting ~32% of this,
+                // but reliability is more important than shaving off a couple of milliseconds on a first-time load.
+                InitializeDistrictCellArray(newDistrictGrid);
+                InitializeDistrictCellArray(newParkGrid);
+
+                // Convert 25-tile data into 81-tile equivalent locations.
+                for (int z = 0; z < GameDistrictGridResolution; ++z)
+                {
+                    for (int x = 0; x < GameDistrictGridResolution; ++x)
+                    {
+                        int gameGridIndex = (z * GameDistrictGridResolution) + x;
+                        int expandedGridIndex = ((z + CellConversionOffset) * ExpandedDistrictGridResolution) + x + CellConversionOffset;
+
+                        Cell districtGridCell = instance.m_districtGrid[gameGridIndex];
+                        newDistrictGrid[expandedGridIndex] = districtGridCell;
+
+                        Cell parkGridCell = instance.m_parkGrid[gameGridIndex];
+                        newParkGrid[expandedGridIndex] = parkGridCell;
+                    }
+                }
+
+                // Replace existing fields with 81 tiles replacements.
+                instance.m_districtGrid = newDistrictGrid;
+                instance.m_parkGrid = newParkGrid;
+            }
         }
 
         /// <summary>
@@ -244,5 +266,12 @@ namespace EightyOne2.Patches
                 }
             }
         }
+
+        /// <summary>
+        /// Legacy container type converter.
+        /// </summary>
+        /// <param name="legacyTypeName">Legacy type name (ignored).</param>
+        /// <returns>DistrictDataContainer type.</returns>
+        private static Type LegacyTypeConverter(string legacyTypeName) => typeof(DistrictDataContainer);
     }
 }
