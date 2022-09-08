@@ -13,7 +13,7 @@ namespace EightyOne2.Serialization
     /// Savegame data container for expanded area data.
     /// Mirroring the original 81 tiles to make backwards-compatibility easier and because no particular reason to change.
     /// </summary>
-    public class GameAreaDataContainer : IDataContainer
+    public sealed class GameAreaDataContainer : IDataContainer
     {
         /// <summary>
         /// Saves data to savegame.

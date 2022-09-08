@@ -31,6 +31,18 @@ namespace EightyOne2
                 districtManager.NamesModified();
                 districtManager.ParkNamesModified();
             });
+
+            // Force update of electricity map.
+            SimulationManager.instance.AddAction(() =>
+            {
+                ElectricityManager.instance.UpdateGrid(-100000f, -100000f, 100000f, 100000f);
+                UnityEngine.Vector4 value = default;
+                value.z = 1 / (ElectricityManager.ELECTRICITYGRID_CELL_SIZE * Patches.ElectricityManagerPatches.ExpandedElectricityGridResolution);
+                value.x = 0.5f;
+                value.y = 0.5f;
+                value.w = 1.0f / Patches.ElectricityManagerPatches.ExpandedElectricityGridResolution;
+                UnityEngine.Shader.SetGlobalVector("_ElectricityMapping", value);
+            });
         }
     }
 }

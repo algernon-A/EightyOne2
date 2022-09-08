@@ -35,7 +35,7 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Game electricity grid height and width (256).
         /// </summary>
-        internal const int GameElectricyGridResolution = ELECTRICITYGRID_RESOLUTION;
+        internal const int GameElectricityGridResolution = ELECTRICITYGRID_RESOLUTION;
 
         /// <summary>
         /// Expanded electricity grid height and width (462).
@@ -45,7 +45,7 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Game electricty grid half-resolution (128f).
         /// </summary>
-        internal const float GameElectricyGridHalfResolution = GameElectricyGridResolution / 2;
+        internal const float GameElectricyGridHalfResolution = GameElectricityGridResolution / 2;
 
         /// <summary>
         /// Expanded electricty grid half-resolution (231f).
@@ -53,11 +53,11 @@ namespace EightyOne2.Patches
         internal const float ExpandedElectricityGridHalfResolution = ExpandedElectricityGridResolution / 2;
 
         // Limits.
-        private const int GameElectricityGridMax = GameElectricyGridResolution - 1;
+        private const int GameElectricityGridMax = GameElectricityGridResolution - 1;
         private const int ExpandedElectricityGridMax = ExpandedElectricityGridResolution - 1;
 
         // Private arrays.
-        private static readonly ExpandedPulseGroup[] s_pulseGroups = new ExpandedPulseGroup[1024];
+        private static readonly ExpandedPulseGroup[] s_pulseGroups = new ExpandedPulseGroup[MAX_PULSE_GROUPS];
         private static readonly ExpandedPulseUnit[] s_pulseUnits = new ExpandedPulseUnit[32786];
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace EightyOne2.Patches
             foreach (CodeInstruction instruction in instructions)
             {
                 // Look for and update any relevant constants.
-                if (instruction.LoadsConstant(GameElectricyGridResolution))
+                if (instruction.LoadsConstant(GameElectricityGridResolution))
                 {
                     // Electricity grid size, i.e. 256->462.
                     instruction.operand = ExpandedElectricityGridResolution;
@@ -145,7 +145,7 @@ namespace EightyOne2.Patches
         */
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToCell due to the complexity of transpiling this one.
+        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToCell using expanded structs.
         /// </summary>
         /// <param name="cell">Target electricity cell.</param>
         /// <param name="group">Group ID.</param>
@@ -242,7 +242,7 @@ namespace EightyOne2.Patches
         */
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNode due to the complexity of transpiling this one.
+        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNode for use in patched execution chains.
         /// </summary>>
         /// <param name="group">Group ID.</param>
         /// <param name="worldX">World x-coordinate.</param>
@@ -269,7 +269,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNode due to the complexity of transpiling this one.
+        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNode using expanded structs.
         /// </summary>
         /// <param name="__instance">ElectricityManager instance.</param>
         /// <param name="nodeIndex">Node index ID.</param>
@@ -332,7 +332,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNodes due to the complexity of transpiling this one.
+        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNodes for use in patched execution chains.
         /// </summary>
         /// <param name="__instance">ElectricityManager instance.</param>
         /// <param name="group">Group ID.</param>
@@ -390,7 +390,7 @@ namespace EightyOne2.Patches
         */
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.GetRootGroup due to the complexity of transpiling this one.
+        /// Pre-emptive Harmony prefix for ElectricityManager.GetRootGroup for use in patched execution chains.
         /// </summary>
         /// <param name="__result">Original method result.</param>
         /// <param name="group">Group ID.</param>
@@ -411,7 +411,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.GetRootGroup due to the complexity of transpiling this one.
+        /// Pre-emptive Harmony prefix for ElectricityManager.GetRootGroup using expanded structs.
         /// </summary>
         /// <param name="root">Root group..</param>
         /// <param name="merged">Merged group ID.</param>
@@ -451,7 +451,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.SimulationStepImpl due to the complexity of transpiling this one.
+        /// Pre-emptive Harmony prefix for ElectricityManager.SimulationStepImpl using expanded structs.
         /// </summary>
         /// <param name="__instance">ElectricityManager instance.</param>
         /// <param name="subStep">Simulation sub-step.</param>
@@ -762,9 +762,9 @@ namespace EightyOne2.Patches
         private static IEnumerable<CodeInstruction> UpdateElectricityMappingTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Replace inverse constants.
-            const float gameZ = 1f / (ELECTRICITYGRID_CELL_SIZE * GameElectricyGridResolution);
+            const float gameZ = 1f / (ELECTRICITYGRID_CELL_SIZE * GameElectricityGridResolution);
             const float expandedZ = 1f / (ELECTRICITYGRID_CELL_SIZE * ExpandedElectricityGridResolution);
-            const float gameW = 1f / GameElectricyGridResolution;
+            const float gameW = 1f / GameElectricityGridResolution;
             const float expandedW = 1f / ExpandedElectricityGridResolution;
 
             foreach (CodeInstruction instruction in instructions)

@@ -14,7 +14,7 @@ namespace EightyOne2.Patches
     /// <summary>
     /// Harmomy patches for the game's electricity manager to implement 81 tiles functionality.
     /// </summary>
-    //[HarmonyPatch(typeof(ElectricityManager))]
+    // [HarmonyPatch(typeof(ElectricityManager))]
     internal static class ElectricityManagerLite
     {
         // 68.85 (instead of 38.25).
@@ -88,7 +88,7 @@ namespace EightyOne2.Patches
             // Replace inverse constant using expanded cell size.
             const float gameZ = 1f / (ELECTRICITYGRID_CELL_SIZE * ELECTRICITYGRID_RESOLUTION);
             const float expandedZ = 1f / (ExpandedElectricityCellSize * ELECTRICITYGRID_RESOLUTION);
-            const float gameW = 1f / ElectricityManagerPatches.GameElectricyGridResolution;
+            const float gameW = 1f / ElectricityManagerPatches.GameElectricityGridResolution;
             const float expandedW = 1f / ElectricityManagerPatches.ExpandedElectricityGridResolution;
 
             foreach (CodeInstruction instruction in instructions)

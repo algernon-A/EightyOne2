@@ -12,7 +12,7 @@ namespace EightyOne2.Patches
     /// <summary>
     /// Harmomy patches for the game's electricity manager to remove the need for electricity transmission ('no powerlines').
     /// </summary>
-    [HarmonyPatch(typeof(ElectricityManager))]
+    // [HarmonyPatch(typeof(ElectricityManager))]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
     public static class NoPowerlinesPatches
     {

@@ -144,13 +144,13 @@ namespace EightyOne2.Patches
             {
                 using (MemoryStream stream = new MemoryStream(data))
                 {
-                    Logging.Message("Found expanded district data");
+                    Logging.Message("found expanded district data");
                     DataSerializer.Deserialize<DistrictDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
                 }
             }
             else
             {
-                Logging.Message("No expanded district data found - coverting vanilla data");
+                Logging.Message("no expanded district data found - coverting vanilla data");
 
                 // New area grid for 81 tiles.
                 Cell[] newDistrictGrid = new Cell[ExpandedDistrictGridArraySize];
