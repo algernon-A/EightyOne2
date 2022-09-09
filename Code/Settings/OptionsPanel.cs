@@ -44,6 +44,10 @@ namespace EightyOne2
             noPowerlineCheck.tooltip = Translations.Translate("NO_POWERLINES_TIP");
             noPowerlineCheck.tooltipBox = UIToolTips.WordWrapToolTip;
 
+            UICheckBox electricRoadsCheck = netGroup.AddCheckbox(Translations.Translate("ELECTRIC_ROADS"), ExpandedElectricityManager.ElectricRoadsEnabled, (isChecked) => ExpandedElectricityManager.ElectricRoadsEnabled = isChecked) as UICheckBox;
+            electricRoadsCheck.tooltip = Translations.Translate("ELECTRIC_ROADS_TIP");
+            electricRoadsCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+
             // Unlock buttons (only if in-game).
             if (Loading.IsLoaded)
             {

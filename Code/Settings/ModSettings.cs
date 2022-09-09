@@ -9,12 +9,13 @@ namespace EightyOne2
     using System.Xml.Serialization;
     using AlgernonCommons.XML;
     using ColossalFramework.IO;
+    using EightyOne2.Patches;
 
     /// <summary>
     /// The mod's XML settings file.
     /// </summary>
     [XmlRoot("EightyOneTiles")]
-    public  class ModSettings : SettingsXMLBase
+    public class ModSettings : SettingsXMLBase
     {
         // Settings file name.
         [XmlIgnore]
@@ -24,7 +25,13 @@ namespace EightyOne2
         /// Gets or sets a value indicating whether 'no powerlines' functionality is enabled.
         /// </summary>
         [XmlElement("NoPowerlines")]
-        public bool XMLNoPowerlines { get => Patches.NoPowerlinesPatches.NoPowerlinesEnabled; set => Patches.NoPowerlinesPatches.NoPowerlinesEnabled = value; }
+        public bool XMLNoPowerlines { get => NoPowerlinesPatches.NoPowerlinesEnabled; set => NoPowerlinesPatches.NoPowerlinesEnabled = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'electric roads' functionality is enabled.
+        /// </summary>
+        [XmlElement("ElectricRoads")]
+        public bool XMLElectricRoads { get => ExpandedElectricityManager.ElectricRoadsEnabled; set => ExpandedElectricityManager.ElectricRoadsEnabled = value; }
 
         /// <summary>
         /// Loads settings from file.

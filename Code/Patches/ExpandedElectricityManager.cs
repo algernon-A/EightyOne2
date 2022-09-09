@@ -21,6 +21,14 @@ namespace EightyOne2.Patches
         private static readonly ExpandedPulseGroup[] s_pulseGroups = new ExpandedPulseGroup[MAX_PULSE_GROUPS];
         private static readonly ExpandedPulseUnit[] s_pulseUnits = new ExpandedPulseUnit[32786];
 
+        // Electric roads status.
+        private static bool s_electricRoads = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the 'no powerlines' functionality is enabled.
+        /// </summary>
+        internal static bool ElectricRoadsEnabled { get => s_electricRoads; set => s_electricRoads = value; }
+
         /// <summary>
         /// Gets the expanded pulse group array.
         /// </summary>
@@ -78,17 +86,19 @@ namespace EightyOne2.Patches
                 }
 
                 // Net nodes.
-                NetNode[] netNodes = Singleton<NetManager>.instance.m_nodes.m_buffer;
+                NetManager netManager = Singleton<NetManager>.instance;
+                NetNode[] netNodes = netManager.m_nodes.m_buffer;
                 int num2 = (num * 32768) >> 7;
                 int num3 = (((num + 1) * 32768) >> 7) - 1;
                 for (int i = num2; i <= num3; i++)
                 {
                     if (netNodes[i].m_flags != 0)
                     {
-                        NetInfo info = netNodes[i].Info;
-                        if (info.m_class.m_service == ItemClass.Service.Electricity || info.m_netAI is ConcourseAI)
+                        // Electric roads modification.
+                        NetInfo netInfo = netNodes[i].Info;
+                        if (netInfo.m_class.m_service == ItemClass.Service.Electricity || netInfo.m_netAI is ConcourseAI || CheckElectricRoad(netInfo))
                         {
-                            UpdateNodeElectricity(instance, i, (nodeGroups[i] == ushort.MaxValue) ? 0 : 1);
+                            UpdateNodeElectricity(i, (nodeGroups[i] == ushort.MaxValue) ? 0 : 1, netManager, netNodes, netInfo);
                             conductiveCells++;
                         }
                     }
@@ -602,8 +612,9 @@ namespace EightyOne2.Patches
                 return;
             }
 
-            NetInfo info = node.Info;
-            if (info.m_class.m_service != ItemClass.Service.Electricity && !(node.Info.m_netAI is ConcourseAI))
+            // Electric road modification.
+            NetInfo netInfo = node.Info;
+            if (netInfo.m_class.m_service != ItemClass.Service.Electricity && !(node.Info.m_netAI is ConcourseAI) && !CheckElectricRoad(netInfo))
             {
                 return;
             }
@@ -722,6 +733,90 @@ namespace EightyOne2.Patches
             pulseGroup2.m_mergeIndex = root;
             s_pulseGroups[root] = pulseGroup;
             s_pulseGroups[merged] = pulseGroup2;
+        }
+
+        /// <summary>
+        /// Checks to see whether the given netinfo is an electric road.
+        /// </summary>
+        /// <param name="netInfo">NetInfo to check.</param>
+        /// <returns>True if this network should counduct electricity, false otherwise.</returns>
+        private static bool CheckElectricRoad(NetInfo netInfo) => s_electricRoads && (netInfo.m_laneTypes & NetInfo.LaneType.Vehicle) != 0;
+
+        /// <summary>
+        /// Substitute for ElectricityManager.UpdateNodeElectricity with support for electric roads.
+        /// </summary>
+        /// <param name="nodeID">Node ID.</param>
+        /// <param name="value">Updated electricity value.</param>
+        /// <param name="netManager">NetManager instance.</param>
+        /// <param name="netNodes">Network node buffer.</param>
+        /// <param name="netInfo">Network info.</param>
+        private static void UpdateNodeElectricity(int nodeID, int value, NetManager netManager, NetNode[] netNodes, NetInfo netInfo)
+        {
+            InfoManager.InfoMode currentMode = Singleton<InfoManager>.instance.CurrentMode;
+            bool flag = false;
+            NetNode.Flags flags = netManager.m_nodes.m_buffer[nodeID].m_flags;
+
+            // Electric road addition.
+            if (s_electricRoads)
+            {
+                if ((flags & NetNode.Flags.Transition) != 0 && netInfo.m_class.m_service == ItemClass.Service.Electricity)
+                {
+                    netNodes[nodeID].m_flags &= ~NetNode.Flags.Transition;
+                    return;
+                }
+            }
+            else
+            {
+                if ((flags & NetNode.Flags.Transition) != 0)
+                {
+                    netNodes[nodeID].m_flags &= ~NetNode.Flags.Transition;
+                    return;
+                }
+            }
+
+            ushort building = netManager.m_nodes.m_buffer[nodeID].m_building;
+            if (building != 0)
+            {
+                BuildingManager buildingManager = Singleton<BuildingManager>.instance;
+                Building[] buildings = buildingManager.m_buildings.m_buffer;
+                if (buildings[building].m_electricityBuffer != value)
+                {
+                    buildings[building].m_electricityBuffer = (ushort)value;
+                    flag = currentMode == InfoManager.InfoMode.Electricity;
+                }
+
+                if (flag)
+                {
+                    buildingManager.UpdateBuildingColors(building);
+                }
+            }
+
+            NetNode.Flags flags2 = flags & ~NetNode.Flags.Electricity;
+            if (value != 0)
+            {
+                flags2 |= NetNode.Flags.Electricity;
+            }
+
+            if (flags2 != flags)
+            {
+                netNodes[nodeID].m_flags = flags2;
+                flag = currentMode == InfoManager.InfoMode.Electricity;
+            }
+
+            if (!flag)
+            {
+                return;
+            }
+
+            netManager.UpdateNodeColors((ushort)nodeID);
+            for (int i = 0; i < 8; i++)
+            {
+                ushort segment = netNodes[nodeID].GetSegment(i);
+                if (segment != 0)
+                {
+                    netManager.UpdateSegmentColors(segment);
+                }
+            }
         }
 
         /// <summary>
