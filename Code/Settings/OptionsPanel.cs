@@ -38,6 +38,13 @@ namespace EightyOne2
             languageDropDown.autoSize = false;
             languageDropDown.width = 270f;
 
+            // Network options.
+            UIHelperBase netGroup = helper.AddGroup(Translations.Translate("NET_OPTIONS"));
+            UICheckBox noPowerlineCheck = netGroup.AddCheckbox(Translations.Translate("NO_POWERLINES"), NoPowerlinesPatches.NoPowerlinesEnabled, (isChecked) => NoPowerlinesPatches.NoPowerlinesEnabled = isChecked) as UICheckBox;
+            noPowerlineCheck.tooltip = Translations.Translate("NO_POWERLINES_TIP");
+            noPowerlineCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+
+            // Unlock buttons (only if in-game).
             if (Loading.IsLoaded)
             {
                 UIHelperBase unlockGroup = helper.AddGroup(Translations.Translate("UNLOCK"));
