@@ -15,8 +15,10 @@ namespace EightyOne2.Serialization
     /// </summary>
     public class ElectricityDataSerializer : SerializableDataExtensionBase
     {
-        // Legacy 81 tiles data ID.
-        private const string DataID = "fakeEM";
+        /// <summary>
+        /// Legacy 81 tiles data ID.
+        /// </summary>
+        internal const string DataID = "fakeEM";
 
         // Data version (last legacy 81 tiles version was 114012u).
         private const uint DataVersion = 114013u;

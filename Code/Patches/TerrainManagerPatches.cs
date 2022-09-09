@@ -102,6 +102,34 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
+        /// Replaces any references to default constants in the provided code with updated 81 tile values, used to adjust the size of default game arrays to avoid an index-out-of-bounds error at map margins.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        private static IEnumerable<CodeInstruction> IncreaseArraySizes(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction instruction in instructions)
+            {
+                // Increase base array size from 480 * 480 to 481 * 481.
+                if (instruction.LoadsConstant(230400))
+                {
+                    instruction.operand = 231361;
+                }
+
+                yield return instruction;
+            }
+        }
+
+        /// <summary>
+        /// Harmony transpiler for TerrainManager.Awake to slightly enlarge terrain detail array size..
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch("Awake")]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions) => IncreaseArraySizes(instructions);
+
+        /// <summary>
         /// Harmony transpiler for TerrainManager.GetUnlockableTerrainFlatness.
         /// Replaces original code with a call to our custom method (avoids issues with inlining), accessing the private array m_patches.
         /// </summary>

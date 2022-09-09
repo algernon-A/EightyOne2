@@ -24,9 +24,6 @@ namespace EightyOne2.Patches
     [HarmonyPatch(typeof(Data))]
     internal static class DistrictManagerDataPatches
     {
-        // Legacy 81 tiles data ID.
-        private const string DataID = "fakeDM";
-
         // Data conversion offset - outer margin of 25-tile data when placed in an 81-tile context.
         private const int CellConversionOffset = (int)ExpandedDistrictGridHalfResolution - (int)GameDistrictGridHalfResolution;
 
@@ -140,7 +137,7 @@ namespace EightyOne2.Patches
         private static void CustomDeserialize(DistrictManager instance)
         {
             // See if this save contains any extended 81 tiles data.
-            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(DataID, out byte[] data))
+            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(DistrictDataSerializer.DataID, out byte[] data))
             {
                 using (MemoryStream stream = new MemoryStream(data))
                 {

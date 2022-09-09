@@ -16,8 +16,10 @@ namespace EightyOne2.Serialization
     /// </summary>
     public class GameAreaDataSerializer : SerializableDataExtensionBase
     {
-        // Legacy 81 tiles data ID.
-        private const string DataID = "fakeGAM";
+        /// <summary>
+        /// Legacy 81 tiles data ID.
+        /// </summary>
+        internal const string DataID = "fakeGAM";
 
         // Data version (last legacy 81 tiles version was 1).
         private const int DataVersion = 2;
@@ -47,32 +49,7 @@ namespace EightyOne2.Serialization
         /// </summary>
         public override void OnLoadData()
         {
-            // Read data from savegame.
-            byte[] data = serializableDataManager.LoadData(DataID);
-
-            // Check to see if anything was read.
-            if (data != null && data.Length != 0)
-            {
-                // Data was read - go ahead and deserialise.
-                using (MemoryStream stream = new MemoryStream(data))
-                {
-                    // Deserialise extended district data..
-                    DataSerializer.Deserialize<GameAreaDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
-                    Logging.Message("read expanded game area data length ", stream.Length);
-                }
-            }
-            else
-            {
-                // No data read.
-                Logging.Message("no expanded game area data read");
-            }
+            // Deserialization is done at GameAreaManager.Deserialize (inserted by transpiler).
         }
-
-        /// <summary>
-        /// Legacy container type converter.
-        /// </summary>
-        /// <param name="legacyTypeName">Legacy type name (ignored).</param>
-        /// <returns>DistrictDataContainer type.</returns>
-        private Type LegacyTypeConverter(string legacyTypeName) => typeof(GameAreaDataContainer);
     }
 }

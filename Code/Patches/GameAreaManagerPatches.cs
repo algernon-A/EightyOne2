@@ -150,16 +150,9 @@ namespace EightyOne2.Patches
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static bool MaxAreaCountPrefix(GameAreaManager __instance, out int __result)
         {
-            // TODO: Transpile.
-
-            // Echoes game code.
-            if (__instance.m_maxAreaCount == 0)
-            {
-                __instance.m_maxAreaCount = ExpandedMaxAreaCount;
-            }
-
             // Assign result.
-            __result = __instance.m_maxAreaCount;
+            __instance.m_maxAreaCount = ExpandedMaxAreaCount;
+            __result = ExpandedMaxAreaCount;
 
             // Always pre-empt original method.
             return false;
@@ -588,10 +581,12 @@ namespace EightyOne2.Patches
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> UpdateDataTranspiler(IEnumerable<CodeInstruction> instructions)
         {
+            Logging.Message("Transpiling GameAreaManager.UpdateData");
+
             // Need to skip initial mode check to avoid false positives in update codes.
             bool transpiling = false;
 
-            MethodInfo targetMethod = AccessTools.Method(typeof(GameAreaManager), nameof(GameAreaManager.GetStartTile));
+            MethodInfo getStartTile = AccessTools.Method(typeof(GameAreaManager), nameof(GameAreaManager.GetStartTile));
             MethodInfo replacementMethod = AccessTools.Method(typeof(GameAreaManagerPatches), nameof(GameAreaManagerPatches.GetStartTile));
             FieldInfo startTileField = AccessTools.Field(typeof(GameAreaManager), "m_startTile");
 
@@ -622,13 +617,14 @@ namespace EightyOne2.Patches
                 else
                 {
                     // Look for and update any relevant constants.
-                    if (instruction.LoadsConstant(GameAreaGridResolution))
+                    if (instruction.opcode == OpCodes.Ldc_I4_5)
                     {
+                        Logging.Message("replacing ldc.i4.5");
                         // Grid width, i.e. 5 -> 9.  Need to replace opcode here as well due to larger constant.
                         instruction.opcode = OpCodes.Ldc_I4;
                         instruction.operand = ExpandedAreaGridResolution;
                     }
-                    else if (instruction.opcode == OpCodes.Call && instruction.operand == targetMethod)
+                    else if (instruction.opcode == OpCodes.Call && instruction.operand == getStartTile)
                     {
                         // Append m_startTile field value to call.
                         yield return new CodeInstruction(OpCodes.Ldarg_0);

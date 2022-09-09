@@ -5,10 +5,15 @@
 
 namespace EightyOne2.Patches
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Reflection;
     using System.Reflection.Emit;
+    using AlgernonCommons;
+    using ColossalFramework;
     using ColossalFramework.IO;
+    using EightyOne2.Serialization;
     using HarmonyLib;
     using static GameAreaManager;
     using static GameAreaManagerPatches;
@@ -90,22 +95,36 @@ namespace EightyOne2.Patches
         /// <param name="instance">GameAreaManager instance.</param>
         private static void CustomDeserialize(GameAreaManager instance)
         {
-            // New area grid for 81 tiles.
-            int[] newAreaGrid = new int[ExpandedMaxAreaCount];
-
-            // Convert 25-tile data into 81-tile equivalent locations.
-            for (int z = 0; z < GameAreaGridResolution; ++z)
+            // See if this save contains any extended 81 tiles data.
+            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(GameAreaDataSerializer.DataID, out byte[] data))
             {
-                for (int x = 0; x < GameAreaGridResolution; ++x)
+                using (MemoryStream stream = new MemoryStream(data))
                 {
-                    int gridSquare = instance.m_areaGrid[(z * GameAreaGridResolution) + x];
-                    newAreaGrid[((z + 2) * ExpandedAreaGridResolution) + x + 2] = gridSquare;
+                    Logging.Message("found expanded area data");
+                    DataSerializer.Deserialize<GameAreaDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
                 }
             }
+            else
+            {
+                Logging.Message("no expanded area data found - coverting vanilla data");
 
-            // Replace existing fields with 81 tiles replacements.
-            instance.m_areaCount = ExpandedMaxAreaCount;
-            instance.m_areaGrid = newAreaGrid;
+                // New area grid for 81 tiles.
+                int[] newAreaGrid = new int[ExpandedMaxAreaCount];
+
+                // Convert 25-tile data into 81-tile equivalent locations.
+                for (int z = 0; z < GameAreaGridResolution; ++z)
+                {
+                    for (int x = 0; x < GameAreaGridResolution; ++x)
+                    {
+                        int gridSquare = instance.m_areaGrid[(z * GameAreaGridResolution) + x];
+                        newAreaGrid[((z + 2) * ExpandedAreaGridResolution) + x + 2] = gridSquare;
+                    }
+                }
+
+                // Replace existing fields with 81 tiles replacements.
+                instance.m_areaCount = ExpandedMaxAreaCount;
+                instance.m_areaGrid = newAreaGrid;
+            }
         }
 
         /// <summary>
@@ -127,5 +146,12 @@ namespace EightyOne2.Patches
                 }
             }
         }
+
+        /// <summary>
+        /// Legacy container type converter.
+        /// </summary>
+        /// <param name="legacyTypeName">Legacy type name (ignored).</param>
+        /// <returns>DistrictDataContainer type.</returns>
+        private static Type LegacyTypeConverter(string legacyTypeName) => typeof(GameAreaDataContainer);
     }
 }

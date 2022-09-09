@@ -104,7 +104,7 @@ namespace EightyOne2.Patches
             ExpandedPulseGroup[] newPulseGroups = PulseGroups;
             ExpandedPulseUnit[] newPulseUnits = PulseUnits;
 
-            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue("fakeEM", out byte[] data))
+            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(ElectricityDataSerializer.DataID, out byte[] data))
             {
                 Logging.Message("found expanded electricity data");
                 using (MemoryStream stream = new MemoryStream(data))

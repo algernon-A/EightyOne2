@@ -15,8 +15,10 @@ namespace EightyOne2.Serialization
     /// </summary>
     public class DistrictDataSerializer : SerializableDataExtensionBase
     {
-        // Legacy 81 tiles data ID.
-        private const string DataID = "fakeDM";
+        /// <summary>
+        /// Legacy 81 tiles data ID.
+        /// </summary>
+        internal const string DataID = "fakeDM";
 
         // Data version (last legacy 81 tiles version was 3).
         private const int DataVersion = 4;
