@@ -7,9 +7,9 @@ namespace EightyOne2.Patches
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
     using AlgernonCommons;
-    using ColossalFramework;
     using HarmonyLib;
     using UnityEngine;
     using static ElectricityManager;
@@ -18,8 +18,6 @@ namespace EightyOne2.Patches
     /// Harmomy patches for the game's electricity manager to implement 81 tiles functionality.
     /// </summary>
     [HarmonyPatch(typeof(ElectricityManager))]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1311:Static readonly fields should begin with upper-case letter", Justification = "Dotnet runtime style")]
     internal static class ElectricityManagerPatches
     {
         /// <summary>
@@ -52,23 +50,15 @@ namespace EightyOne2.Patches
         /// </summary>
         internal const float ExpandedElectricityGridHalfResolution = ExpandedElectricityGridResolution / 2;
 
-        // Limits.
-        private const int GameElectricityGridMax = GameElectricityGridResolution - 1;
-        private const int ExpandedElectricityGridMax = ExpandedElectricityGridResolution - 1;
-
-        // Private arrays.
-        private static readonly ExpandedPulseGroup[] s_pulseGroups = new ExpandedPulseGroup[MAX_PULSE_GROUPS];
-        private static readonly ExpandedPulseUnit[] s_pulseUnits = new ExpandedPulseUnit[32786];
+        /// <summary>
+        /// Game electricity grid resolution maximum bound (resolution - 1 = 255).
+        /// </summary>
+        internal const int GameElectricityGridMax = GameElectricityGridResolution - 1;
 
         /// <summary>
-        /// Gets the expanded pulse group array.
+        /// Expanded electricity grid resolution maximum bound (resolution - 1 = 461).
         /// </summary>
-        internal static ExpandedPulseGroup[] PulseGroups => s_pulseGroups;
-
-        /// <summary>
-        /// Gets the expanded pulse unit array.
-        /// </summary>
-        internal static ExpandedPulseUnit[] PulseUnits => s_pulseUnits;
+        internal const int ExpandedElectricityGridMax = ExpandedElectricityGridResolution - 1;
 
         /// <summary>
         /// Replaces any references to default constants in the provided code with updated 81 tile values.
@@ -104,6 +94,23 @@ namespace EightyOne2.Patches
 
                 yield return instruction;
             }
+        }
+
+        /// <summary>
+        /// Reverse patch for ElectricityManager.UpdateNodeElectricity to access private method of original instance.
+        /// </summary>
+        /// <param name="instance">ElectricityManager instance.</param>
+        /// <param name="nodeID">ID of of node to update.</param>
+        /// <param name="value">Value to apply.</param>
+        /// <exception cref="NotImplementedException">Reverse patch wasn't applied.</exception>
+        [HarmonyReversePatch(HarmonyReversePatchType.Snapshot)]
+        [HarmonyPatch("UpdateNodeElectricity")]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void UpdateNodeElectricity(ElectricityManager instance, int nodeID, int value)
+        {
+            string message = "UpdateNodeElectricity reverse Harmony patch wasn't applied";
+            Logging.Error(message, instance, nodeID, value);
+            throw new NotImplementedException(message);
         }
 
         /// <summary>
@@ -144,6 +151,7 @@ namespace EightyOne2.Patches
         private static IEnumerable<CodeInstruction> ConductToCellTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
         */
 
+        /*
         /// <summary>
         /// Pre-emptive Harmony prefix for ElectricityManager.ConductToCell using expanded structs.
         /// </summary>
@@ -229,6 +237,7 @@ namespace EightyOne2.Patches
             // Don't execute original method.
             return false;
         }
+        */
 
         /*
         /// <summary>
@@ -241,8 +250,9 @@ namespace EightyOne2.Patches
         private static IEnumerable<CodeInstruction> ConductToCellsTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
         */
 
+        /*
         /// <summary>
-        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNode for use in patched execution chains.
+        /// Pre-emptive Harmony prefix for ElectricityManager.ConductToCells for use in patched execution chains.
         /// </summary>>
         /// <param name="group">Group ID.</param>
         /// <param name="worldX">World x-coordinate.</param>
@@ -267,7 +277,9 @@ namespace EightyOne2.Patches
             // Don't execute original method.
             return false;
         }
+        */
 
+        /*
         /// <summary>
         /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNode using expanded structs.
         /// </summary>
@@ -330,7 +342,9 @@ namespace EightyOne2.Patches
             // Don't execute original method.
             return false;
         }
+        */
 
+        /*
         /// <summary>
         /// Pre-emptive Harmony prefix for ElectricityManager.ConductToNodes for use in patched execution chains.
         /// </summary>
@@ -377,6 +391,7 @@ namespace EightyOne2.Patches
             // Don't execute original method.
             return false;
         }
+        */
 
         /*
         /// <summary>
@@ -389,6 +404,7 @@ namespace EightyOne2.Patches
         private static IEnumerable<CodeInstruction> ConductToNodesTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
         */
 
+        /*
         /// <summary>
         /// Pre-emptive Harmony prefix for ElectricityManager.GetRootGroup for use in patched execution chains.
         /// </summary>
@@ -448,8 +464,38 @@ namespace EightyOne2.Patches
 
             // Don't execute original method.
             return false;
+        }*/
+
+        /// <summary>
+        /// Harmony transpiler for ElectricityManager.SimulationStepImpl to replace with call to our expanded electricity manager.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch("SimulationStepImpl")]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> SimulationStepImplTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldarg_1);
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ElectricityManager), "m_electricityGrid"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldflda, AccessTools.Field(typeof(ElectricityManager), "m_pulseGroupCount"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldflda, AccessTools.Field(typeof(ElectricityManager), "m_pulseUnitStart"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldflda, AccessTools.Field(typeof(ElectricityManager), "m_pulseUnitEnd"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldflda, AccessTools.Field(typeof(ElectricityManager), "m_processedCells"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldflda, AccessTools.Field(typeof(ElectricityManager), "m_conductiveCells"));
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldflda, AccessTools.Field(typeof(ElectricityManager), "m_canContinue"));
+            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ExpandedElectricityManager), nameof(ExpandedElectricityManager.SimulationStepImpl)));
+            yield return new CodeInstruction(OpCodes.Ret);
         }
 
+        /*
         /// <summary>
         /// Pre-emptive Harmony prefix for ElectricityManager.SimulationStepImpl using expanded structs.
         /// </summary>
@@ -515,8 +561,8 @@ namespace EightyOne2.Patches
                     __instance.m_nodeGroups[i] = ushort.MaxValue;
                 }
 
-                int num4 = (num * 256) >> 7;
-                int num5 = (((num + 1) * 256) >> 7) - 1;
+                int num4 = (num * ExpandedElectricityGridResolution) >> 7;
+                int num5 = (((num + 1) * ExpandedElectricityGridResolution) >> 7) - 1;
                 ExpandedPulseGroup pulseGroup = default;
                 ExpandedPulseUnit pulseUnit = default;
                 for (int j = num4; j <= num5; j++)
@@ -533,12 +579,12 @@ namespace EightyOne2.Patches
                                 pulseGroup.m_curCharge = (uint)cell.m_currentCharge;
                                 pulseGroup.m_mergeCount = 0;
                                 pulseGroup.m_mergeIndex = ushort.MaxValue;
-                                pulseGroup.m_x = (byte)k;
-                                pulseGroup.m_z = (byte)j;
+                                pulseGroup.m_x = (ushort)k;
+                                pulseGroup.m_z = (ushort)j;
                                 pulseUnit.m_group = (ushort)___m_pulseGroupCount;
                                 pulseUnit.m_node = 0;
-                                pulseUnit.m_x = (byte)k;
-                                pulseUnit.m_z = (byte)j;
+                                pulseUnit.m_x = (ushort)k;
+                                pulseUnit.m_z = (ushort)j;
                                 cell.m_pulseGroup = (ushort)___m_pulseGroupCount;
                                 s_pulseGroups[___m_pulseGroupCount++] = pulseGroup;
                                 s_pulseUnits[___m_pulseUnitEnd] = pulseUnit;
@@ -631,12 +677,12 @@ namespace EightyOne2.Patches
                                 ConductToCellPrefix(ref ___m_electricityGrid[num9 - 1], pulseUnit2.m_group, pulseUnit2.m_x - 1, pulseUnit2.m_z, limit, ___m_electricityGrid, ___m_pulseGroupCount, ref ___m_pulseUnitEnd, ref ___m_canContinue);
                             }
 
-                            if (pulseUnit2.m_z < ExpandedElectricityGridResolution)
+                            if (pulseUnit2.m_z < ExpandedElectricityGridMax)
                             {
                                 ConductToCellPrefix(ref ___m_electricityGrid[num9 + ExpandedElectricityGridResolution], pulseUnit2.m_group, pulseUnit2.m_x, pulseUnit2.m_z + 1, limit, ___m_electricityGrid, ___m_pulseGroupCount, ref ___m_pulseUnitEnd, ref ___m_canContinue);
                             }
 
-                            if (pulseUnit2.m_x < ExpandedElectricityGridResolution)
+                            if (pulseUnit2.m_x < ExpandedElectricityGridMax)
                             {
                                 ConductToCellPrefix(ref ___m_electricityGrid[num9 + 1], pulseUnit2.m_group, pulseUnit2.m_x + 1, pulseUnit2.m_z, limit, ___m_electricityGrid, ___m_pulseGroupCount, ref ___m_pulseUnitEnd, ref ___m_canContinue);
                             }
@@ -724,6 +770,7 @@ namespace EightyOne2.Patches
             // Don't execute original method.
             return false;
         }
+        */
 
         /// <summary>
         /// Harmony transpiler for ElectricityManager.TryDumpElectricity to replace hardcoded game constants.
@@ -782,17 +829,27 @@ namespace EightyOne2.Patches
             }
         }
 
-        /*
         /// <summary>
-        /// Harmony transpiler for ElectricityManager.UpdateGrid to replace hardcoded game constants.
+        /// Harmony transpiler for ElectricityManager.UpdateGrid to replace with call to our expanded electricity manager.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(ElectricityManager.UpdateGrid))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> UpdateGridTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceElectricityConstants(instructions);
-        */
+        private static IEnumerable<CodeInstruction> UpdateGridTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldarg_1);
+            yield return new CodeInstruction(OpCodes.Ldarg_2);
+            yield return new CodeInstruction(OpCodes.Ldarg_3);
+            yield return new CodeInstruction(OpCodes.Ldarg_S, 4);
+            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ElectricityManager), "m_electricityGrid"));
+            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ExpandedElectricityManager), nameof(ExpandedElectricityManager.UpdateGrid)));
+            yield return new CodeInstruction(OpCodes.Ret);
+        }
 
+        /*
         /// <summary>
         /// Pre-emptive Harmony prefix for ElectricityManager.UpdateGrid due to the complexity of transpiling this one.
         /// </summary>
@@ -816,8 +873,7 @@ namespace EightyOne2.Patches
                 int num5 = (i * ExpandedElectricityGridResolution) + num;
                 for (int j = num; j <= num3; j++)
                 {
-                    ___m_electricityGrid[num5].m_conductivity = 0;
-                    num5++;
+                    ___m_electricityGrid[num5++].m_conductivity = 0;
                 }
             }
 
@@ -920,6 +976,7 @@ namespace EightyOne2.Patches
             __instance.AreaModified(num, num2, num3, num4);
             return false;
         }
+        */
 
         /// <summary>
         /// Harmony transpiler for ElectricityManager.UpdateTexture to replace hardcoded game constants.
@@ -1025,50 +1082,5 @@ namespace EightyOne2.Patches
             Logging.Error(message, instance, group);
             throw new NotImplementedException(message);
         }*/
-
-        /// <summary>
-        /// Reverse patch for ElectricityManager.UpdateNodeElectricity to access private method of original instance.
-        /// </summary>
-        /// <param name="instance">ElectricityManager instance.</param>
-        /// <param name="nodeID">ID of of node to update.</param>
-        /// <param name="value">Value to apply.</param>
-        /// <exception cref="NotImplementedException">Reverse patch wasn't applied.</exception>
-        [HarmonyReversePatch(HarmonyReversePatchType.Snapshot)]
-        [HarmonyPatch("UpdateNodeElectricity")]
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void UpdateNodeElectricity(ElectricityManager instance, int nodeID, int value)
-        {
-            string message = "UpdateNodeElectricity reverse Harmony patch wasn't applied";
-            Logging.Error(message, instance, nodeID, value);
-            throw new NotImplementedException(message);
-        }
-
-        /// <summary>
-        /// Expanded game PulseGroup struct to handle coordinate ranges outside byte limits.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Uses game names")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Game struct")]
-        internal struct ExpandedPulseGroup
-        {
-            public uint m_origCharge;
-            public uint m_curCharge;
-            public ushort m_mergeIndex;
-            public ushort m_mergeCount;
-            public ushort m_x;
-            public ushort m_z;
-        }
-
-        /// <summary>
-        /// Expanded game PulseUnit struct to handle coordinate ranges outside byte limits.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Uses game names")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Game struct")]
-        internal struct ExpandedPulseUnit
-        {
-            public ushort m_group;
-            public ushort m_node;
-            public ushort m_x;
-            public ushort m_z;
-        }
     }
 }

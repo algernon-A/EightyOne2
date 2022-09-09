@@ -17,6 +17,7 @@ namespace EightyOne2.Patches
     using UnityEngine;
     using static ElectricityManager;
     using static ElectricityManagerPatches;
+    using static ExpandedElectricityManager;
 
     /// <summary>
     /// Harmony patches for the electricity manager's data handling to implement 81 tiles functionality.

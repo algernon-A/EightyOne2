@@ -10,6 +10,7 @@ namespace EightyOne2.Serialization
     using HarmonyLib;
     using static ElectricityManager;
     using static Patches.ElectricityManagerPatches;
+    using static Patches.ExpandedElectricityManager;
 
     /// <summary>
     /// Savegame data container for expanded district data.
