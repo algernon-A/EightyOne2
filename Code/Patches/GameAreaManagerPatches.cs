@@ -620,6 +620,7 @@ namespace EightyOne2.Patches
                     if (instruction.opcode == OpCodes.Ldc_I4_5)
                     {
                         Logging.Message("replacing ldc.i4.5");
+
                         // Grid width, i.e. 5 -> 9.  Need to replace opcode here as well due to larger constant.
                         instruction.opcode = OpCodes.Ldc_I4;
                         instruction.operand = ExpandedAreaGridResolution;

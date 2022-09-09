@@ -181,5 +181,14 @@ namespace EightyOne2.Patches
             yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(TerrainManagerPatches), nameof(TerrainManagerPatches.GetSurfaceCell)));
             yield return new CodeInstruction(OpCodes.Ret);
         }
+
+        /// <summary>
+        /// Harmony transpiler for TerrainManager.SetDetailedPatch to slightly enlarge terrain detail array size..
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(TerrainManager.SetDetailedPatch))]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> SetDetailedPatchTranspiler(IEnumerable<CodeInstruction> instructions) => IncreaseArraySizes(instructions);
     }
 }
