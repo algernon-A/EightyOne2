@@ -19,7 +19,7 @@ namespace EightyOne2.Patches
     {
         // Expanded arrays.
         private static readonly ExpandedPulseGroup[] s_pulseGroups = new ExpandedPulseGroup[MAX_PULSE_GROUPS];
-        private static readonly ExpandedPulseUnit[] s_pulseUnits = new ExpandedPulseUnit[32786];
+        private static readonly ExpandedPulseUnit[] s_pulseUnits = new ExpandedPulseUnit[32768];
 
         // Electric roads status.
         private static bool s_electricRoads = false;

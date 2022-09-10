@@ -23,7 +23,7 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Game electricity grid array size (256 * 256 = 65,536).
         /// </summary>
-        internal const int GameElectricyGridArraySize = ELECTRICITYGRID_RESOLUTION * ELECTRICITYGRID_RESOLUTION;
+        internal const int GameElectricityGridArraySize = ELECTRICITYGRID_RESOLUTION * ELECTRICITYGRID_RESOLUTION;
 
         /// <summary>
         /// Expanded electricity grid array size (462 * 462 = 213444).

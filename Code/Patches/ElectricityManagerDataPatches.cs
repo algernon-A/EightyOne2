@@ -133,34 +133,30 @@ namespace EightyOne2.Patches
 
                 // Convert PulseGroups.
                 ExpandedPulseGroup[] expandedPulseGroups = PulseGroups;
+                for (int i = 0; i < pulseGroups.Length; ++i)
                 {
-                    for (int i = 0; i < pulseGroups.Length; ++i)
+                    expandedPulseGroups[i] = new ExpandedPulseGroup
                     {
-                        expandedPulseGroups[i] = new ExpandedPulseGroup
-                        {
-                            m_origCharge = pulseGroups[i].m_origCharge,
-                            m_curCharge = pulseGroups[i].m_curCharge,
-                            m_mergeIndex = pulseGroups[i].m_mergeIndex,
-                            m_mergeCount = pulseGroups[i].m_mergeCount,
-                            m_x = pulseGroups[i].m_x,
-                            m_z = pulseGroups[i].m_z,
-                        };
-                    }
+                        m_origCharge = pulseGroups[i].m_origCharge,
+                        m_curCharge = pulseGroups[i].m_curCharge,
+                        m_mergeIndex = pulseGroups[i].m_mergeIndex,
+                        m_mergeCount = pulseGroups[i].m_mergeCount,
+                        m_x = pulseGroups[i].m_x,
+                        m_z = pulseGroups[i].m_z,
+                    };
                 }
 
                 // Convert PulseUnits.
                 ExpandedPulseUnit[] expandedPulseUnits = PulseUnits;
+                for (int i = 0; i < pulseUnits.Length; ++i)
                 {
-                    for (int i = 0; i < pulseUnits.Length; ++i)
+                    expandedPulseUnits[i] = new ExpandedPulseUnit
                     {
-                        expandedPulseUnits[i] = new ExpandedPulseUnit
-                        {
-                            m_group = pulseUnits[i].m_group,
-                            m_node = pulseUnits[i].m_node,
-                            m_x = pulseUnits[i].m_x,
-                            m_z = pulseUnits[i].m_z,
-                        };
-                    }
+                        m_group = pulseUnits[i].m_group,
+                        m_node = pulseUnits[i].m_node,
+                        m_x = pulseUnits[i].m_x,
+                        m_z = pulseUnits[i].m_z,
+                    };
                 }
             }
         }
@@ -176,7 +172,7 @@ namespace EightyOne2.Patches
         private static Cell[] CustomSerialize(Cell[] electricityGrid, PulseGroup[] pulseGroups, PulseUnit[] pulseUnits)
         {
             // New (temporary) vanilla electricity grid for saving.
-            Cell[] vanillaElectricityGrid = new Cell[GameElectricyGridArraySize];
+            Cell[] vanillaElectricityGrid = new Cell[GameElectricityGridArraySize];
 
             for (int z = 0; z < GameElectricityGridResolution; ++z)
             {
@@ -199,8 +195,8 @@ namespace EightyOne2.Patches
                         m_curCharge = expandedPulseGroups[i].m_curCharge,
                         m_mergeIndex = expandedPulseGroups[i].m_mergeIndex,
                         m_mergeCount = expandedPulseGroups[i].m_mergeCount,
-                        m_x = (byte)Mathf.Clamp(expandedPulseGroups[i].m_x, 0, 255),
-                        m_z = (byte)Mathf.Clamp(expandedPulseGroups[i].m_z, 0, 255),
+                        m_x = (byte)Mathf.Clamp(expandedPulseGroups[i].m_x, 0, byte.MaxValue),
+                        m_z = (byte)Mathf.Clamp(expandedPulseGroups[i].m_z, 0, byte.MaxValue),
                     };
                 }
             }
@@ -214,8 +210,8 @@ namespace EightyOne2.Patches
                     {
                         m_group = pulseUnits[i].m_group,
                         m_node = pulseUnits[i].m_node,
-                        m_x = (byte)Mathf.Clamp(expandedPulseUnits[i].m_x, 0, 255),
-                        m_z = (byte)Mathf.Clamp(expandedPulseUnits[i].m_z, 0, 255),
+                        m_x = (byte)Mathf.Clamp(expandedPulseUnits[i].m_x, 0, byte.MaxValue),
+                        m_z = (byte)Mathf.Clamp(expandedPulseUnits[i].m_z, 0, byte.MaxValue),
                     };
                 }
             }
