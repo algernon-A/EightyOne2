@@ -13,7 +13,7 @@ namespace EightyOne2.Patches
     /// <summary>
     /// Harmomy patches for the game's water manager to remove the need for water transmission ('no pipes').
     /// </summary>
-    [HarmonyPatch(typeof(WaterManager))]
+    // [HarmonyPatch(typeof(WaterManager))]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
     public static class NoPipesPatches
     {
