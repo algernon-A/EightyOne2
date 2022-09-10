@@ -26,7 +26,7 @@ namespace EightyOne2.Patches
     internal static class ElectricityManagerDataPatches
     {
         // Data conversion offset - outer margin of 25-tile data when placed in an 81-tile context.
-        private const int CellConversionOffset = (int)ExpandedElectricityGridHalfResolution - (int)GameElectricyGridHalfResolution;
+        private const int CellConversionOffset = (int)ExpandedElectricityGridHalfResolution - (int)GameElectricityGridHalfResolution;
 
         /// <summary>
         /// Harmony transpiler for ElectricityManager.Data.AfterDeserialize to replace hardcoded game constants.

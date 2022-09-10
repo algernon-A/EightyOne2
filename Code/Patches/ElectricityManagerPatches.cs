@@ -43,7 +43,7 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Game electricty grid half-resolution (128f).
         /// </summary>
-        internal const float GameElectricyGridHalfResolution = GameElectricityGridResolution / 2;
+        internal const float GameElectricityGridHalfResolution = GameElectricityGridResolution / 2;
 
         /// <summary>
         /// Expanded electricty grid half-resolution (231f).
@@ -80,7 +80,7 @@ namespace EightyOne2.Patches
                     // Electricity grid array maximum index i.e. 255->461.
                     instruction.operand = ExpandedElectricityGridMax;
                 }
-                else if (instruction.LoadsConstant(GameElectricyGridHalfResolution))
+                else if (instruction.LoadsConstant(GameElectricityGridHalfResolution))
                 {
                     // Electricity grid array half-size i.e. 12f8->231f.
                     instruction.operand = ExpandedElectricityGridHalfResolution;
