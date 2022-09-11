@@ -5,9 +5,14 @@
 
 namespace EightyOne2.Patches
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Reflection.Emit;
     using AlgernonCommons;
+    using ColossalFramework;
+    using ColossalFramework.IO;
+    using EightyOne2.Serialization;
     using HarmonyLib;
     using UnityEngine;
     using static ExpandedWaterManager;
@@ -101,7 +106,7 @@ namespace EightyOne2.Patches
         /// <param name="heatingPulseUnits">WaterManager m_heatingPulseUnits array.</param>
         private static void CustomDeserialize(WaterManager waterManager, Cell[] waterGrid, PulseUnit[] waterPulseUnits, PulseUnit[] sewagePulseUnits, PulseUnit[] heatingPulseUnits)
         {
-            /*if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(WaterDataSerializer.DataID, out byte[] data))
+            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(WaterDataSerializer.DataID, out byte[] data))
             {
                 Logging.Message("found expanded water data");
                 using (MemoryStream stream = new MemoryStream(data))
@@ -109,7 +114,7 @@ namespace EightyOne2.Patches
                     DataSerializer.Deserialize<WaterDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
                 }
             }
-            else*/
+            else
             {
                 Logging.Message("no expanded water data found - coverting vanilla data");
 
@@ -167,6 +172,11 @@ namespace EightyOne2.Patches
             return vanillaWaterGrid;
         }
 
+        /// <summary>
+        /// Converts vanilla pulse units to expanded pulse units.
+        /// </summary>
+        /// <param name="expandedPulseUnits">Expanded pulse unit array.</param>
+        /// <param name="pulseUnits">Banilla pulse unit array.</param>
         private static void ConvertVanillaPulseUnits(ExpandedPulseUnit[] expandedPulseUnits, PulseUnit[] pulseUnits)
         {
             for (int i = 0; i < pulseUnits.Length; ++i)
@@ -181,6 +191,11 @@ namespace EightyOne2.Patches
             }
         }
 
+        /// <summary>
+        /// Converts expanded pulse units to vanilla pulse units.
+        /// </summary>
+        /// <param name="expandedPulseUnits">Expanded pulse unit array.</param>
+        /// <param name="pulseUnits">Banilla pulse unit array.</param>
         private static void ConvertExpandedPulseUnits(ExpandedPulseUnit[] expandedPulseUnits, PulseUnit[] pulseUnits)
         {
             for (int i = 0; i < pulseUnits.Length; ++i)
@@ -200,6 +215,6 @@ namespace EightyOne2.Patches
         /// </summary>
         /// <param name="legacyTypeName">Legacy type name (ignored).</param>
         /// <returns>WaterDataContainer type.</returns>
-        //private static Type LegacyTypeConverter(string legacyTypeName) => typeof(WaterDataContainer);
+        private static Type LegacyTypeConverter(string legacyTypeName) => typeof(WaterDataContainer);
     }
 }

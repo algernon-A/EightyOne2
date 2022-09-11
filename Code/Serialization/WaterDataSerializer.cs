@@ -1,4 +1,4 @@
-﻿// <copyright file="ElectricityDataSerializer.cs" company="algernon (K. Algernon A. Sheppard)">
+﻿// <copyright file="WaterDataSerializer.cs" company="algernon (K. Algernon A. Sheppard)">
 // Copyright (c) algernon (K. Algernon A. Sheppard). All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 // </copyright>
@@ -13,12 +13,12 @@ namespace EightyOne2.Serialization
     /// <summary>
     /// Serialization for expanded district data.
     /// </summary>
-    public class ElectricityDataSerializer : SerializableDataExtensionBase
+    public class WaterDataSerializer : SerializableDataExtensionBase
     {
         /// <summary>
         /// Legacy 81 tiles data ID.
         /// </summary>
-        internal const string DataID = "fakeEM";
+        internal const string DataID = "fakeWM";
 
         // Data version (last legacy 81 tiles version was 114012u).
         private const uint DataVersion = 114013u;
@@ -33,12 +33,12 @@ namespace EightyOne2.Serialization
 
             using (MemoryStream stream = new MemoryStream())
             {
-                // Serialise extended electricity data.
-                DataSerializer.Serialize(stream, DataSerializer.Mode.Memory, DataVersion, new ElectricityDataContainer());
+                // Serialise extended water data.
+                DataSerializer.Serialize(stream, DataSerializer.Mode.Memory, DataVersion, new WaterDataContainer());
 
                 // Write to savegame.
                 serializableDataManager.SaveData(DataID, stream.ToArray());
-                Logging.Message("wrote expanded electricity data length ", stream.Length);
+                Logging.Message("wrote expanded water data length ", stream.Length);
             }
         }
 
@@ -48,7 +48,7 @@ namespace EightyOne2.Serialization
         /// </summary>
         public override void OnLoadData()
         {
-            // Deserialization is done at ElectricityManager.Deserialize (inserted by transpiler).
+            // Deserialization is done at WaterManager.Deserialize (inserted by transpiler).
         }
     }
 }

@@ -98,7 +98,7 @@ namespace EightyOne2.Serialization
 
             encodedBools.EndWrite();
 
-            AlgernonCommons.Logging.Message("writing pulseGroups");
+            AlgernonCommons.Logging.Message("writing electricity pulseGroups");
 
             // Pulse groups.
             ExpandedPulseGroup[] pulseGroups = PulseGroups;
