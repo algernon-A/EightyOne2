@@ -106,65 +106,75 @@ namespace EightyOne2.Patches
                     nodeGroups[i] = ushort.MaxValue;
                 }
 
-                int num4 = (num * ExpandedElectricityGridResolution) >> 7;
-                int num5 = (((num + 1) * ExpandedElectricityGridResolution) >> 7) - 1;
-                ExpandedPulseGroup pulseGroup = default;
-                ExpandedPulseUnit pulseUnit = default;
-                for (int j = num4; j <= num5; j++)
+                /* Start framing rewrite.
+                 * Original does two rows per frame, we'll do four, but have to check upper bound.
+                 */
+                int startRow = num * 4;
+                int endRow = Mathf.Min(startRow + 3, ExpandedElectricityGridMax);
+
+                if (startRow < endRow)
                 {
-                    int num6 = j * ExpandedElectricityGridResolution;
-                    for (int k = 0; k < ExpandedElectricityGridResolution; k++)
+                    ExpandedPulseGroup pulseGroup = default;
+                    ExpandedPulseUnit pulseUnit = default;
+                    for (int j = startRow; j <= endRow; j++)
                     {
-                        Cell cell = electricityGrid[num6];
-                        if (cell.m_currentCharge > 0)
+                        int num6 = j * ExpandedElectricityGridResolution;
+                        for (int k = 0; k < ExpandedElectricityGridResolution; k++)
                         {
-                            if (pulseGroupCount < 1024)
+                            Cell cell = electricityGrid[num6];
+                            if (cell.m_currentCharge > 0)
                             {
-                                pulseGroup.m_origCharge = (uint)cell.m_currentCharge;
-                                pulseGroup.m_curCharge = (uint)cell.m_currentCharge;
-                                pulseGroup.m_mergeCount = 0;
-                                pulseGroup.m_mergeIndex = ushort.MaxValue;
-                                pulseGroup.m_x = (ushort)k;
-                                pulseGroup.m_z = (ushort)j;
-                                pulseUnit.m_group = (ushort)pulseGroupCount;
-                                pulseUnit.m_node = 0;
-                                pulseUnit.m_x = (ushort)k;
-                                pulseUnit.m_z = (ushort)j;
-                                cell.m_pulseGroup = (ushort)pulseGroupCount;
-                                pulseGroups[pulseGroupCount++] = pulseGroup;
-                                pulseUnits[pulseUnitEnd] = pulseUnit;
-                                if (++pulseUnitEnd == pulseUnits.Length)
+                                if (pulseGroupCount < 1024)
                                 {
-                                    pulseUnitEnd = 0;
+                                    pulseGroup.m_origCharge = (uint)cell.m_currentCharge;
+                                    pulseGroup.m_curCharge = (uint)cell.m_currentCharge;
+                                    pulseGroup.m_mergeCount = 0;
+                                    pulseGroup.m_mergeIndex = ushort.MaxValue;
+                                    pulseGroup.m_x = (ushort)k;
+                                    pulseGroup.m_z = (ushort)j;
+                                    pulseUnit.m_group = (ushort)pulseGroupCount;
+                                    pulseUnit.m_node = 0;
+                                    pulseUnit.m_x = (ushort)k;
+                                    pulseUnit.m_z = (ushort)j;
+                                    cell.m_pulseGroup = (ushort)pulseGroupCount;
+                                    pulseGroups[pulseGroupCount++] = pulseGroup;
+                                    pulseUnits[pulseUnitEnd] = pulseUnit;
+                                    if (++pulseUnitEnd == pulseUnits.Length)
+                                    {
+                                        pulseUnitEnd = 0;
+                                    }
                                 }
+                                else
+                                {
+                                    cell.m_pulseGroup = ushort.MaxValue;
+                                }
+
+                                cell.m_currentCharge = 0;
+                                conductiveCells++;
                             }
                             else
                             {
                                 cell.m_pulseGroup = ushort.MaxValue;
+                                if (cell.m_conductivity >= 64)
+                                {
+                                    conductiveCells++;
+                                }
                             }
 
-                            cell.m_currentCharge = 0;
-                            conductiveCells++;
-                        }
-                        else
-                        {
-                            cell.m_pulseGroup = ushort.MaxValue;
-                            if (cell.m_conductivity >= 64)
+                            if (cell.m_tmpElectrified != cell.m_electrified)
                             {
-                                conductiveCells++;
+                                cell.m_electrified = cell.m_tmpElectrified;
                             }
-                        }
 
-                        if (cell.m_tmpElectrified != cell.m_electrified)
-                        {
-                            cell.m_electrified = cell.m_tmpElectrified;
-                        }
+                            cell.m_tmpElectrified = cell.m_pulseGroup != ushort.MaxValue;
+                            electricityGrid[num6] = cell;
 
-                        cell.m_tmpElectrified = cell.m_pulseGroup != ushort.MaxValue;
-                        electricityGrid[num6] = cell;
-                        num6++;
+                            num6++;
+                        }
                     }
                 }
+
+                /* End framing rewrite. */
 
                 return;
             }

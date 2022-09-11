@@ -224,9 +224,15 @@ namespace EightyOne2.Patches
                     instance.m_nodeData[i] = node;
                 }
 
-                int num4 = (num * ExpandedWaterGridResolution) >> 7;
-                int num5 = (((num + 1) * ExpandedWaterGridResolution) >> 7) - 1;
-                for (int j = num4; j <= num5; j++)
+                /* Start framing rewrite.
+                 * Original does two rows per frame, we'll do four, but have to check upper bound.
+                 */
+                int startRow = num * 4;
+                int endRow = Mathf.Min(startRow + 3, ExpandedWaterGridMax);
+
+                if (startRow < endRow)
+                {
+                    for (int j = startRow; j <= endRow; j++)
                     {
                         int num6 = j * ExpandedWaterGridResolution;
                         for (int k = 0; k < ExpandedWaterGridResolution; k++)
@@ -262,6 +268,9 @@ namespace EightyOne2.Patches
                             num6++;
                         }
                     }
+                }
+
+                /* End framing rewrite. */
 
                 return;
             }
