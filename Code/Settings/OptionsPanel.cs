@@ -48,6 +48,10 @@ namespace EightyOne2
             electricRoadsCheck.tooltip = Translations.Translate("ELECTRIC_ROADS_TIP");
             electricRoadsCheck.tooltipBox = UIToolTips.WordWrapToolTip;
 
+            UICheckBox noPipesCheck = netGroup.AddCheckbox(Translations.Translate("NO_PIPES"), NoPipesPatches.NoPipesEnabled, (isChecked) => NoPipesPatches.NoPipesEnabled = isChecked) as UICheckBox;
+            noPipesCheck.tooltip = Translations.Translate("NO_PIPES_TIP");
+            noPipesCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+
             // Unlock buttons (only if in-game).
             if (Loading.IsLoaded)
             {

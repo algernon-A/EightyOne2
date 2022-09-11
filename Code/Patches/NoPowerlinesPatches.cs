@@ -39,7 +39,7 @@ namespace EightyOne2.Patches
             {
                 electricity = s_electricityPool > 0;
 
-                // Always pre-empt original method.
+                // Pre-empt original method.
                 return false;
             }
 
@@ -62,7 +62,7 @@ namespace EightyOne2.Patches
                 __result = Mathf.Clamp(rate, 0, max);
                 s_electricityPool += __result;
 
-                // Always pre-empt original method.
+                // Pre-empt original method.
                 return false;
             }
 
@@ -85,7 +85,7 @@ namespace EightyOne2.Patches
                 __result = Mathf.Clamp(rate, 0, max);
                 s_electricityPool += __result;
 
-                // Always pre-empt original method.
+                // Pre-empt original method.
                 return false;
             }
 
@@ -108,7 +108,7 @@ namespace EightyOne2.Patches
                 __result = Mathf.Clamp(Math.Min(rate, max), 0, s_electricityPool);
                 s_electricityPool -= __result;
 
-                // Always pre-empt original method.
+                // Pre-empt original method.
                 return false;
             }
 

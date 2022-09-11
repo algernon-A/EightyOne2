@@ -34,6 +34,12 @@ namespace EightyOne2
         public bool XMLElectricRoads { get => ExpandedElectricityManager.ElectricRoadsEnabled; set => ExpandedElectricityManager.ElectricRoadsEnabled = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'no powerlines' functionality is enabled.
+        /// </summary>
+        [XmlElement("NoPipes")]
+        public bool XMLNoPipes { get => NoPipesPatches.NoPipesEnabled; set => NoPipesPatches.NoPipesEnabled = value; }
+
+        /// <summary>
         /// Loads settings from file.
         /// </summary>
         internal static void Load() => XMLFileUtils.Load<ModSettings>(SettingsFileName);

@@ -20,5 +20,5 @@
 "NO_POWERLINES_TIP","When this is enabled, buildings no longer need to be conencted with powerlines (you will still need to produce electricity).","Tooltip in options panel."
 "ELECTRIC_ROADS","Enable electricity transmission along roads","Option in options panel - activates 'electric roads' functionality."
 "ELECTRIC_ROADS_TIP","When this is enabled, roads will conduct electricy as though they are powerlines.","Tooltip in options panel."
-"NO_PIPES,"Enable water, sewage, and heating transmission without pipes","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES","Enable water, sewage, and heating transmission without pipes","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","When this is enabled, buildings no longer need to be conencted with water or heating pipes (you will still need to provide water and sewage treatment, and heating plants if desired).","Tooltip in options panel."

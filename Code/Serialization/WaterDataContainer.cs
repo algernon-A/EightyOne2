@@ -29,7 +29,7 @@ namespace EightyOne2.Serialization
             WaterManager waterManager = Singleton<WaterManager>.instance;
 
             // Water grid.
-            Cell[] waterGrid = AccessTools.Field(typeof(WaterManager), "m_electricityGrid").GetValue(waterManager) as Cell[];
+            Cell[] waterGrid = AccessTools.Field(typeof(WaterManager), "m_waterGrid").GetValue(waterManager) as Cell[];
             int gridLength = waterGrid.Length;
             EncodedArray.Byte encodedBytes = EncodedArray.Byte.BeginWrite(serializer);
             for (int i = 0; i < gridLength; ++i)

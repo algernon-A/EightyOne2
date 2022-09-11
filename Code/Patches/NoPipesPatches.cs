@@ -13,10 +13,13 @@ namespace EightyOne2.Patches
     /// <summary>
     /// Harmomy patches for the game's water manager to remove the need for water transmission ('no pipes').
     /// </summary>
-    // [HarmonyPatch(typeof(WaterManager))]
+    [HarmonyPatch(typeof(WaterManager))]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
     public static class NoPipesPatches
     {
+        // Enabled status.
+        private static bool s_noPipesEnabled = false;
+
         // Centralised electricity pool.
         private static int s_waterPool = 0;
 
@@ -30,18 +33,28 @@ namespace EightyOne2.Patches
         private static byte s_waterPollution = 0;
 
         /// <summary>
+        /// Gets or sets a value indicating whether the 'no pipes' functionality is enabled.
+        /// </summary>
+        internal static bool NoPipesEnabled { get => s_noPipesEnabled; set => s_noPipesEnabled = value; }
+
+        /// <summary>
         /// Pre-emptive Harmony prefix patch to WaterManager.CheckHeating to implement 'no pipes' functionality.
         /// </summary>
         /// <param name="heating">Set to true if heating is available, false otherwise.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.CheckHeating))]
         [HarmonyPrefix]
-        public static bool CheckHeatingPrefix(out bool heating)
+        public static bool CheckHeatingPrefix(ref bool heating)
         {
-            heating = s_heatingPool > 0;
+            if (s_noPipesEnabled)
+            {
+                heating = s_heatingPool > 0;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -50,19 +63,24 @@ namespace EightyOne2.Patches
         /// <param name="water">Set to true if water is available, false otherwise.</param>
         /// <param name="sewage">Set to true if sewage is available, false otherwise.</param>
         /// <param name="waterPollution">Current water pollution level.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.CheckWater))]
         [HarmonyPrefix]
-        public static bool CheckWaterPrefix(out bool water, out bool sewage, out byte waterPollution)
+        public static bool CheckWaterPrefix(ref bool water, ref bool sewage, ref byte waterPollution)
         {
-            water = s_waterPool > 0;
-            sewage = s_sewagePool > 0;
+            if (s_noPipesEnabled)
+            {
+                water = s_waterPool > 0;
+                sewage = s_sewagePool > 0;
 
-            // Return zero for water pollution if no water.
-            waterPollution = s_waterPool > 0 ? s_waterPollution : byte.MinValue;
+                // Return zero for water pollution if no water.
+                waterPollution = s_waterPool > 0 ? s_waterPollution : byte.MinValue;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -71,16 +89,21 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result (sewage removal dumped 'to' grid).</param>
         /// <param name="rate">Water production rate.</param>
         /// <param name="max">Maximum water production rate.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryDumpHeating))]
         [HarmonyPrefix]
         public static bool TryDumpHeatingPrefix(ref int __result, int rate, int max)
         {
-            __result = Mathf.Clamp(rate, 0, max);
-            s_heatingPool += __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Mathf.Clamp(rate, 0, max);
+                s_heatingPool += __result;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -89,18 +112,23 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result (sewage removal dumped 'to' grid).</param>
         /// <param name="rate">Water production rate.</param>
         /// <param name="max">Maximum water production rate.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(
             nameof(WaterManager.TryDumpSewage),
             new Type[] { typeof(Vector3), typeof(int), typeof(int) })]
         [HarmonyPrefix]
         public static bool TryDumpSewage1Prefix(ref int __result, int rate, int max)
         {
-            __result = Mathf.Clamp(rate, 0, max);
-            s_sewagePool += __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Mathf.Clamp(rate, 0, max);
+                s_sewagePool += __result;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -109,18 +137,23 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result (sewage removal dumped 'to' grid).</param>
         /// <param name="rate">Water production rate.</param>
         /// <param name="max">Maximum water production rate.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(
             nameof(WaterManager.TryDumpSewage),
             new Type[] { typeof(Vector3), typeof(int), typeof(int) })]
         [HarmonyPrefix]
         public static bool TryDumpSewage2Prefix(ref int __result, int rate, int max)
         {
-            __result = Mathf.Clamp(rate, 0, max);
-            s_sewagePool += __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Mathf.Clamp(rate, 0, max);
+                s_sewagePool += __result;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -130,19 +163,24 @@ namespace EightyOne2.Patches
         /// <param name="rate">Water production rate.</param>
         /// <param name="max">Maximum water production rate.</param>
         /// <param name="waterPollution">Source water pollution level.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryDumpWater))]
         [HarmonyPrefix]
         public static bool TryDumpWaterPrefix(ref int __result, int rate, int max, byte waterPollution)
         {
-            __result = Mathf.Clamp(rate, 0, max);
-            s_waterPool += __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Mathf.Clamp(rate, 0, max);
+                s_waterPool += __result;
 
-            // TODO: implement pollution scaling.
-            s_waterPollution = waterPollution;
+                // TODO: implement pollution scaling.
+                s_waterPollution = waterPollution;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -152,19 +190,24 @@ namespace EightyOne2.Patches
         /// <param name="rate">Electricity production rate.</param>
         /// <param name="max">Maximum electricity production rate.</param>
         /// <param name="connected">Whether or not the building is considered connected to the heating network (controlls complaint display).</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryFetchHeating))]
         [HarmonyPrefix]
-        public static bool TryFetchHeatingPrefix(ref int __result, int rate, int max, out bool connected)
+        public static bool TryFetchHeatingPrefix(ref int __result, int rate, int max, ref bool connected)
         {
-            __result = Math.Min(Math.Min(rate, max), s_heatingPool);
-            s_heatingPool -= __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Math.Min(Math.Min(rate, max), s_heatingPool);
+                s_heatingPool -= __result;
 
-            // Assign connected status (true if we have any current heating capacity).
-            connected = Singleton<DistrictManager>.instance.m_districts.m_buffer[0].GetHeatingCapacity() > 0;
+                // Assign connected status (true if we have any current heating capacity).
+                connected = Singleton<DistrictManager>.instance.m_districts.m_buffer[0].GetHeatingCapacity() > 0;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -173,16 +216,21 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result (sewage removal 'fetched' from grid).</param>
         /// <param name="rate">Electricity production rate.</param>
         /// <param name="max">Maximum electricity production rate.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryFetchSewage))]
         [HarmonyPrefix]
         public static bool TryFetchSewagePrefix(ref int __result, int rate, int max)
         {
-            __result = Math.Min(Math.Min(rate, max), s_sewagePool);
-            s_sewagePool -= __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Math.Min(Math.Min(rate, max), s_sewagePool);
+                s_sewagePool -= __result;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -191,7 +239,7 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result (water fetched from grid).</param>
         /// <param name="rate">Electricity production rate.</param>
         /// <param name="max">Maximum electricity production rate.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(
             nameof(WaterManager.TryFetchWater),
             new Type[] { typeof(Vector3), typeof(int), typeof(int), typeof(byte) },
@@ -199,11 +247,16 @@ namespace EightyOne2.Patches
         [HarmonyPrefix]
         public static bool TryFetchWater1Prefix(ref int __result, int rate, int max)
         {
-            __result = Math.Min(Math.Min(rate, max), s_waterPool);
-            s_waterPool -= __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Math.Min(Math.Min(rate, max), s_waterPool);
+                s_waterPool -= __result;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -212,7 +265,7 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result (water fetched from grid).</param>
         /// <param name="rate">Electricity production rate.</param>
         /// <param name="max">Maximum electricity production rate.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(
             nameof(WaterManager.TryFetchWater),
             new Type[] { typeof(ushort), typeof(int), typeof(int), typeof(byte) },
@@ -220,11 +273,16 @@ namespace EightyOne2.Patches
         [HarmonyPrefix]
         public static bool TryFetchWater2Prefix(ref int __result, int rate, int max)
         {
-            __result = Math.Min(Math.Min(rate, max), s_waterPool);
-            s_waterPool -= __result;
+            if (s_noPipesEnabled)
+            {
+                __result = Math.Min(Math.Min(rate, max), s_waterPool);
+                s_waterPool -= __result;
 
-            // Always pre-empt original method.
-            return false;
+                // Pre-empt original method.
+                return false;
+            }
+
+            return true;
         }
     }
 }
