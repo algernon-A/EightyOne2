@@ -2,8 +2,13 @@
 	<PropertyGroup>
 		<TargetFramework>net35</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Title>81 Tiles 2</Title>
+		<AssemblyTitle>$(Title)</AssemblyTitle>
 		<Description>A Cities: Skylines mod.</Description>
-		<Version>0.2</Version>
+		<Authors>algernon</Authors>
+		<Copyright>Copyright © 2022 algernon</Copyright>
+		<Product>$(Title)</Product>
+		<Version>0.3</Version>
 		<ManagedDLLPath>$(MSBuildProgramFiles32)/Steam/steamapps/common/Cities_Skylines/Cities_Data/Managed</ManagedDLLPath>
 		<AssemblySearchPaths>
 			$(AssemblySearchPaths);
