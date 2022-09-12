@@ -6,7 +6,6 @@
 namespace EightyOne2.Patches
 {
     using System.Collections.Generic;
-    using System.Reflection.Emit;
     using HarmonyLib;
 
     /// <summary>
@@ -16,28 +15,13 @@ namespace EightyOne2.Patches
     internal class WaterFacilityAIPatches
     {
         /// <summary>
-        /// Harmony transpiler for WaterFacilityAI.ProduceGoods to replace hardcoded game constants.
+        /// Harmony transpiler for WaterFacilityAI.ProduceGoods to implement segment checking skipping for 'no pipes' functionality.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("ProduceGoods")]
         [HarmonyTranspiler]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Harmony")]
-        private static IEnumerable<CodeInstruction> ProduceGoodsTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            bool patched = false;
-
-            foreach (CodeInstruction instruction in instructions)
-            {
-                // Replace initial 'false' allocation to flag (local 5) with 'true'.
-                if (!patched && instruction.opcode == OpCodes.Ldc_I4_0)
-                {
-                    instruction.opcode = OpCodes.Ldc_I4_1;
-                    patched = true;
-                }
-
-                yield return instruction;
-            }
-        }
+        private static IEnumerable<CodeInstruction> ProduceGoodsTranspiler(IEnumerable<CodeInstruction> instructions) => NoPipesPatches.NoSegmentsTranspiler(instructions);
     }
 }

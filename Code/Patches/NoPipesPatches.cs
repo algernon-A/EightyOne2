@@ -6,6 +6,8 @@
 namespace EightyOne2.Patches
 {
     using System;
+    using System.Collections.Generic;
+    using System.Reflection.Emit;
     using ColossalFramework;
     using HarmonyLib;
     using UnityEngine;
@@ -35,7 +37,71 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Gets or sets a value indicating whether the 'no pipes' functionality is enabled.
         /// </summary>
-        internal static bool NoPipesEnabled { get => s_noPipesEnabled; set => s_noPipesEnabled = value; }
+        internal static bool NoPipesEnabled
+        {
+            get => s_noPipesEnabled;
+
+            set
+            {
+                s_noPipesEnabled = value;
+
+                // If game is loaded, we need to update all water nodes attached to water facility buildings, to ensure that 'no pipe connection' messages are displayed/cleared as appropriate.
+                if (Loading.IsLoaded)
+                {
+                    // Watch the threading!
+                    Singleton<SimulationManager>.instance.AddAction(() =>
+                    {
+                        // Local references.
+                        Building[] buildings = Singleton<BuildingManager>.instance.m_buildings.m_buffer;
+                        NetNode[] nodes = Singleton<NetManager>.instance.m_nodes.m_buffer;
+
+                        // Iterate through all buildings, looking for valid targets.
+                        for (ushort i = 0; i < buildings.Length; ++i)
+                        {
+                            // Extant buildings only.
+                            if ((buildings[i].m_flags & Building.Flags.Created) != 0)
+                            {
+                                // WaterFacilityAIs only.
+                                if (buildings[i].Info?.m_buildingAI is WaterFacilityAI)
+                                {
+                                    // If there's an attached node, update it.
+                                    ushort nodeID = buildings[i].m_netNode;
+                                    if (nodeID != 0)
+                                    {
+                                        nodes[nodeID].UpdateNode(nodeID);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Patches methods to suppress 'no connected segments' check.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        internal static IEnumerable<CodeInstruction> NoSegmentsTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            bool patched = false;
+
+            Harmony.DEBUG = true;
+
+            foreach (CodeInstruction instruction in instructions)
+            {
+                // Replace initial 'false' allocation to flag with custom setting.
+                if (!patched && instruction.opcode == OpCodes.Ldc_I4_0)
+                {
+                    instruction.opcode = OpCodes.Ldsfld;
+                    instruction.operand = AccessTools.Field(typeof(NoPipesPatches), nameof(s_noPipesEnabled));
+                    patched = true;
+                }
+
+                yield return instruction;
+            }
+        }
 
         /// <summary>
         /// Pre-emptive Harmony prefix patch to WaterManager.CheckHeating to implement 'no pipes' functionality.
@@ -44,7 +110,7 @@ namespace EightyOne2.Patches
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.CheckHeating))]
         [HarmonyPrefix]
-        public static bool CheckHeatingPrefix(ref bool heating)
+        private static bool CheckHeatingPrefix(ref bool heating)
         {
             if (s_noPipesEnabled)
             {
@@ -66,7 +132,7 @@ namespace EightyOne2.Patches
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.CheckWater))]
         [HarmonyPrefix]
-        public static bool CheckWaterPrefix(ref bool water, ref bool sewage, ref byte waterPollution)
+        private static bool CheckWaterPrefix(ref bool water, ref bool sewage, ref byte waterPollution)
         {
             if (s_noPipesEnabled)
             {
@@ -92,7 +158,7 @@ namespace EightyOne2.Patches
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryDumpHeating))]
         [HarmonyPrefix]
-        public static bool TryDumpHeatingPrefix(ref int __result, int rate, int max)
+        private static bool TryDumpHeatingPrefix(ref int __result, int rate, int max)
         {
             if (s_noPipesEnabled)
             {
@@ -117,7 +183,7 @@ namespace EightyOne2.Patches
             nameof(WaterManager.TryDumpSewage),
             new Type[] { typeof(Vector3), typeof(int), typeof(int) })]
         [HarmonyPrefix]
-        public static bool TryDumpSewage1Prefix(ref int __result, int rate, int max)
+        private static bool TryDumpSewage1Prefix(ref int __result, int rate, int max)
         {
             if (s_noPipesEnabled)
             {
@@ -142,7 +208,7 @@ namespace EightyOne2.Patches
             nameof(WaterManager.TryDumpSewage),
             new Type[] { typeof(Vector3), typeof(int), typeof(int) })]
         [HarmonyPrefix]
-        public static bool TryDumpSewage2Prefix(ref int __result, int rate, int max)
+        private static bool TryDumpSewage2Prefix(ref int __result, int rate, int max)
         {
             if (s_noPipesEnabled)
             {
@@ -166,7 +232,7 @@ namespace EightyOne2.Patches
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryDumpWater))]
         [HarmonyPrefix]
-        public static bool TryDumpWaterPrefix(ref int __result, int rate, int max, byte waterPollution)
+        private static bool TryDumpWaterPrefix(ref int __result, int rate, int max, byte waterPollution)
         {
             if (s_noPipesEnabled)
             {
@@ -193,7 +259,7 @@ namespace EightyOne2.Patches
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryFetchHeating))]
         [HarmonyPrefix]
-        public static bool TryFetchHeatingPrefix(ref int __result, int rate, int max, ref bool connected)
+        private static bool TryFetchHeatingPrefix(ref int __result, int rate, int max, ref bool connected)
         {
             if (s_noPipesEnabled)
             {
@@ -219,7 +285,7 @@ namespace EightyOne2.Patches
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(WaterManager.TryFetchSewage))]
         [HarmonyPrefix]
-        public static bool TryFetchSewagePrefix(ref int __result, int rate, int max)
+        private static bool TryFetchSewagePrefix(ref int __result, int rate, int max)
         {
             if (s_noPipesEnabled)
             {
@@ -245,7 +311,7 @@ namespace EightyOne2.Patches
             new Type[] { typeof(Vector3), typeof(int), typeof(int), typeof(byte) },
             new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
         [HarmonyPrefix]
-        public static bool TryFetchWater1Prefix(ref int __result, int rate, int max)
+        private static bool TryFetchWater1Prefix(ref int __result, int rate, int max)
         {
             if (s_noPipesEnabled)
             {
@@ -271,7 +337,7 @@ namespace EightyOne2.Patches
             new Type[] { typeof(ushort), typeof(int), typeof(int), typeof(byte) },
             new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
         [HarmonyPrefix]
-        public static bool TryFetchWater2Prefix(ref int __result, int rate, int max)
+        private static bool TryFetchWater2Prefix(ref int __result, int rate, int max)
         {
             if (s_noPipesEnabled)
             {

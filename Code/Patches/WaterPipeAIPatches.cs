@@ -6,7 +6,6 @@
 namespace EightyOne2.Patches
 {
     using System.Collections.Generic;
-    using System.Reflection.Emit;
     using HarmonyLib;
 
     /// <summary>
@@ -16,27 +15,12 @@ namespace EightyOne2.Patches
     internal class WaterPipeAIPatches
     {
         /// <summary>
-        /// Harmony transpiler for WaterPipeAI.UpdateNode to replace hardcoded game constants.
+        /// Harmony transpiler for WaterPipeAI.UpdateNode to implement segment checking skipping for 'no pipes' functionality.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(WaterPipeAI.UpdateNode))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> UpdateNodeTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            bool patched = false;
-
-            foreach (CodeInstruction instruction in instructions)
-            {
-                // Replace initial 'false' allocation to flag (local 5) with 'true'.
-                if (!patched && instruction.opcode == OpCodes.Ldc_I4_0)
-                {
-                    instruction.opcode = OpCodes.Ldc_I4_1;
-                    patched = true;
-                }
-
-                yield return instruction;
-            }
-        }
+        private static IEnumerable<CodeInstruction> UpdateNodeTranspiler(IEnumerable<CodeInstruction> instructions) => NoPipesPatches.NoSegmentsTranspiler(instructions);
     }
 }
