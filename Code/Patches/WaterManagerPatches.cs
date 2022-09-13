@@ -8,6 +8,8 @@ namespace EightyOne2.Patches
     using System;
     using System.Collections.Generic;
     using System.Reflection.Emit;
+    using ColossalFramework;
+    using ColossalFramework.Math;
     using HarmonyLib;
     using UnityEngine;
     using static WaterManager;
@@ -242,6 +244,160 @@ namespace EightyOne2.Patches
         [HarmonyPatch(nameof(WaterManager.UpdateGrid))]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> UpdateGridTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceWaterConstants(instructions);
+
+        /// <summary>
+        /// Pre-emptive Harmony prefix for WaterManager.UpdateGrid to implement 81 tiles functionality.
+        /// </summary>
+        /// <param name="__instance">WaterManager instance.</param>
+        /// <param name="minX">Minimum X-coordinate of updated area.</param>
+        /// <param name="minZ">Minimum Z-coordinate of updated area.</param>
+        /// <param name="maxX">Maximum X-coordinate of updated area.</param>
+        /// <param name="maxZ">Maximum Z-coordinate of updated area.</param>
+        /// <param name="___m_waterGrid">WaterManager private array - m_waterGrid (water cell array).</param>
+        /// <returns>Always false (never execute original method).</returns>
+        [HarmonyPatch(nameof(WaterManager.UpdateGrid))]
+        [HarmonyPrefix]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
+        private static bool UpdateGrid(WaterManager __instance, float minX, float minZ, float maxX, float maxZ, Cell[] ___m_waterGrid)
+        {
+            int num = Mathf.Max((int)((minX / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), 0);
+            int num2 = Mathf.Max((int)((minZ / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), 0);
+            int num3 = Mathf.Min((int)((maxX / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), ExpandedWaterGridMax);
+            int num4 = Mathf.Min((int)((maxZ / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), ExpandedWaterGridMax);
+            for (int i = num2; i <= num4; i++)
+            {
+                int num5 = (i * ExpandedWaterGridResolution) + num;
+                for (int j = num; j <= num3; j++)
+                {
+                    ___m_waterGrid[num5].m_conductivity = 0;
+                    ___m_waterGrid[num5].m_conductivity2 = 0;
+                    ___m_waterGrid[num5].m_closestPipeSegment = 0;
+                    ___m_waterGrid[num5].m_closestPipeSegment2 = 0;
+                    num5++;
+                }
+            }
+
+            float num6 = ((num - ExpandedWaterGridHalfResolution) * WATERGRID_CELL_SIZE) - 100f;
+            float num7 = ((num2 - ExpandedWaterGridHalfResolution) * WATERGRID_CELL_SIZE) - 100f;
+            float num8 = ((num3 - ExpandedWaterGridHalfResolution + 1f) * WATERGRID_CELL_SIZE) + 100f;
+            float num9 = ((num4 - ExpandedWaterGridHalfResolution + 1f) * WATERGRID_CELL_SIZE) + 100f;
+            int num10 = Mathf.Max((int)((num6 / 64f) + 135f), 0);
+            int num11 = Mathf.Max((int)((num7 / 64f) + 135f), 0);
+            int num12 = Mathf.Min((int)((num8 / 64f) + 135f), 269);
+            int num13 = Mathf.Min((int)((num9 / 64f) + 135f), 269);
+            float num14 = 100f;
+            Array16<NetNode> nodes = Singleton<NetManager>.instance.m_nodes;
+            Array16<NetSegment> segments = Singleton<NetManager>.instance.m_segments;
+            ushort[] segmentGrid = Singleton<NetManager>.instance.m_segmentGrid;
+            for (int k = num11; k <= num13; k++)
+            {
+                for (int l = num10; l <= num12; l++)
+                {
+                    ushort num15 = segmentGrid[(k * 270) + l];
+                    int num16 = 0;
+                    while (num15 != 0)
+                    {
+                        NetSegment.Flags flags = segments.m_buffer[num15].m_flags;
+                        if ((flags & (NetSegment.Flags.Created | NetSegment.Flags.Deleted)) == NetSegment.Flags.Created)
+                        {
+                            NetInfo info = segments.m_buffer[num15].Info;
+                            if (info.m_class.m_service == ItemClass.Service.Water && info.m_class.m_level <= ItemClass.Level.Level2)
+                            {
+                                ushort startNode = segments.m_buffer[num15].m_startNode;
+                                ushort endNode = segments.m_buffer[num15].m_endNode;
+                                Vector2 a = VectorUtils.XZ(nodes.m_buffer[startNode].m_position);
+                                Vector2 b = VectorUtils.XZ(nodes.m_buffer[endNode].m_position);
+                                float num17 = Mathf.Max(Mathf.Max(num6 - a.x, num7 - a.y), Mathf.Max(a.x - num8, a.y - num9));
+                                float num18 = Mathf.Max(Mathf.Max(num6 - b.x, num7 - b.y), Mathf.Max(b.x - num8, b.y - num9));
+                                if (num17 < 0f || num18 < 0f)
+                                {
+                                    int num19 = Mathf.Max((int)(((Mathf.Min(a.x, b.x) - num14) / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), num);
+                                    int num20 = Mathf.Max((int)(((Mathf.Min(a.y, b.y) - num14) / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), num2);
+                                    int num21 = Mathf.Min((int)(((Mathf.Max(a.x, b.x) + num14) / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), num3);
+                                    int num22 = Mathf.Min((int)(((Mathf.Max(a.y, b.y) + num14) / WATERGRID_CELL_SIZE) + ExpandedWaterGridHalfResolution), num4);
+                                    for (int m = num20; m <= num22; m++)
+                                    {
+                                        int num23 = (m * ExpandedWaterGridResolution) + num19;
+                                        float y = (m + 0.5f - ExpandedWaterGridHalfResolution) * WATERGRID_CELL_SIZE;
+                                        for (int n = num19; n <= num21; n++)
+                                        {
+                                            float x = (n + 0.5f - ExpandedWaterGridHalfResolution) * WATERGRID_CELL_SIZE;
+                                            float f = Segment2.DistanceSqr(a, b, new Vector2(x, y), out var _);
+                                            f = Mathf.Sqrt(f);
+                                            if (f < num14 + 19.125f)
+                                            {
+                                                float num24 = ((num14 - f) * (2f / 153f)) + 0.25f;
+                                                int num25 = Mathf.Min(255, Mathf.RoundToInt(num24 * 255f));
+                                                if (num25 > ___m_waterGrid[num23].m_conductivity)
+                                                {
+                                                    ___m_waterGrid[num23].m_conductivity = (byte)num25;
+                                                    ___m_waterGrid[num23].m_closestPipeSegment = num15;
+                                                }
+
+                                                if (info.m_class.m_level == ItemClass.Level.Level2 && num25 > ___m_waterGrid[num23].m_conductivity2)
+                                                {
+                                                    ___m_waterGrid[num23].m_conductivity2 = (byte)num25;
+                                                    ___m_waterGrid[num23].m_closestPipeSegment2 = num15;
+                                                }
+                                            }
+
+                                            num23++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        num15 = segments.m_buffer[num15].m_nextGridSegment;
+                        if (++num16 >= 32768)
+                        {
+                            CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + Environment.StackTrace);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (int num26 = num2; num26 <= num4; num26++)
+            {
+                int num27 = (num26 * ExpandedWaterGridResolution) + num;
+                for (int num28 = num; num28 <= num3; num28++)
+                {
+                    Cell cell = ___m_waterGrid[num27];
+                    if (cell.m_conductivity == 0)
+                    {
+                        cell.m_currentWaterPressure = 0;
+                        cell.m_currentSewagePressure = 0;
+                        cell.m_currentHeatingPressure = 0;
+                        cell.m_waterPulseGroup = ushort.MaxValue;
+                        cell.m_sewagePulseGroup = ushort.MaxValue;
+                        cell.m_heatingPulseGroup = ushort.MaxValue;
+                        cell.m_tmpHasWater = false;
+                        cell.m_tmpHasSewage = false;
+                        cell.m_tmpHasHeating = false;
+                        cell.m_hasWater = false;
+                        cell.m_hasSewage = false;
+                        cell.m_hasHeating = false;
+                        cell.m_pollution = 0;
+                        ___m_waterGrid[num27] = cell;
+                    }
+                    else if (cell.m_conductivity2 == 0)
+                    {
+                        cell.m_currentHeatingPressure = 0;
+                        cell.m_heatingPulseGroup = ushort.MaxValue;
+                        cell.m_tmpHasHeating = false;
+                        cell.m_hasHeating = false;
+                        ___m_waterGrid[num27] = cell;
+                    }
+
+                    num27++;
+                }
+            }
+
+            __instance.AreaModified(num, num2, num3, num4);
+
+            return false;
+        }
 
         /// <summary>
         /// Harmony transpiler for WaterManager.UpdateTexture to replace hardcoded game constants.
