@@ -111,33 +111,41 @@ namespace EightyOne2.Patches
                 Logging.Message("found expanded water data");
                 using (MemoryStream stream = new MemoryStream(data))
                 {
-                    DataSerializer.Deserialize<WaterDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
-                }
-            }
-            else
-            {
-                Logging.Message("no expanded water data found - coverting vanilla data");
-
-                // New water grid for 81 tiles.
-                Cell[] newWaterGrid = new Cell[ExpandedWaterGridArraySize];
-                AccessTools.Field(typeof(WaterManager), "m_waterGrid").SetValue(waterManager, newWaterGrid);
-
-                // Convert 25-tile data into 81-tile equivalent locations.
-                for (int z = 0; z < GameWaterGridResolution; ++z)
-                {
-                    for (int x = 0; x < GameWaterGridResolution; ++x)
+                    try
                     {
-                        int oldCellIndex = (z * GameWaterGridResolution) + x;
-                        int newCellIndex = ((z + CellConversionOffset) * ExpandedWaterGridResolution) + x + CellConversionOffset;
-                        newWaterGrid[newCellIndex] = waterGrid[oldCellIndex];
+                        // Attempt to read expanded data, and if successful, return.
+                        DataSerializer.Deserialize<WaterDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.LogException(e, "exception deserializing expanded water data - perhaps a corrupted EML array size");
                     }
                 }
-
-                // Convert PulseUnits.
-                ConvertVanillaPulseUnits(WaterPulseUnits, waterPulseUnits);
-                ConvertVanillaPulseUnits(SewagePulseUnits, sewagePulseUnits);
-                ConvertVanillaPulseUnits(HeatingPulseUnits, heatingPulseUnits);
             }
+
+            // If we got here, we didn't get readable expanded water data.
+            Logging.Message("no expanded water data found - coverting vanilla data");
+
+            // New water grid for 81 tiles.
+            Cell[] newWaterGrid = new Cell[ExpandedWaterGridArraySize];
+            AccessTools.Field(typeof(WaterManager), "m_waterGrid").SetValue(waterManager, newWaterGrid);
+
+            // Convert 25-tile data into 81-tile equivalent locations.
+            for (int z = 0; z < GameWaterGridResolution; ++z)
+            {
+                for (int x = 0; x < GameWaterGridResolution; ++x)
+                {
+                    int oldCellIndex = (z * GameWaterGridResolution) + x;
+                    int newCellIndex = ((z + CellConversionOffset) * ExpandedWaterGridResolution) + x + CellConversionOffset;
+                    newWaterGrid[newCellIndex] = waterGrid[oldCellIndex];
+                }
+            }
+
+            // Convert PulseUnits.
+            ConvertVanillaPulseUnits(WaterPulseUnits, waterPulseUnits);
+            ConvertVanillaPulseUnits(SewagePulseUnits, sewagePulseUnits);
+            ConvertVanillaPulseUnits(HeatingPulseUnits, heatingPulseUnits);
         }
 
         /// <summary>
