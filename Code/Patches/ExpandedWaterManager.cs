@@ -527,6 +527,13 @@ namespace EightyOne2.Patches
                 if (pulseGroup4.m_mergeIndex != ushort.MaxValue && pulseGroup4.m_collectPressure != 0)
                 {
                     PulseGroup pulseGroup5 = m_waterPulseGroups[pulseGroup4.m_mergeIndex];
+
+                    // Division by zero guard.
+                    if (pulseGroup5.m_collectPressure < 1)
+                    {
+                        pulseGroup5.m_collectPressure = 1;
+                    }
+
                     pulseGroup4.m_curPressure = (uint)((ulong)((long)pulseGroup5.m_curPressure * (long)pulseGroup4.m_collectPressure) / (ulong)pulseGroup5.m_collectPressure);
                     if (pulseGroup4.m_collectPressure < pulseGroup4.m_curPressure)
                     {
@@ -548,6 +555,13 @@ namespace EightyOne2.Patches
                     PulseGroup pulseGroup7 = m_waterPulseGroups[pulseGroup6.m_mergeIndex];
                     uint curPressure = pulseGroup7.m_curPressure;
                     curPressure = (pulseGroup7.m_collectPressure < curPressure) ? (curPressure - pulseGroup7.m_collectPressure) : 0u;
+
+                    // Division by zero guard.
+                    if (pulseGroup7.m_origPressure < 1)
+                    {
+                        pulseGroup7.m_origPressure = 1;
+                    }
+
                     pulseGroup6.m_curPressure = (uint)((ulong)((long)curPressure * (long)pulseGroup6.m_origPressure) / (ulong)pulseGroup7.m_origPressure);
                     pulseGroup7.m_curPressure -= pulseGroup6.m_curPressure;
                     pulseGroup7.m_origPressure -= pulseGroup6.m_origPressure;
@@ -573,6 +587,13 @@ namespace EightyOne2.Patches
                 if (pulseGroup9.m_mergeIndex != ushort.MaxValue && pulseGroup9.m_collectPressure != 0)
                 {
                     PulseGroup pulseGroup10 = m_sewagePulseGroups[pulseGroup9.m_mergeIndex];
+
+                    // Division by zero guard.
+                    if (pulseGroup10.m_collectPressure < 1)
+                    {
+                        pulseGroup10.m_collectPressure = 1;
+                    }
+
                     pulseGroup9.m_curPressure = (uint)((ulong)((long)pulseGroup10.m_curPressure * (long)pulseGroup9.m_collectPressure) / (ulong)pulseGroup10.m_collectPressure);
                     if (pulseGroup9.m_collectPressure < pulseGroup9.m_curPressure)
                     {
@@ -592,6 +613,12 @@ namespace EightyOne2.Patches
                 if (pulseGroup11.m_mergeIndex != ushort.MaxValue && pulseGroup11.m_collectPressure == 0)
                 {
                     PulseGroup pulseGroup12 = m_sewagePulseGroups[pulseGroup11.m_mergeIndex];
+
+                    // Division by zero guard.
+                    if (pulseGroup12.m_origPressure < 1)
+                    {
+                        pulseGroup12.m_origPressure = 1;
+                    }
 
                     pulseGroup11.m_curPressure = (uint)((ulong)((long)pulseGroup12.m_curPressure * (long)pulseGroup11.m_origPressure) / (ulong)pulseGroup12.m_origPressure);
                     pulseGroup12.m_curPressure -= pulseGroup11.m_curPressure;
@@ -618,6 +645,13 @@ namespace EightyOne2.Patches
                 if (pulseGroup14.m_mergeIndex != ushort.MaxValue)
                 {
                     PulseGroup pulseGroup15 = m_heatingPulseGroups[pulseGroup14.m_mergeIndex];
+
+                    // Division by zero guard.
+                    if (pulseGroup15.m_origPressure < 1)
+                    {
+                        pulseGroup15.m_origPressure = 1;
+                    }
+
                     pulseGroup14.m_curPressure = (uint)((ulong)((long)pulseGroup15.m_curPressure * (long)pulseGroup14.m_origPressure) / (ulong)pulseGroup15.m_origPressure);
                     pulseGroup15.m_curPressure -= pulseGroup14.m_curPressure;
                     pulseGroup15.m_origPressure -= pulseGroup14.m_origPressure;
