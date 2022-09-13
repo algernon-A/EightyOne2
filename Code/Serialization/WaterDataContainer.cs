@@ -291,30 +291,30 @@ namespace EightyOne2.Serialization
             AccessTools.Field(typeof(WaterManager), "m_waterGrid").SetValue(waterManager, waterGrid);
 
             // Water grid.
-            EncodedArray.Byte encodedBytes = EncodedArray.Byte.BeginRead(serializer);
+            EncodedArray.Byte waterConductivity = EncodedArray.Byte.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
-                waterGrid[i].m_conductivity = encodedBytes.Read();
+                waterGrid[i].m_conductivity = waterConductivity.Read();
             }
 
-            encodedBytes.EndRead();
+            waterConductivity.EndRead();
 
             // Heating grid.
-            encodedBytes = EncodedArray.Byte.BeginRead(serializer);
+            EncodedArray.Byte heatingConductivity = EncodedArray.Byte.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
-                waterGrid[i].m_conductivity2 = encodedBytes.Read();
+                waterGrid[i].m_conductivity2 = heatingConductivity.Read();
             }
 
-            encodedBytes.EndRead();
+            heatingConductivity.EndRead();
 
             // Water pressure.
-            EncodedArray.Short encodedShorts = EncodedArray.Short.BeginRead(serializer);
+            EncodedArray.Short currentWaterPressures = EncodedArray.Short.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_currentWaterPressure = encodedShorts.Read();
+                    waterGrid[i].m_currentWaterPressure = currentWaterPressures.Read();
                 }
                 else
                 {
@@ -322,15 +322,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedShorts.EndRead();
+            currentWaterPressures.EndRead();
 
             // Sewage pressure.
-            encodedShorts = EncodedArray.Short.BeginRead(serializer);
+            EncodedArray.Short currentSewagePressures = EncodedArray.Short.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_currentSewagePressure = encodedShorts.Read();
+                    waterGrid[i].m_currentSewagePressure = currentSewagePressures.Read();
                 }
                 else
                 {
@@ -338,15 +338,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedShorts.EndRead();
+            currentSewagePressures.EndRead();
 
             // Heating pressure.
-            encodedShorts = EncodedArray.Short.BeginRead(serializer);
+            EncodedArray.Short currentHeatingPressures = EncodedArray.Short.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity2 != 0)
                 {
-                    waterGrid[i].m_currentHeatingPressure = encodedShorts.Read();
+                    waterGrid[i].m_currentHeatingPressure = currentHeatingPressures.Read();
                 }
                 else
                 {
@@ -354,15 +354,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedShorts.EndRead();
+            currentHeatingPressures.EndRead();
 
             // Water pulse group references.
-            EncodedArray.UShort encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort waterPulseGroupData = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_waterPulseGroup = encodedUShorts.Read();
+                    waterGrid[i].m_waterPulseGroup = waterPulseGroupData.Read();
                 }
                 else
                 {
@@ -370,15 +370,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedUShorts.EndRead();
+            waterPulseGroupData.EndRead();
 
             // Sewage pulse group references.
-            encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort sewagePulseGroupData = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_sewagePulseGroup = encodedUShorts.Read();
+                    waterGrid[i].m_sewagePulseGroup = sewagePulseGroupData.Read();
                 }
                 else
                 {
@@ -386,15 +386,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedUShorts.EndRead();
+            sewagePulseGroupData.EndRead();
 
             // Heating pulse group references.
-            encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort heatingPulseGroupData = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity2 != 0)
                 {
-                    waterGrid[i].m_heatingPulseGroup = encodedUShorts.Read();
+                    waterGrid[i].m_heatingPulseGroup = heatingPulseGroupData.Read();
                 }
                 else
                 {
@@ -402,39 +402,39 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedUShorts.EndRead();
+            heatingPulseGroupData.EndRead();
 
             // Water closest pipe segment.
-            encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort closestWaterSegments = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_closestPipeSegment = encodedUShorts.Read();
+                    waterGrid[i].m_closestPipeSegment = closestWaterSegments.Read();
                 }
             }
 
-            encodedUShorts.EndRead();
+            closestWaterSegments.EndRead();
 
             // Heating closest pipe segment.
-            encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort closestHeatingSegments = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity2 != 0)
                 {
-                    waterGrid[i].m_closestPipeSegment2 = encodedUShorts.Read();
+                    waterGrid[i].m_closestPipeSegment2 = closestHeatingSegments.Read();
                 }
             }
 
-            encodedUShorts.EndRead();
+            closestHeatingSegments.EndRead();
 
             // Water states.
-            EncodedArray.Bool encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            EncodedArray.Bool hasWater = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_hasWater = encodedBools.Read();
+                    waterGrid[i].m_hasWater = hasWater.Read();
                 }
                 else
                 {
@@ -442,15 +442,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
+            hasWater.EndRead();
 
             // Sewage states.
-            encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            EncodedArray.Bool hasSewage = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_hasSewage = encodedBools.Read();
+                    waterGrid[i].m_hasSewage = hasSewage.Read();
                 }
                 else
                 {
@@ -458,15 +458,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
+            hasSewage.EndRead();
 
             // Heating states.
-            encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            EncodedArray.Bool hasHeating = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity2 != 0)
                 {
-                    waterGrid[i].m_hasHeating = encodedBools.Read();
+                    waterGrid[i].m_hasHeating = hasHeating.Read();
                 }
                 else
                 {
@@ -474,16 +474,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
-            encodedUShorts.EndRead();
+            hasHeating.EndRead();
 
-            // Tempoarary water states.
-            encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            // Temporary water states.
+            EncodedArray.Bool tmpHasWater = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_tmpHasWater = encodedBools.Read();
+                    waterGrid[i].m_tmpHasWater = tmpHasWater.Read();
                 }
                 else
                 {
@@ -491,15 +490,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
+            tmpHasWater.EndRead();
 
             // Temporary sewage states.
-            encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            EncodedArray.Bool tmpHasSewage = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_tmpHasSewage = encodedBools.Read();
+                    waterGrid[i].m_tmpHasSewage = tmpHasSewage.Read();
                 }
                 else
                 {
@@ -507,15 +506,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
+            tmpHasSewage.EndRead();
 
             // Temporary heating states.
-            encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            EncodedArray.Bool tmpHasHeating = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity2 != 0)
                 {
-                    waterGrid[i].m_tmpHasHeating = encodedBools.Read();
+                    waterGrid[i].m_tmpHasHeating = tmpHasHeating.Read();
                 }
                 else
                 {
@@ -523,15 +522,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
+            tmpHasHeating.EndRead();
 
             // Water pollution.
-            encodedBytes = EncodedArray.Byte.BeginRead(serializer);
+            EncodedArray.Byte pollution = EncodedArray.Byte.BeginRead(serializer);
             for (int i = 0; i < ExpandedWaterGridArraySize; ++i)
             {
                 if (waterGrid[i].m_conductivity != 0)
                 {
-                    waterGrid[i].m_pollution = encodedBytes.Read();
+                    waterGrid[i].m_pollution = pollution.Read();
                 }
                 else
                 {
@@ -539,7 +538,7 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBytes.EndRead();
+            pollution.EndRead();
 
             // Water pulse groups.
             PulseGroup[] waterPulseGroups = AccessTools.Field(typeof(WaterManager), "m_waterPulseGroups").GetValue(waterManager) as PulseGroup[];

@@ -190,12 +190,12 @@ namespace EightyOne2.Serialization
             encodedBytes.EndRead();
 
             // Current charges.
-            EncodedArray.Short encodedShorts = EncodedArray.Short.BeginRead(serializer);
+            EncodedArray.Short conductivity = EncodedArray.Short.BeginRead(serializer);
             for (int i = 0; i < ExpandedElectricityGridArraySize; ++i)
             {
                 if (electricityGrid[i].m_conductivity != 0)
                 {
-                    electricityGrid[i].m_currentCharge = encodedShorts.Read();
+                    electricityGrid[i].m_currentCharge = conductivity.Read();
                 }
                 else
                 {
@@ -203,15 +203,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedShorts.EndRead();
+            conductivity.EndRead();
 
             // Extra charges.
-            EncodedArray.UShort encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort extraCharges = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < ExpandedElectricityGridArraySize; ++i)
             {
                 if (electricityGrid[i].m_conductivity != 0)
                 {
-                    electricityGrid[i].m_extraCharge = encodedUShorts.Read();
+                    electricityGrid[i].m_extraCharge = extraCharges.Read();
                 }
                 else
                 {
@@ -219,15 +219,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedUShorts.EndRead();
+            extraCharges.EndRead();
 
             // Pulse group references.
-            encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort pulseGroupData = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < ExpandedElectricityGridArraySize; ++i)
             {
                 if (electricityGrid[i].m_conductivity != 0)
                 {
-                    electricityGrid[i].m_pulseGroup = encodedUShorts.Read();
+                    electricityGrid[i].m_pulseGroup = pulseGroupData.Read();
                 }
                 else
                 {
@@ -235,15 +235,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedUShorts.EndRead();
+            pulseGroupData.EndRead();
 
             // Electrified states.
-            EncodedArray.Bool encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            EncodedArray.Bool electrified = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedElectricityGridArraySize; ++i)
             {
                 if (electricityGrid[i].m_conductivity != 0)
                 {
-                    electricityGrid[i].m_electrified = encodedBools.Read();
+                    electricityGrid[i].m_electrified = electrified.Read();
                 }
                 else
                 {
@@ -251,15 +251,15 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
+            electrified.EndRead();
 
             // Temporary states.
-            encodedBools = EncodedArray.Bool.BeginRead(serializer);
+            EncodedArray.Bool tmpElectrified = EncodedArray.Bool.BeginRead(serializer);
             for (int i = 0; i < ExpandedElectricityGridArraySize; ++i)
             {
                 if (electricityGrid[i].m_conductivity != 0)
                 {
-                    electricityGrid[i].m_tmpElectrified = encodedBools.Read();
+                    electricityGrid[i].m_tmpElectrified = tmpElectrified.Read();
                 }
                 else
                 {
@@ -267,7 +267,7 @@ namespace EightyOne2.Serialization
                 }
             }
 
-            encodedBools.EndRead();
+            tmpElectrified.EndRead();
 
             // Pulse groups.
             ExpandedPulseGroup[] pulseGroups = PulseGroups;
@@ -302,13 +302,13 @@ namespace EightyOne2.Serialization
 
             // Node groups.
             ushort[] nodeGroups = electricityManager.m_nodeGroups;
-            encodedUShorts = EncodedArray.UShort.BeginRead(serializer);
+            EncodedArray.UShort nodeGroupData = EncodedArray.UShort.BeginRead(serializer);
             for (int i = 0; i < 32768; ++i)
             {
-                nodeGroups[i] = encodedUShorts.Read();
+                nodeGroups[i] = nodeGroupData.Read();
             }
 
-            encodedUShorts.EndRead();
+            nodeGroupData.EndRead();
 
             // Remaining private fields.
             AccessTools.Field(typeof(ElectricityManager), "m_processedCells").SetValue(electricityManager, serializer.ReadInt32());
