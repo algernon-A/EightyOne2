@@ -5,6 +5,7 @@
 
 namespace EightyOne2.Serialization
 {
+    using AlgernonCommons;
     using ColossalFramework;
     using ColossalFramework.IO;
     using HarmonyLib;
@@ -610,6 +611,8 @@ namespace EightyOne2.Serialization
         private static int ReadPulseUnits(DataSerializer serializer, ExpandedPulseUnit[] pulseUnits)
         {
             int pulseUnitCount = (int)serializer.ReadUInt16();
+
+            Logging.Message("reading PulseUnits with count ", pulseUnitCount);
 
             // Pulse unit array.
             for (int i = 0; i < pulseUnitCount; ++i)
