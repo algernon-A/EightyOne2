@@ -87,8 +87,6 @@ namespace EightyOne2.Patches
         {
             bool patched = false;
 
-            Harmony.DEBUG = true;
-
             foreach (CodeInstruction instruction in instructions)
             {
                 // Replace initial 'false' allocation to flag with custom setting.

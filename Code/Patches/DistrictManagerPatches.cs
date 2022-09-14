@@ -705,19 +705,22 @@ namespace EightyOne2.Patches
                 {
                     // District grid resolution, i.e. 512 -> 900.
                     instruction.operand = ExpandedDistrictGridResolution;
-                    Logging.Message("replaced ", GameDistrictGridResolution, " with ", ExpandedDistrictGridResolution);
+
+                    // Logging.Message("replaced ", GameDistrictGridResolution, " with ", ExpandedDistrictGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridMax))
                 {
                     // Maximum iteration value: district grid resolution - 1 , i.e. 511 -> 899.
                     instruction.operand = ExpandedDistrictGridMax;
-                    Logging.Message("replaced ", GameDistrictGridMax, " with ", ExpandedDistrictGridMax);
+
+                    // Logging.Message("replaced ", GameDistrictGridMax, " with ", ExpandedDistrictGridMax);
                 }
                 else if (instruction.LoadsConstant(GameDistrictGridHalfResolution))
                 {
                     // District grid half-resolution, i.e. 256f -> 450f.
                     instruction.operand = ExpandedDistrictGridHalfResolution;
-                    Logging.Message("replaced ", GameDistrictGridHalfResolution, " with ", ExpandedDistrictGridHalfResolution);
+
+                    // Logging.Message("replaced ", GameDistrictGridHalfResolution, " with ", ExpandedDistrictGridHalfResolution);
                 }
 
                 yield return instruction;
