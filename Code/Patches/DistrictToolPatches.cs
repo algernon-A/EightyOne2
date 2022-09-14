@@ -22,7 +22,7 @@ namespace EightyOne2.Patches
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(DistrictTool.ApplyBrush), new Type[] { typeof(DistrictTool.Layer), typeof(byte), typeof(float), typeof(Vector3), typeof(Vector3) })]
+        [HarmonyPatch(nameof(DistrictTool.ApplyBrush), new Type[] { typeof(DistrictTool.Layer), typeof(byte), typeof(float), typeof(Vector3), typeof(Vector3), typeof(bool) })]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> ApplyBrushTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceDistrictToolConstants(instructions);
 

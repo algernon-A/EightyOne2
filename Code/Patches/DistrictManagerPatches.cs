@@ -187,9 +187,20 @@ namespace EightyOne2.Patches
         /// <param name="instructions">Original ILCode.</param>
         /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(DistrictManager.GetPark))]
+        [HarmonyPatch(nameof(DistrictManager.GetPark), new Type[] { typeof(Vector3) })]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetParkTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceDistrictConstants(instructions, original);
+        private static IEnumerable<CodeInstruction> GetPark1Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceDistrictConstants(instructions, original);
+
+        /// <summary>
+        /// Harmony transpiler for DistrictManager.GetPark to update code constants.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <param name="original">Method being patched.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(DistrictManager.GetPark), new Type[] { typeof(Vector3), typeof(float), typeof(DistrictPark.ParkType) })]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> GetPark2Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceDistrictConstants(instructions, original);
+
 
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetParkArea to update code constants.

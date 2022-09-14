@@ -12,6 +12,7 @@ namespace EightyOne2.Patches
     using System.Runtime.CompilerServices;
     using AlgernonCommons;
     using AlgernonCommons.Patching;
+    using ColossalFramework;
     using HarmonyLib;
     using UnityEngine;
     using static ImmaterialResourceManager;
@@ -20,6 +21,7 @@ namespace EightyOne2.Patches
     /// Harmony patches for the immaterial resource manager to implement 81 tiles functionality.
     /// </summary>
     [HarmonyPatch(typeof(ImmaterialResourceManager))]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
     internal static class ImmaterialResourceManagerPatches
     {
         /// <summary>
@@ -53,6 +55,31 @@ namespace EightyOne2.Patches
         private const int ExpandedImmaterialResourceGridMax = ExpandedImmaterialResourceGridResolution - 1;
 
         /// <summary>
+        /// Replacement for m_tempAreaIndexes using expanded cell location struct.
+        /// </summary>
+        private static readonly Dictionary<ExpandedCellLocation, int> TempAreaIndexes = new Dictionary<ExpandedCellLocation, int>();
+
+        /// <summary>
+        /// Replacement for m_tempAreaQueue using expanded cell location struct.
+        /// </summary>
+        private static readonly List<ExpandedAreaQueueItem> TempAreaQueue = new List<ExpandedAreaQueueItem>();
+
+        /// <summary>
+        /// Copy of game private enum ImmaterialResourceManager.AreaQueueItemDirecton.
+        /// </summary>
+        private enum AreaQueueItemDirection
+        {
+            None = 0,
+            Up = 1,
+            Down = 2,
+            Left = 4,
+            Right = 8,
+            Vertical = 3,
+            Horizontal = 0xC,
+            All = 0xF,
+        }
+
+        /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AddLocalResource to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
@@ -71,16 +98,6 @@ namespace EightyOne2.Patches
         [HarmonyPatch(nameof(ImmaterialResourceManager.AddObstructedResource))]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> AddObstructedResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceLocalImmaterialResourceConstants(instructions, original);
-
-        /// <summary>
-        /// Harmony transpiler for ImmaterialResourceManager.AddParkResource to update code constants.
-        /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being transpiled.</param>
-        /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch(nameof(ImmaterialResourceManager.AddParkResource))]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AddParkResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.AddResource to update code constants.
@@ -227,6 +244,85 @@ namespace EightyOne2.Patches
         [HarmonyPatch(nameof(ImmaterialResourceManager.CheckResource))]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> CheckResourceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceImmaterialResourceConstants(instructions, original);
+
+        /// <summary>
+        /// Pre-emptive Harmony prefix for ImmaterialResourceManager.GetParkAreaResourceIndexes to implement 81 tiles functionality using expanded fields and constants.
+        /// </summary>
+        /// <param name="__result">Original method result.</param>
+        /// <param name="park">Park ID.</param>
+        /// <param name="radius">Radius of effect.</param>
+        /// <returns>Always false (never execute original method).</returns>
+        [HarmonyPatch(nameof(ImmaterialResourceManager.GetParkAreaResourceIndexes))]
+        [HarmonyPrefix]
+        private static bool GetParkAreaResourceIndexesPrefix(out ParkAreaIndex[] __result, byte park, float radius)
+        {
+            TempAreaQueue.Clear();
+            TempAreaIndexes.Clear();
+            float num2 = Mathf.Max(38.4f, radius + 19.2f);
+            int num3 = Mathf.FloorToInt(num2 * num2 / 1474.56f);
+            DistrictManager districtManager = Singleton<DistrictManager>.instance;
+            Vector3 nameLocation = districtManager.m_parks.m_buffer[park].m_nameLocation;
+            ExpandedCellLocation cellLocation = default;
+
+            // cellLocation.m_x = (byte)Mathf.Clamp((int)((nameLocation.x / 38.4f) + 128f), 0, 255);
+            cellLocation.m_x = (byte)Mathf.Clamp((int)((nameLocation.x / 38.4f) + ExpandedImmaterialResourceGridHalfResolution), 0, ExpandedImmaterialResourceGridMax);
+
+            // cellLocation.m_z = (byte)Mathf.Clamp((int)((nameLocation.z / 38.4f) + 128f), 0, 255);
+            cellLocation.m_z = (byte)Mathf.Clamp((int)((nameLocation.z / 38.4f) + ExpandedImmaterialResourceGridHalfResolution), 0, ExpandedImmaterialResourceGridMax);
+
+            ExpandedAreaQueueItem item = default;
+            item.m_cost = 0;
+            item.m_location = cellLocation;
+            item.m_source = cellLocation;
+            item.m_direction = AreaQueueItemDirection.All;
+            TempAreaIndexes[cellLocation] = TempAreaQueue.Count;
+            TempAreaQueue.Add(item);
+            for (int i = 0; i < TempAreaQueue.Count; i++)
+            {
+                ExpandedAreaQueueItem item2 = TempAreaQueue[i];
+                if (item2.m_location.m_x > 0 && (item2.m_direction & AreaQueueItemDirection.Left) != 0)
+                {
+                    ProcessParkArea(ref item2, park, num3, AreaQueueItemDirection.Left);
+                }
+
+                if (item2.m_location.m_z > 0 && (item2.m_direction & AreaQueueItemDirection.Down) != 0)
+                {
+                    ProcessParkArea(ref item2, park, num3, AreaQueueItemDirection.Down);
+                }
+
+                if (item2.m_location.m_x < byte.MaxValue && (item2.m_direction & AreaQueueItemDirection.Right) != 0)
+                {
+                    ProcessParkArea(ref item2, park, num3, AreaQueueItemDirection.Right);
+                }
+
+                if (item2.m_location.m_z < byte.MaxValue && (item2.m_direction & AreaQueueItemDirection.Up) != 0)
+                {
+                    ProcessParkArea(ref item2, park, num3, AreaQueueItemDirection.Up);
+                }
+            }
+
+            List<ParkAreaIndex> list = new List<ParkAreaIndex>();
+            for (int j = 0; j < TempAreaQueue.Count; j++)
+            {
+                ExpandedAreaQueueItem areaQueueItem = TempAreaQueue[j];
+                if (areaQueueItem.m_cost < num3)
+                {
+                    ParkAreaIndex parkAreaIndex = default;
+
+                    // parkAreaIndex.m_index = ((areaQueueItem.m_location.m_z * 256) + areaQueueItem.m_location.m_x) * 29;
+                    parkAreaIndex.m_index = ((areaQueueItem.m_location.m_z * ExpandedImmaterialResourceGridResolution) + areaQueueItem.m_location.m_x) * RESOURCE_COUNT;
+
+                    parkAreaIndex.m_cost = areaQueueItem.m_cost;
+                    ParkAreaIndex item3 = parkAreaIndex;
+                    list.Add(item3);
+                }
+            }
+
+            __result = list.ToArray();
+
+            // Don't execute original method.
+            return false;
+        }
 
         /// <summary>
         /// Harmony transpiler for ImmaterialResourceManager.SimulationStepImpl to reframe simulation step processing by calling our custom method.
@@ -521,6 +617,144 @@ namespace EightyOne2.Patches
             string message = "CalculateTotalResources reverse Harmony patch wasn't applied";
             Logging.Error(message, buffer, bufferMul, target);
             throw new NotImplementedException(message);
+        }
+
+        /// <summary>
+        /// Re-implementation of ImmaterialResourceManager.ProcessParkArea using expanded structs (ExpandedAreaQueueItem and ExpandedCellLocation).
+        /// </summary>
+        /// <param name="item">Queue item.</param>
+        /// <param name="park">Park ID.</param>
+        /// <param name="maxCost">Maxmimum cost.</param>
+        /// <param name="direction">Direction to process.</param>
+        private static void ProcessParkArea(ref ExpandedAreaQueueItem item, byte park, int maxCost, AreaQueueItemDirection direction)
+        {
+            ExpandedCellLocation cellLocation = default;
+            switch (direction)
+            {
+                case AreaQueueItemDirection.Left:
+                    cellLocation.m_x = (byte)(item.m_location.m_x - 1);
+                    break;
+                case AreaQueueItemDirection.Right:
+                    cellLocation.m_x = (byte)(item.m_location.m_x + 1);
+                    break;
+                default:
+                    cellLocation.m_x = item.m_location.m_x;
+                    break;
+            }
+
+            switch (direction)
+            {
+                case AreaQueueItemDirection.Up:
+                    cellLocation.m_z = (byte)(item.m_location.m_z - 1);
+                    break;
+                case AreaQueueItemDirection.Down:
+                    cellLocation.m_z = (byte)(item.m_location.m_z + 1);
+                    break;
+                default:
+                    cellLocation.m_z = item.m_location.m_z;
+                    break;
+            }
+
+            ExpandedAreaQueueItem value2 = default;
+            if (TempAreaIndexes.TryGetValue(cellLocation, out var value))
+            {
+                value2 = TempAreaQueue[value];
+                value2.m_direction = RemoveDirection(value2.m_direction, direction);
+                if (value2.m_cost > 0 && (value2.m_source.m_x != item.m_source.m_x || value2.m_source.m_z != item.m_source.m_z))
+                {
+                    int num = ((cellLocation.m_x - item.m_source.m_x) * (cellLocation.m_x - item.m_source.m_x)) + ((cellLocation.m_z - item.m_source.m_z) * (cellLocation.m_z - item.m_source.m_z));
+                    if (num < value2.m_cost)
+                    {
+                        value2.m_cost = num;
+                        value2.m_source = item.m_source;
+                    }
+                }
+
+                TempAreaQueue[value] = value2;
+                return;
+            }
+
+            value2.m_location = cellLocation;
+
+            // Vector3 worldPos = new Vector3(((float)(int)cellLocation.m_x - 128f + 0.5f) * 38.4f, 0f, ((float)(int)cellLocation.m_z - 128f + 0.5f) * 38.4f);
+            Vector3 worldPos = new Vector3(((float)(int)cellLocation.m_x - ExpandedImmaterialResourceGridHalfResolution + 0.5f) * RESOURCEGRID_CELL_SIZE, 0f, ((float)(int)cellLocation.m_z - ExpandedImmaterialResourceGridHalfResolution + 0.5f) * RESOURCEGRID_CELL_SIZE);
+
+            if (Singleton<DistrictManager>.instance.GetPark(worldPos) == park)
+            {
+                value2.m_cost = 0;
+                value2.m_source = cellLocation;
+            }
+            else
+            {
+                value2.m_cost = ((cellLocation.m_x - item.m_source.m_x) * (cellLocation.m_x - item.m_source.m_x)) + ((cellLocation.m_z - item.m_source.m_z) * (cellLocation.m_z - item.m_source.m_z));
+                value2.m_source = item.m_source;
+            }
+
+            if (value2.m_cost < maxCost)
+            {
+                value2.m_direction = RemoveDirection(AreaQueueItemDirection.All, direction);
+                TempAreaIndexes[cellLocation] = TempAreaQueue.Count;
+                TempAreaQueue.Add(value2);
+            }
+        }
+
+        /// <summary>
+        /// Re-implementation of ImmaterialResourceManager.RemoveDirection private method; just easier than using a reverse patch (and only called from our custom method anyway).
+        /// </summary>
+        /// <param name="itemDirection">Original item direction.</param>
+        /// <param name="direction">Direction to remove.</param>
+        /// <returns>Updated direction.</returns>
+        private static AreaQueueItemDirection RemoveDirection(AreaQueueItemDirection itemDirection, AreaQueueItemDirection direction)
+        {
+            switch (direction)
+            {
+                case AreaQueueItemDirection.Up:
+                    return itemDirection & ~AreaQueueItemDirection.Down;
+                case AreaQueueItemDirection.Down:
+                    return itemDirection & ~AreaQueueItemDirection.Up;
+                case AreaQueueItemDirection.Left:
+                    return itemDirection & ~AreaQueueItemDirection.Right;
+                case AreaQueueItemDirection.Right:
+                    return itemDirection & ~AreaQueueItemDirection.Left;
+                default:
+                    return AreaQueueItemDirection.None;
+            }
+        }
+
+        /// <summary>
+        /// Expanded game CellLocation struct to handle coordinate ranges outside byte limits.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Uses game names")]
+        private struct ExpandedCellLocation
+        {
+            public ushort m_x;
+
+            public ushort m_z;
+
+            public override string ToString()
+            {
+                return m_x + ";" + m_z;
+            }
+        }
+
+        /// <summary>
+        /// Expanded game AreaQueueItem struct to handle coordinate ranges outside byte limits (replaces CellLocation with ExpandedCellLocation).
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Uses game names")]
+        private struct ExpandedAreaQueueItem
+        {
+            public int m_cost;
+
+            public ExpandedCellLocation m_location;
+
+            public ExpandedCellLocation m_source;
+
+            public AreaQueueItemDirection m_direction;
+
+            public override string ToString()
+            {
+                return string.Concat("loc: ", m_location, " cost: ", m_cost, " dir: ", m_direction);
+            }
         }
     }
 }

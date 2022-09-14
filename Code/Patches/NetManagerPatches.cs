@@ -25,9 +25,9 @@ namespace EightyOne2.Patches
         private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Need to make sure m_tileNodesCount is initialized using a larger array for 81 tiles.
-            // Looking for the hardcoded constant 925, being 37 * 25 (original game area grid count), and replacing it with 37 * 81 (new area grid count).
-            const int OriginalValue = 37 * GameAreaManagerPatches.GameGridArea;
-            const int NewValue = 37 * GameAreaManagerPatches.ExpandedMaxAreaCount;
+            // Looking for the hardcoded constant 975, being 39 * 25 (original game area grid count), and replacing it with 39 * 81 (new area grid count).
+            const int OriginalValue = 39 * GameAreaManagerPatches.GameGridArea;
+            const int NewValue = 39 * GameAreaManagerPatches.ExpandedMaxAreaCount;
 
             foreach (CodeInstruction instruction in instructions)
             {
