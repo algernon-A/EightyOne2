@@ -45,6 +45,18 @@ namespace EightyOne2
                 Shader.SetGlobalVector("_ElectricityMapping", value);
             });
 
+            // Force update of water map.
+            SimulationManager.instance.AddAction(() =>
+            {
+                WaterManager.instance.UpdateGrid(-100000f, -100000f, 100000f, 100000f);
+                Vector4 value = default(Vector4);
+                value.z = 0.000102124184f;
+                value.x = 0.5f;
+                value.y = 0.5f;
+                value.w = 0.00390625f;
+                Shader.SetGlobalVector("_WaterMapping", value);
+            });
+
             // Push back edge fog to match original 81 tiles mod.
             SimulationManager.instance.AddAction(() => Object.FindObjectOfType<RenderProperties>().m_edgeFogDistance = 2800f);
             SimulationManager.instance.AddAction(() => Object.FindObjectOfType<FogEffect>().m_edgeFogDistance = 2800f);
