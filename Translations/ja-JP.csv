@@ -21,5 +21,5 @@
 "NO_POWERLINES_TIP","有効時は、送電線と建物の接続が不要になります。 (注意: 発電設備は必要です)","Tooltip in options panel."
 "ELECTRIC_ROADS","道路沿いから、電力の伝搬を有効化","Option in options panel - activates 'electric roads' functionality."
 "ELECTRIC_ROADS_TIP","有効時は、道路を送電線と同じように電力を伝搬させます。","Tooltip in options panel."
-"NO_PIPES,Enable water"," 上下水道"," and heating transmission without pipes""","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES","配管を無くして、上下水道/暖房熱の供給が可能","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","有効時は、建物に水道管や暖房管の接続が不要になります。 (注意: 上下水道の設備や暖房設備(要DLC) は必要です)","Tooltip in options panel."

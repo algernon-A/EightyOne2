@@ -20,5 +20,5 @@
 "NO_POWERLINES_TIP","Wenn diese Option aktiviert ist, müssen Gebäude nicht mehr mit Stromleitungen verbunden werden (Strom muss aber dennoch bereitgestellt werden).","Tooltip in options panel."
 "ELECTRIC_ROADS","Stromübertragung entlang der Straßen aktivieren","Option in options panel - activates 'electric roads' functionality."
 "ELECTRIC_ROADS_TIP","Wenn dies aktiviert ist, werden Straßen Elektrizität leiten, als wären sie Stromleitungen.","Tooltip in options panel."
-"NO_PIPES,Enable water","Abwasser"," and heating transmission without pipes""","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES","Wasser-, Abwasser- und Heizwärmeübertragung ohne Rohrleitungen aktivieren","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Wenn dies aktiviert ist, müssen Gebäude nicht mehr mit Wasser- oder Heizrohren verbunden werden (Wasser-, Abwasser- und Heizanlagen müssen aber dennoch gebaut werden).","Tooltip in options panel."
