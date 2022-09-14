@@ -1,7 +1,13 @@
-﻿Version 0.5 -
+﻿Version 0.5.1 -
+
+- Remove debugging logging
+
+
+Version 0.5 -
 
 - Compatibility updates for game version 1.15
 - Fix sewage PulseUnit serialization errors (caused simulation errors when saving a game)
+
 
 Version 0.4 -
 
