@@ -2,5 +2,6 @@
 
 - Adjust WaterManager.UpdateGrid patching (fix for some buildings not being connected to water)
 - Attempt to detect and recover from invalid/corrupted EML Beta savefile data
+- Push back edge fog distance (for players not using edge fog suppressing mods)
 - Add division-by-zero guards in case of invalid/corrupted water pulse data
 - Minor code cleanups

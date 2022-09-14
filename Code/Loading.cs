@@ -8,6 +8,7 @@ namespace EightyOne2
     using AlgernonCommons.Patching;
     using ColossalFramework;
     using ICities;
+    using UnityEngine;
 
     /// <summary>
     /// Main loading class: the mod runs from here.
@@ -36,13 +37,18 @@ namespace EightyOne2
             SimulationManager.instance.AddAction(() =>
             {
                 ElectricityManager.instance.UpdateGrid(-100000f, -100000f, 100000f, 100000f);
-                UnityEngine.Vector4 value = default;
+                Vector4 value = default;
                 value.z = 1 / (ElectricityManager.ELECTRICITYGRID_CELL_SIZE * Patches.ElectricityManagerPatches.ExpandedElectricityGridResolution);
                 value.x = 0.5f;
                 value.y = 0.5f;
                 value.w = 1.0f / Patches.ElectricityManagerPatches.ExpandedElectricityGridResolution;
-                UnityEngine.Shader.SetGlobalVector("_ElectricityMapping", value);
+                Shader.SetGlobalVector("_ElectricityMapping", value);
             });
+
+            // Push back edge fog to match original 81 tiles mod.
+            SimulationManager.instance.AddAction(() => Object.FindObjectOfType<RenderProperties>().m_edgeFogDistance = 2800f);
+            SimulationManager.instance.AddAction(() => Object.FindObjectOfType<FogEffect>().m_edgeFogDistance = 2800f);
+            SimulationManager.instance.AddAction(() => Object.FindObjectOfType<FogProperties>().m_EdgeFogDistance = 2800f);
         }
     }
 }
