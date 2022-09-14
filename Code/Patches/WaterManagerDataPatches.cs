@@ -85,9 +85,9 @@ namespace EightyOne2.Patches
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(WaterManager), "m_waterPulseUnits"));
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(WaterManager), "m_sewagePulseGroups"));
+                    yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(WaterManager), "m_sewagePulseUnits"));
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(WaterManager), "m_heatingPulseGroups"));
+                    yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(WaterManager), "m_heatingPulseUnits"));
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(WaterManagerDataPatches), nameof(CustomSerialize)));
                 }
 

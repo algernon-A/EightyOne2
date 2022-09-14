@@ -1,4 +1,6 @@
-﻿Version 0.4 -
+﻿- Fix sewage PulseUnit serialization errors (caused simulation errors when saving a game)
+
+Version 0.4 -
 
 - Adjust WaterManager.UpdateGrid patching (fix for some buildings not being connected to water)
 - Attempt to detect and recover from invalid/corrupted EML Beta savefile data
