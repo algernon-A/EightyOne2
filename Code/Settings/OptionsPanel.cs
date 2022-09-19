@@ -14,7 +14,7 @@ namespace EightyOne2
     using ICities;
 
     /// <summary>
-    /// The mod's options panel..
+    /// The mod's options panel.
     /// </summary>
     public class OptionsPanel : UIPanel
     {
