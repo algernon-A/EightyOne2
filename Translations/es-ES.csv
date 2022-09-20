@@ -20,5 +20,5 @@
 "NO_POWERLINES_TIP","Cuando esto está habilitado, los edificios ya no necesitan estar conectados con líneas de tensión (todavía necesitarás producir electricidad).","Tooltip in options panel."
 "ELECTRIC_ROADS","Habilitar la transmisión de electricidad a lo largo de las carreteras","Option in options panel - activates 'electric roads' functionality."
 "ELECTRIC_ROADS_TIP","Cuando esto está habilitado, las carreteras llevaran electricidad como si fueran líneas eléctricas.","Tooltip in options panel."
-"NO_PIPES,Enable water"," desagüe"," and heating transmission without pipes""","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES","Habilita la transmisión de agua, desagüe y calefacción sin tuberías","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Cuando esto está habilitado, los edificios ya no necesitan estar conectados con tuberías de agua o calefacción (todavía tendrás que proporcionar agua y tratamiento de aguas residuales y plantas de calefacción si es deseado).","Tooltip in options panel."
