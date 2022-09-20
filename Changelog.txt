@@ -1,4 +1,8 @@
-﻿Version 0.5.1 -
+﻿- Fix building lights and electricity overlay color not showing electricity connection when 'no powerlines' is enabled 
+- Deactivate when loading into map editor
+
+
+Version 0.5.1 -
 
 - Remove debugging logging
 

@@ -33,6 +33,7 @@ namespace EightyOne2.Patches
         /// <param name="electricity">Set to true if electricity is available, false otherwise.</param>
         /// <returns>False (pre-empt original game method) if no powerlines functionality is enabled, true (continue execution) otherwise.</returns>
         [HarmonyPatch(nameof(ElectricityManager.CheckElectricity))]
+        [HarmonyPrefix]
         private static bool CheckElectricityPrefix(ref bool electricity)
         {
             if (s_noPowerlinesEnabled)
