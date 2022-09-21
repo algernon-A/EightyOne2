@@ -1,4 +1,7 @@
-﻿Version 0.5.2 -
+﻿- Add mechanism to force-fix ElectricityManager and WaterManager textures if another mod instantiates a manager before patches are applied
+- Remove redundant post-load refreshes to reduce loading time
+
+Version 0.5.2 -
 
 - Fix building lights and electricity overlay color not showing electricity connection when 'no powerlines' is enabled 
 - Deactivate when loading into map editor
