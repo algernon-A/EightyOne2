@@ -1,4 +1,6 @@
-﻿- Add mechanism to force-fix ElectricityManager and WaterManager textures if another mod instantiates a manager before patches are applied
+﻿Version 0.6 -
+
+- Add mechanism to force-fix ElectricityManager and WaterManager textures if another mod instantiates a manager before patches are applied
 - Remove redundant post-load refreshes to reduce loading time
 
 Version 0.5.2 -
