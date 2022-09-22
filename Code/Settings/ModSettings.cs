@@ -40,6 +40,17 @@ namespace EightyOne2
         public bool XMLNoPipes { get => NoPipesPatches.NoPipesEnabled; set => NoPipesPatches.NoPipesEnabled = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether expanded data should be ignored on next load.
+        /// </summary>
+        [XmlElement("IgnoreExpanded")]
+        public bool XMLIgnoreExpanded { get => IgnoreExpanded; set => IgnoreExpanded = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether expanded data should be ignored on next load.
+        /// </summary>
+        internal static bool IgnoreExpanded { get; set; } = false;
+
+        /// <summary>
         /// Loads settings from file.
         /// </summary>
         internal static void Load() => XMLFileUtils.Load<ModSettings>(SettingsFileName);

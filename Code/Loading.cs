@@ -33,6 +33,13 @@ namespace EightyOne2
             // Update utility grids.
             simulationManager.AddAction(() => Singleton<WaterManager>.instance.UpdateGrid(-10000f, -10000f, 10000f, 10000f));
             simulationManager.AddAction(() => Singleton<ElectricityManager>.instance.UpdateGrid(-10000f, -10000f, 10000f, 10000f));
+
+            // Reset 'ignore expanded data' flag.
+            if (ModSettings.IgnoreExpanded)
+            {
+                ModSettings.IgnoreExpanded = false;
+                ModSettings.Save();
+            }
         }
     }
 }

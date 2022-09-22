@@ -104,7 +104,8 @@ namespace EightyOne2.Patches
             ExpandedPulseGroup[] newPulseGroups = PulseGroups;
             ExpandedPulseUnit[] newPulseUnits = PulseUnits;
 
-            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(ElectricityDataSerializer.DataID, out byte[] data))
+            // See if this save contains any extended 81 tiles data (unless we're ignoring any).
+            if (!ModSettings.IgnoreExpanded && Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(ElectricityDataSerializer.DataID, out byte[] data))
             {
                 Logging.Message("found expanded electricity data");
                 using (MemoryStream stream = new MemoryStream(data))

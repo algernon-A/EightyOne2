@@ -1,4 +1,8 @@
-﻿Version 0.6 -
+﻿- Add option to ignore any serialized 81-tile data (fallback if legacy mod data is corrupted)
+- Add additional checks for invalid legacy savegame data
+
+
+Version 0.6 -
 
 - Add mechanism to force-fix ElectricityManager and WaterManager textures if another mod instantiates a manager before patches are applied
 - Remove redundant post-load refreshes to reduce loading time

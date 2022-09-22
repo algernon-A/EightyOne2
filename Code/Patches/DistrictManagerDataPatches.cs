@@ -136,8 +136,8 @@ namespace EightyOne2.Patches
         /// <param name="instance">DistrictManager instance.</param>
         private static void CustomDeserialize(DistrictManager instance)
         {
-            // See if this save contains any extended 81 tiles data.
-            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(DistrictDataSerializer.DataID, out byte[] data))
+            // See if this save contains any extended 81 tiles data (unless we're ignoring any).
+            if (!ModSettings.IgnoreExpanded && Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(DistrictDataSerializer.DataID, out byte[] data))
             {
                 using (MemoryStream stream = new MemoryStream(data))
                 {

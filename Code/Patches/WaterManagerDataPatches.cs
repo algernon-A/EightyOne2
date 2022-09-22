@@ -106,7 +106,8 @@ namespace EightyOne2.Patches
         /// <param name="heatingPulseUnits">WaterManager m_heatingPulseUnits array.</param>
         private static void CustomDeserialize(WaterManager waterManager, Cell[] waterGrid, PulseUnit[] waterPulseUnits, PulseUnit[] sewagePulseUnits, PulseUnit[] heatingPulseUnits)
         {
-            if (Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(WaterDataSerializer.DataID, out byte[] data))
+            // See if this save contains any extended 81 tiles data (unless we're ignoring any).
+            if (!ModSettings.IgnoreExpanded && Singleton<SimulationManager>.instance.m_serializableDataStorage.TryGetValue(WaterDataSerializer.DataID, out byte[] data))
             {
                 Logging.Message("found expanded water data");
                 using (MemoryStream stream = new MemoryStream(data))

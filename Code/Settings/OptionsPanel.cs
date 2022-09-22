@@ -59,6 +59,12 @@ namespace EightyOne2
                 unlockGroup.AddButton(Translations.Translate("UNLOCK_25"), () => Singleton<SimulationManager>.instance.AddAction(() => Unlock(5)));
                 unlockGroup.AddButton(Translations.Translate("UNLOCK_ALL"), () => Singleton<SimulationManager>.instance.AddAction(() => Unlock(9)));
             }
+
+            // Rescue options.
+            UIHelperBase rescueGroup = helper.AddGroup(Translations.Translate("RESCUE_OPTIONS"));
+            UICheckBox ignoreExpandedCheck = rescueGroup.AddCheckbox(Translations.Translate("IGNORE_EXPANDED"), ModSettings.IgnoreExpanded, (isChecked) => ModSettings.IgnoreExpanded = isChecked) as UICheckBox;
+            ignoreExpandedCheck.tooltip = Translations.Translate("IGNORE_EXPANDED_TIP");
+            ignoreExpandedCheck.tooltipBox = UIToolTips.WordWrapToolTip;
         }
 
         /// <summary>
