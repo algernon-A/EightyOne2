@@ -23,10 +23,16 @@ namespace EightyOne2
         {
             base.LoadedActions(mode);
 
+            SimulationManager simulationManager = Singleton<SimulationManager>.instance;
+
             // Push back edge fog to match original 81 tiles mod.
-            SimulationManager.instance.AddAction(() => Object.FindObjectOfType<RenderProperties>().m_edgeFogDistance = 2800f);
-            SimulationManager.instance.AddAction(() => Object.FindObjectOfType<FogEffect>().m_edgeFogDistance = 2800f);
-            SimulationManager.instance.AddAction(() => Object.FindObjectOfType<FogProperties>().m_EdgeFogDistance = 2800f);
+            simulationManager.AddAction(() => Object.FindObjectOfType<RenderProperties>().m_edgeFogDistance = 2800f);
+            simulationManager.AddAction(() => Object.FindObjectOfType<FogEffect>().m_edgeFogDistance = 2800f);
+            simulationManager.AddAction(() => Object.FindObjectOfType<FogProperties>().m_EdgeFogDistance = 2800f);
+
+            // Update utility grids.
+            simulationManager.AddAction(() => Singleton<WaterManager>.instance.UpdateGrid(-10000f, -10000f, 10000f, 10000f));
+            simulationManager.AddAction(() => Singleton<ElectricityManager>.instance.UpdateGrid(-10000f, -10000f, 10000f, 10000f));
         }
     }
 }

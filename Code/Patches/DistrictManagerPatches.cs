@@ -201,7 +201,6 @@ namespace EightyOne2.Patches
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> GetPark2Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => ReplaceDistrictConstants(instructions, original);
 
-
         /// <summary>
         /// Harmony transpiler for DistrictManager.GetParkArea to update code constants.
         /// </summary>

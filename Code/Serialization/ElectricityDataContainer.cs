@@ -5,6 +5,7 @@
 
 namespace EightyOne2.Serialization
 {
+    using AlgernonCommons;
     using ColossalFramework;
     using ColossalFramework.IO;
     using HarmonyLib;
@@ -283,6 +284,19 @@ namespace EightyOne2.Serialization
                 pulseGroups[i].m_mergeCount = (ushort)serializer.ReadUInt16();
                 pulseGroups[i].m_x = (ushort)serializer.ReadUInt16();
                 pulseGroups[i].m_z = (ushort)serializer.ReadUInt16();
+
+                // Check for invalid data.
+                if (pulseGroups[i].m_x >= ExpandedElectricityGridResolution)
+                {
+                    Logging.Error("found invalid electricity PulseGroup x coordinate of ", pulseGroups[i].m_x);
+                    pulseGroups[i].m_x = 0;
+                }
+
+                if (pulseGroups[i].m_z >= ExpandedElectricityGridResolution)
+                {
+                    Logging.Error("found invalid electricity PulseGroup z coordinate of ", pulseGroups[i].m_z);
+                    pulseGroups[i].m_z = 0;
+                }
             }
 
             // Pulse units.
@@ -298,6 +312,31 @@ namespace EightyOne2.Serialization
                 pulseUnits[i].m_node = (ushort)serializer.ReadUInt16();
                 pulseUnits[i].m_x = (ushort)serializer.ReadUInt16();
                 pulseUnits[i].m_z = (ushort)serializer.ReadUInt16();
+
+                // Checks for invalid data.
+                if (pulseUnits[i].m_group >= WaterManager.MAX_PULSE_GROUPS)
+                {
+                    Logging.Error("found invalid electricity PulseUnit group index of ", pulseUnits[i].m_group);
+                    pulseUnits[i].m_group = 0;
+                }
+
+                if (pulseUnits[i].m_node >= NetManager.MAX_NODE_COUNT)
+                {
+                    Logging.Error("found invalid electricity PulseUnit node index of ", pulseUnits[i].m_node);
+                    pulseUnits[i].m_node = 0;
+                }
+
+                if (pulseUnits[i].m_x >= ExpandedElectricityGridResolution)
+                {
+                    Logging.Error("found invalid electricity PulseUnit x coordinate of ", pulseUnits[i].m_x);
+                    pulseUnits[i].m_x = 0;
+                }
+
+                if (pulseUnits[i].m_z >= ExpandedElectricityGridResolution)
+                {
+                    Logging.Error("found invalid electricity PulseUnit z coordinate of ", pulseUnits[i].m_z);
+                    pulseUnits[i].m_z = 0;
+                }
             }
 
             // Node groups.

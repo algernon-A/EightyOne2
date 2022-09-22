@@ -109,55 +109,63 @@ namespace EightyOne2.Patches
                 Logging.Message("found expanded electricity data");
                 using (MemoryStream stream = new MemoryStream(data))
                 {
-                    DataSerializer.Deserialize<ElectricityDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
-                }
-            }
-            else
-            {
-                Logging.Message("no expanded district data found - coverting vanilla data");
-
-                // New electricity grid for 81 tiles.
-                Cell[] newElectricityGrid = new Cell[ExpandedElectricityGridArraySize];
-                AccessTools.Field(typeof(ElectricityManager), "m_electricityGrid").SetValue(electricityManager, newElectricityGrid);
-
-                // Convert 25-tile data into 81-tile equivalent locations.
-                for (int z = 0; z < GameElectricityGridResolution; ++z)
-                {
-                    for (int x = 0; x < GameElectricityGridResolution; ++x)
+                    try
                     {
-                        int oldCellIndex = (z * GameElectricityGridResolution) + x;
-                        int newCellIndex = ((z + CellConversionOffset) * ExpandedElectricityGridResolution) + x + CellConversionOffset;
-                        newElectricityGrid[newCellIndex] = electricityGrid[oldCellIndex];
+                        // Attempt to read expanded data, and if successful, return.
+                        DataSerializer.Deserialize<ElectricityDataContainer>(stream, DataSerializer.Mode.Memory, LegacyTypeConverter);
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.LogException(e, "exception deserializing expanded water data - perhaps a corrupted EML array size");
                     }
                 }
+            }
 
-                // Convert PulseGroups.
-                ExpandedPulseGroup[] expandedPulseGroups = PulseGroups;
-                for (int i = 0; i < pulseGroups.Length; ++i)
-                {
-                    expandedPulseGroups[i] = new ExpandedPulseGroup
-                    {
-                        m_origCharge = pulseGroups[i].m_origCharge,
-                        m_curCharge = pulseGroups[i].m_curCharge,
-                        m_mergeIndex = pulseGroups[i].m_mergeIndex,
-                        m_mergeCount = pulseGroups[i].m_mergeCount,
-                        m_x = pulseGroups[i].m_x,
-                        m_z = pulseGroups[i].m_z,
-                    };
-                }
+            // If we got here, we didn't get readable expanded water data.
+            Logging.Message("no expanded electricity data found - coverting vanilla data");
 
-                // Convert PulseUnits.
-                ExpandedPulseUnit[] expandedPulseUnits = PulseUnits;
-                for (int i = 0; i < pulseUnits.Length; ++i)
+            // New electricity grid for 81 tiles.
+            Cell[] newElectricityGrid = new Cell[ExpandedElectricityGridArraySize];
+            AccessTools.Field(typeof(ElectricityManager), "m_electricityGrid").SetValue(electricityManager, newElectricityGrid);
+
+            // Convert 25-tile data into 81-tile equivalent locations.
+            for (int z = 0; z < GameElectricityGridResolution; ++z)
+            {
+                for (int x = 0; x < GameElectricityGridResolution; ++x)
                 {
-                    expandedPulseUnits[i] = new ExpandedPulseUnit
-                    {
-                        m_group = pulseUnits[i].m_group,
-                        m_node = pulseUnits[i].m_node,
-                        m_x = pulseUnits[i].m_x,
-                        m_z = pulseUnits[i].m_z,
-                    };
+                    int oldCellIndex = (z * GameElectricityGridResolution) + x;
+                    int newCellIndex = ((z + CellConversionOffset) * ExpandedElectricityGridResolution) + x + CellConversionOffset;
+                    newElectricityGrid[newCellIndex] = electricityGrid[oldCellIndex];
                 }
+            }
+
+            // Convert PulseGroups.
+            ExpandedPulseGroup[] expandedPulseGroups = PulseGroups;
+            for (int i = 0; i < pulseGroups.Length; ++i)
+            {
+                expandedPulseGroups[i] = new ExpandedPulseGroup
+                {
+                    m_origCharge = pulseGroups[i].m_origCharge,
+                    m_curCharge = pulseGroups[i].m_curCharge,
+                    m_mergeIndex = pulseGroups[i].m_mergeIndex,
+                    m_mergeCount = pulseGroups[i].m_mergeCount,
+                    m_x = pulseGroups[i].m_x,
+                    m_z = pulseGroups[i].m_z,
+                };
+            }
+
+            // Convert PulseUnits.
+            ExpandedPulseUnit[] expandedPulseUnits = PulseUnits;
+            for (int i = 0; i < pulseUnits.Length; ++i)
+            {
+                expandedPulseUnits[i] = new ExpandedPulseUnit
+                {
+                    m_group = pulseUnits[i].m_group,
+                    m_node = pulseUnits[i].m_node,
+                    m_x = pulseUnits[i].m_x,
+                    m_z = pulseUnits[i].m_z,
+                };
             }
         }
 

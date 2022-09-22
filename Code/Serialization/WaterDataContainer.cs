@@ -229,8 +229,6 @@ namespace EightyOne2.Serialization
 
             encodedBytes.EndWrite();
 
-            AlgernonCommons.Logging.Message("writing water pulseGroups");
-
             // Water pulse groups.
             PulseGroup[] waterPulseGroups = AccessTools.Field(typeof(WaterManager), "m_waterPulseGroups").GetValue(waterManager) as PulseGroup[];
             int waterPulseGroupCount = (int)AccessTools.Field(typeof(WaterManager), "m_waterPulseGroupCount").GetValue(waterManager);
@@ -596,6 +594,13 @@ namespace EightyOne2.Serialization
                 pulseGroups[i].m_mergeIndex = (ushort)serializer.ReadUInt16();
                 pulseGroups[i].m_mergeCount = (ushort)serializer.ReadUInt16();
                 pulseGroups[i].m_node = (ushort)serializer.ReadUInt16();
+
+                // Check for invalid data.
+                if (pulseGroups[i].m_node >= NetManager.MAX_NODE_COUNT)
+                {
+                    Logging.Error("found invalid water PulseGroup node index of ", pulseGroups[i].m_node);
+                    pulseGroups[i].m_node = 0;
+                }
             }
 
             return pulseGroupCount;
@@ -620,6 +625,34 @@ namespace EightyOne2.Serialization
                 pulseUnits[i].m_node = (ushort)serializer.ReadUInt16();
                 pulseUnits[i].m_x = (ushort)serializer.ReadUInt16();
                 pulseUnits[i].m_z = (ushort)serializer.ReadUInt16();
+
+                // Checks for invalid data.
+                if (pulseUnits[i].m_group >= WaterManager.MAX_PULSE_GROUPS)
+                {
+                    Logging.Error("found invalid water PulseUnit group index of ", pulseUnits[i].m_group);
+                    pulseUnits[i].m_group = 0;
+                }
+
+                // Check for invalid data.
+                if (pulseUnits[i].m_node >= NetManager.MAX_NODE_COUNT)
+                {
+                    Logging.Error("found invalid water PulseUnit node index of ", pulseUnits[i].m_node);
+                    pulseUnits[i].m_node = 0;
+                }
+
+                // Check for invalid data.
+                if (pulseUnits[i].m_x >= ExpandedWaterGridResolution)
+                {
+                    Logging.Error("found invalid water PulseUnit x coordinate of ", pulseUnits[i].m_x);
+                    pulseUnits[i].m_x = 0;
+                }
+
+                // Check for invalid data.
+                if (pulseUnits[i].m_z >= ExpandedWaterGridResolution)
+                {
+                    Logging.Error("found invalid water PulseUnit z coordinate of ", pulseUnits[i].m_z);
+                    pulseUnits[i].m_z = 0;
+                }
             }
 
             return pulseUnitCount % pulseUnits.Length;
