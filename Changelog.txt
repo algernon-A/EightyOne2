@@ -1,4 +1,6 @@
-﻿- Add option to ignore any serialized 81-tile data (fallback if legacy mod data is corrupted)
+﻿Version 0.7 -
+
+- Add option to ignore any serialized 81-tile data (fallback if legacy mod data is corrupted)
 - Add additional checks for invalid legacy savegame data
 
 
