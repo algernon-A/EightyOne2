@@ -75,6 +75,26 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
+        /// Harmony transpiler for DistrictManager.Data.AfterDeserialize to replace hardcoded game constants.
+        /// </summary>
+        /// <param name="instructions">Original ILCode.</param>
+        /// <returns>Modified ILCode.</returns>
+        [HarmonyPatch(nameof(Data.AfterDeserialize))]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> AfterDeserializeTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.LoadsConstant(GameDistrictGridMax))
+                {
+                    instruction.operand = ExpandedDistrictGridMax;
+                }
+
+                yield return instruction;
+            }
+        }
+
+        /// <summary>
         /// Harmony transpiler for DistrictManager.Data.Serialize to insert call to custom serialize method at the correct spots (serialization of cell arrays).
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
