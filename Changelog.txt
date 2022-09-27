@@ -1,4 +1,6 @@
-﻿- Add mechanism to force-fix DistrictManager textures if another mod instantiates the manager before patches are applied
+﻿Version 0.8 -
+
+- Add mechanism to force-fix DistrictManager textures if another mod instantiates the manager before patches are applied
 - Update AlgernonCommons
 
 
