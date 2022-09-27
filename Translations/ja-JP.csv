@@ -23,3 +23,8 @@
 "ELECTRIC_ROADS_TIP","有効時は、道路を送電線と同じように電力を伝搬させます。","Tooltip in options panel."
 "NO_PIPES","配管を無くして、上下水道/暖房熱の供給が可能","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","有効時は、建物に水道管や暖房管の接続が不要になります。 (注意: 上下水道の設備や暖房設備(要DLC) は必要です)","Tooltip in options panel."
+"RESCUE_OPTIONS","緊急救助オプション - 使用上の注意","Option header in options panel."
+"IGNORE_EXPANDED","次にセーブのロード時に、拡張された81タイルのデータを無視します。"
+"IGNORE_EXPANDED_TIP","以前の81タイルMODで、 保存したゲームでロード時に問題が起こる場合は、 緊急時の予備オプションとして使用します。 (特に消滅した地区や地域に関する問題)
+警告: オプションを使用すると、 中央25タイルのエリア以外では地区が不正確になります。
+このオプションは、次の都市のロードが完了した後に自動的に設定はクリアされます。","Tooltip in options panel."

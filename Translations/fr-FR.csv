@@ -22,3 +22,8 @@
 "ELECTRIC_ROADS_TIP","Lorsque cette option est activée, les routes conduiront l'électricité comme si elles étaient des lignes électriques.","Tooltip in options panel."
 "NO_PIPES","Activer l'évacuation de l'eau, des eaux usées et du chauffage sans conduits","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Lorsque cette option est activée, les bâtiments n'ont plus besoin d'être connectés avec des tuyaux ou des conduites de chauffage (vous devrez toujours assurer le traitement de l'eau et des eaux usées, et les installations de chauffage si désiré).","Tooltip in options panel."
+"RESCUE_OPTIONS","Options de récupération d'urgence - UTILISER AVEC PRUDENCE","Option header in options panel."
+"IGNORE_EXPANDED","Ignorer les donnees de l'espace etendu de 81 Tiles lors du prochain chargement."
+"IGNORE_EXPANDED_TIP","Utilisez cette option comme option de secours si vous rencontrez des problèmes lors du chargement des parties sauvegardées par les mods 81 tiles antérieurs (en particulier tout problème avec les quartiers ou les zones qui disparaissent).
+AVERTISSEMENT : utiliser cette option provoquera une malformation des zones situées en dehors de la zone centrale de 25 tuiles.
+Cette option sera automatiquement désactivée une fois la prochaine charge de la ville terminée.","Tooltip in options panel."

@@ -22,3 +22,8 @@
 "ELECTRIC_ROADS_TIP","当此选项启用时，道路将会像电缆一样传输电力","Tooltip in options panel."
 "NO_PIPES","启用水、污水、热能无需水管即可传输","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","当此选项启用时，建筑无需和水管或供暖相连即可使用对应服务（你仍然需要提供水和污水处理，如果适用的话还有供暖设备）","Tooltip in options panel."
+"RESCUE_OPTIONS","Emergency rescue options - USE WITH CAUTION","Option header in options panel."
+"IGNORE_EXPANDED","Ignore expanded 81 tiles data when next loading a save."
+"IGNORE_EXPANDED_TIP","Use this as an emergency fallback option if you're having issues when loading games saved by earlier 81 tile mods (especially any issues with disappearing districts or areas).
+WARNING: using this option will cause any districts outside the central 25-tile area to be malformed.
+This option will automatically clear after the next city load is complete.","Tooltip in options panel."

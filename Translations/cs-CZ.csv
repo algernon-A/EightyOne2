@@ -22,8 +22,8 @@
 "ELECTRIC_ROADS_TIP","Pokud je to povoleno, budou silnice rozvádět elektrickou energii, jako by se jednalo o elektrické vedení.","Tooltip in options panel."
 "NO_PIPES","Povolit přenos vody, odpadní vody a vytápění bez potrubí","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Pokud je toto povoleno, budovy již nemusí být propojeny vodním nebo ohřevném potrubím (stále budete muset zajistit vodu, čištění odpadních vod a podle potřeby vytápění).","Tooltip in options panel."
-"RESCUE_OPTIONS","Emergency rescue options - USE WITH CAUTION","Option header in options panel."
-"IGNORE_EXPANDED","Ignore expanded 81 tiles data when next loading a save."
-"IGNORE_EXPANDED_TIP","Use this as an emergency fallback option if you're having issues when loading games saved by earlier 81 tile mods (especially any issues with disappearing districts or areas).
-WARNING: using this option will cause any districts outside the central 25-tile area to be malformed.
-This option will automatically clear after the next city load is complete.","Tooltip in options panel."
+"RESCUE_OPTIONS","Možnosti nouzové záchrany - POUŽÍT S OPATRNOSTÍ","Option header in options panel."
+"IGNORE_EXPANDED","Ignorovat rozšířené údaje z 81 Tiles při dalším načtení uložení."
+"IGNORE_EXPANDED_TIP","Použijte toto jako nouzovou záložní možnost, pokud máte problémy při načítání her uložených dřívějšími 81 Tiles módy (zejména problémy s mizejícími distrikty nebo oblastmi).
+VAROVÁNÍ: použití této možnosti způsobí deformaci všech okresů mimo střední 25-dlaždicovou oblast.
+Tato možnost bude automaticky odebrána po dokončení dalšího načítání města.","Tooltip in options panel."

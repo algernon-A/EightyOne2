@@ -1,5 +1,5 @@
 ﻿"LANGUAGE","Polski","Language name (in native language)."
-"LANGUAGE_GAME","Użyj języka gry","Default selection in language selection menu."
+"LANGUAGE_GAME","Domyślny język","Default selection in language selection menu."
 "NOTE_CLOSE","Zamknij","Notification button text - closes the notification."
 "NOTE_DONTSHOWAGAIN","Nie pokazuj więcej","Notification button text - don't show this notification again."
 "CONFLICT_DETECTED","Konflikt modyfikacji!","Warning message that a mod conflict was detected."
@@ -10,7 +10,7 @@
 "HARMONY_NOT_INSTALLED","Wymagany mod 'Harmony 2' nie został zainstalowany","Possible cause of Harmony error - Harmony not installed."
 "HARMONY_MOD_ERROR","Stary i/lub uszkodzony mod blokuje 'Harmony 2' przed prawidłowym działaniem","Possible cause of Harmony error - a broken mod (not this one) can cause things to stop working."
 "HARMONY_MOD_CONFLICT","Inny modem może spróbować zastosować łatkę Harmony","Possible cause of Harmony error - two mods trying to patch the same thing at once."
-"MOD_DESCRIPTION","Odblokowuje wszystkie 81 kafelków mapy.","Mod description displayed in content manager."
+"MOD_DESCRIPTION","Odblokowuj wszystkie 81 kafelki mapy.","Mod description displayed in content manager."
 "SET_LANGUAGE","Ustaw język"
 "UNLOCK","Obszar odblokowany"
 "UNLOCK_25","Odblokuj 25 środkowych kafelków mapy","Button in options panel - unlocks 25-tile area"
@@ -22,3 +22,8 @@
 "ELECTRIC_ROADS_TIP","Kiedy ta opcja jest włączona, drogi będą przewodzić prąd tak, jakby były to linie energetyczne.","Tooltip in options panel."
 "NO_PIPES","Włącz przesył wody, ścieków i rur grzewczych bez rurociągów","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Gdy ta opcja jest włączona, budynki nie muszą być przyłączone do rur przesyłających wodę, ścieki i ogrzewanie (nadal będziesz musiał produkować energię elektryczną i ogrzewanie jeśli jest potrzebne).","Tooltip in options panel."
+"RESCUE_OPTIONS","Awaryjne opcje – UŻYWAJ UWAŻNIE","Option header in options panel."
+"IGNORE_EXPANDED","Ignoruj rozszerzenie o 81 kafelków podczas następnego wczytywania zapisu."
+"IGNORE_EXPANDED_TIP","Use this as an emergency fallback option if you're having issues when loading games saved by earlier 81 tile mods (especially any issues with disappearing districts or areas).
+WARNING: using this option will cause any districts outside the central 25-tile area to be malformed.
+This option will automatically clear after the next city load is complete.","Tooltip in options panel."

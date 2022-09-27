@@ -22,3 +22,8 @@
 "ELECTRIC_ROADS_TIP","Wenn dies aktiviert ist, werden Straßen Elektrizität leiten, als wären sie Stromleitungen.","Tooltip in options panel."
 "NO_PIPES","Wasser-, Abwasser- und Heizwärmeübertragung ohne Rohrleitungen aktivieren","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Wenn dies aktiviert ist, müssen Gebäude nicht mehr mit Wasser- oder Heizrohren verbunden werden (Wasser-, Abwasser- und Heizanlagen müssen aber dennoch gebaut werden).","Tooltip in options panel."
+"RESCUE_OPTIONS","Notfallrettungsoptionen - MIT VORSICHT BENUTZEN","Option header in options panel."
+"IGNORE_EXPANDED","Ignoriere erweiterte 81 Tiles 2 Daten beim nächsten Laden eines Spielstandes."
+"IGNORE_EXPANDED_TIP","Benutze diese Option als Notfall-Fallback-Option, wenn Probleme beim Laden eines Spielstands bestehen, die von früheren 81 Tiles-Mods gespeichert wurden (insbesondere bei Problemen mit verschwindenden Distrikten oder Gebieten).
+WARNUNG: Mit dieser Option werden alle Bezirke außerhalb des zentralen Bereichs mit 25 Kacheln nicht erstellt.
+Diese Option wird automatisch deaktiviert, nachdem die nächste Stadt geladen wurde.","Tooltip in options panel."
