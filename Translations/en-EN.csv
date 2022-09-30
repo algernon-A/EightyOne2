@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","Unlocks all 81 game area tiles.","Mod description displayed in content manager."
 "SET_LANGUAGE","Set language"
 "UNLOCK","Area unlocking"
+"IGNORE_UNLOCK","Ignore area unlocking progression","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","When this is enabled, you will always be able to purchase new game area tiles, ignoring any city milestone progress restrictions.","Tooltip in options panel."
 "UNLOCK_25","Unlock central 25 tile area","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Unlock all areas","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Transmission networks","Option header in options panel".

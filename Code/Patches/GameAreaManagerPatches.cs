@@ -21,7 +21,6 @@ namespace EightyOne2.Patches
     /// </summary>
     [HarmonyPatch(typeof(GameAreaManager))]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Harmony")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Static replacements for instance methods")]
     public static class GameAreaManagerPatches
     {
         /// <summary>
@@ -62,6 +61,14 @@ namespace EightyOne2.Patches
         // Original game area limit.
         private const int GameMaxAreaCount = 9;
 
+        // Ignore game area unlocking progression.
+        private static bool s_ignoreUnlocking = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether area unlocking progression is ignored.
+        /// </summary>
+        internal static bool IgnoreUnlocking { get => s_ignoreUnlocking; set => s_ignoreUnlocking = value; }
+
         /// <summary>
         /// Replication ofGameAreaManager.GetStartTile to implement new area grid size.
         /// Needed as a separate method due to JITter inlining of original method.
@@ -71,6 +78,7 @@ namespace EightyOne2.Patches
         /// <param name="z">Tile z-position.</param>
         /// <param name="startTile">Start tile index.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Existing parameters")]
         public static void GetStartTile(GameAreaManager __instance, out int x, out int z, int startTile)
         {
             x = startTile % ExpandedAreaGridResolution;
@@ -86,6 +94,7 @@ namespace EightyOne2.Patches
         /// <param name="z">Tile z-position.</param>
         /// <returns>Area tile index.</returns>
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Existing parameters")]
         public static int GetTileIndex(GameAreaManager __instance, int x, int z)
         {
             return (z * ExpandedAreaGridResolution) + x;
@@ -100,6 +109,7 @@ namespace EightyOne2.Patches
         /// <param name="x">Tile x-position.</param>
         /// <param name="z">Tile z-position.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Existing parameters")]
         public static void GetTileXZ(GameAreaManager __instance, int tile, out int x, out int z)
         {
             x = tile % ExpandedAreaGridResolution;
@@ -115,6 +125,7 @@ namespace EightyOne2.Patches
         /// <param name="x">Tile x-position.</param>
         /// <param name="z">Tile z-position.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Existing parameters")]
         public static void GetTileXZ(GameAreaManager __instance, Vector3 p, out int x, out int z)
         {
             x = Mathf.Clamp(Mathf.FloorToInt((p.x / AreaGridCellResolution) + ExpandedGridHalfWidth), 0, 5);
@@ -218,11 +229,10 @@ namespace EightyOne2.Patches
         /// Harmony transpiler for GameAreaManager.Awake to update texture size constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch("Awake")]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction instruction in instructions)
             {
@@ -290,6 +300,15 @@ namespace EightyOne2.Patches
         {
             // Bounds check.
             if (x < 0 || z < 0 || x >= ExpandedAreaGridResolution || z >= ExpandedAreaGridResolution)
+            {
+                __result = false;
+
+                // Don't execute original method.
+                return false;
+            }
+
+            // Milestone unlock check.
+            if (!s_ignoreUnlocking && !Singleton<UnlockManager>.instance.Unlocked(__instance.m_areaCount))
             {
                 __result = false;
 

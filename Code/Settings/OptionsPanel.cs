@@ -52,10 +52,16 @@ namespace EightyOne2
             noPipesCheck.tooltip = Translations.Translate("NO_PIPES_TIP");
             noPipesCheck.tooltipBox = UIToolTips.WordWrapToolTip;
 
+            // Unlocking options.
+            UIHelperBase unlockGroup = helper.AddGroup(Translations.Translate("UNLOCK"));
+
+            UICheckBox ignoreUnlockCheck = unlockGroup.AddCheckbox(Translations.Translate("IGNORE_UNLOCK"), GameAreaManagerPatches.IgnoreUnlocking, (isChecked) => GameAreaManagerPatches.IgnoreUnlocking = isChecked) as UICheckBox;
+            ignoreUnlockCheck.tooltip = Translations.Translate("IGNORE_UNLOCK_TIP");
+            ignoreUnlockCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+
             // Unlock buttons (only if in-game).
             if (Loading.IsLoaded)
             {
-                UIHelperBase unlockGroup = helper.AddGroup(Translations.Translate("UNLOCK"));
                 unlockGroup.AddButton(Translations.Translate("UNLOCK_25"), () => Singleton<SimulationManager>.instance.AddAction(() => Unlock(5)));
                 unlockGroup.AddButton(Translations.Translate("UNLOCK_ALL"), () => Singleton<SimulationManager>.instance.AddAction(() => Unlock(9)));
             }

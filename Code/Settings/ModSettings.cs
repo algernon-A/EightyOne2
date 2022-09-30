@@ -21,6 +21,14 @@ namespace EightyOne2
         [XmlIgnore]
         private static readonly string SettingsFileName = Path.Combine(DataLocation.localApplicationData, "EightyOneTiles.xml");
 
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether area unlocking progression is ignored.
+        /// </summary>
+        [XmlElement("IgnoreUnlocking")]
+        public bool XMLIgnoreUnlocking { get => GameAreaManagerPatches.IgnoreUnlocking; set => GameAreaManagerPatches.IgnoreUnlocking = value; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'no powerlines' functionality is enabled.
         /// </summary>
