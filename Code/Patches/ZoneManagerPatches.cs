@@ -59,19 +59,16 @@ namespace EightyOne2.Patches
                 {
                     // Zone grid resolution, i.e. 150 -> 270.
                     instruction.operand = ExpandedZoneGridResolution;
-                    Logging.Message("replaced ", GameZoneGridResolution, " with ", ExpandedZoneGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameZoneGridMax))
                 {
                     // Zone grid resolution limit, i.e. 149 -> 269.
                     instruction.operand = ExpandedZoneGridMax;
-                    Logging.Message("replaced ", GameZoneGridMax, " with ", ExpandedZoneGridMax);
                 }
                 else if (instruction.LoadsConstant(GameZoneGridHalfResolution))
                 {
                     // Zone grid half resolution, i.e. 75f -> 135f.
                     instruction.operand = ExpandedZoneGridHalfResolution;
-                    Logging.Message("replaced ", GameZoneGridHalfResolution, " with ", ExpandedZoneGridHalfResolution);
                 }
 
                 yield return instruction;

@@ -176,19 +176,16 @@ namespace EightyOne2.Patches
                 {
                     // Immaterial resource resolution, i.e. 256 -> 450.
                     instruction.operand = ExpandedImmaterialResourceGridResolution;
-                    Logging.Message("replaced ", GameImmaterialResourceGridResolution, " with ", ExpandedImmaterialResourceGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
                     // Immaterial resource half-resolution - 1 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
-                    Logging.Message("replaced ", GameImmaterialResourceGridHalfResolution, " with ", ExpandedImmaterialResourceGridHalfResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridMax - 1))
                 {
                     // Maximum iteration value: immaterial resource resolution - 2 , i.e. 254 -> 448.
                     instruction.operand = ExpandedImmaterialResourceGridMax - 1;
-                    Logging.Message("replaced ", GameImmaterialResourceGridMax - 1, " with ", ExpandedImmaterialResourceGridMax - 1);
                 }
 
                 // TOOD: may need to have custom code for this, ushort[] buffer needs to be uint[] maybe?
@@ -419,19 +416,16 @@ namespace EightyOne2.Patches
                 {
                     // Immaterial resource resolution, i.e. 256 -> 450.
                     instruction.operand = ExpandedImmaterialResourceGridResolution;
-                    Logging.Message("replaced ", GameImmaterialResourceGridResolution, " with ", ExpandedImmaterialResourceGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridMax))
                 {
                     // Maximum iteration value: immaterial resource resolution - 1 , i.e. 255 -> 449.
                     instruction.operand = ExpandedImmaterialResourceGridMax;
-                    Logging.Message("replaced ", GameImmaterialResourceGridMax, " with ", ExpandedImmaterialResourceGridMax);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
                     // Maximum iteration value: immaterial resource resolution - 1 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
-                    Logging.Message("replaced ", GameImmaterialResourceGridHalfResolution, " with ", ExpandedImmaterialResourceGridHalfResolution);
                 }
 
                 yield return instruction;
@@ -455,19 +449,16 @@ namespace EightyOne2.Patches
                 {
                     // Immaterial resource resolution, i.e. 256 -> 450.
                     instruction.operand = ExpandedImmaterialResourceGridResolution;
-                    Logging.Message("replaced ", GameImmaterialResourceGridResolution, " with ", ExpandedImmaterialResourceGridResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
                     // Immaterial resource half-resolution - 1 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
-                    Logging.Message("replaced ", GameImmaterialResourceGridHalfResolution, " with ", ExpandedImmaterialResourceGridHalfResolution);
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridMax - 2))
                 {
                     // Maximum iteration value: immaterial resource resolution - 3 , i.e. 253 -> 447.
                     instruction.operand = ExpandedImmaterialResourceGridMax - 2;
-                    Logging.Message("replaced ", GameImmaterialResourceGridMax, " with ", ExpandedImmaterialResourceGridMax);
                 }
 
                 yield return instruction;

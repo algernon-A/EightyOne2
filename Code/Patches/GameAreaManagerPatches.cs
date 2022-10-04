@@ -183,8 +183,6 @@ namespace EightyOne2.Patches
                 // Check for ldc.i4.2.
                 if (instruction.opcode == OpCodes.Ldc_I4_2)
                 {
-                    Logging.Message("converting ldc.i4.2 to ldc.i4.0 in method ", PatcherBase.PrintMethod(original));
-
                     // Convert to ldc.i4.0.
                     instruction.opcode = OpCodes.Ldc_I4_0;
                 }
@@ -638,8 +636,6 @@ namespace EightyOne2.Patches
                     // Look for and update any relevant constants.
                     if (instruction.opcode == OpCodes.Ldc_I4_5)
                     {
-                        Logging.Message("replacing ldc.i4.5");
-
                         // Grid width, i.e. 5 -> 9.  Need to replace opcode here as well due to larger constant.
                         instruction.opcode = OpCodes.Ldc_I4;
                         instruction.operand = ExpandedAreaGridResolution;
@@ -656,7 +652,6 @@ namespace EightyOne2.Patches
                     else if (instruction.opcode == OpCodes.Ldloc_S && instruction.operand is LocalBuilder localBuilder && localBuilder.LocalIndex == 14)
                     {
                         // Skip ldloc.s 14 and following add.
-                        Logging.Message("skipping ldloc.s 14");
                         instructionEnumerator.MoveNext();
                         continue;
                     }
