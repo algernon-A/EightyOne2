@@ -1,4 +1,6 @@
-﻿- Implement milestone area unlocking progression (with option to ignore)
+﻿Version 0.9 -
+
+- Implement milestone area unlocking progression (with option to ignore)
 - Add fix for game TransferOffer.Position inaccuracy (causes occasional issues with pedestrian area cargo and garbage outside the 25 tile area)
 
 
