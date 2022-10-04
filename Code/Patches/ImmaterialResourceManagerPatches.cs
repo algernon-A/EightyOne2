@@ -124,8 +124,8 @@ namespace EightyOne2.Patches
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        //[HarmonyPatch("Awake")]
-        //[HarmonyTranspiler]
+        [HarmonyPatch("Awake")]
+        [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             bool replacing255 = false;
