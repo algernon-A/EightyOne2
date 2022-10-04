@@ -610,10 +610,10 @@ namespace EightyOne2.Patches
             FieldInfo startTileField = AccessTools.Field(typeof(GameAreaManager), "m_startTile");
 
             // Iterate through all instructions in original method.
-            IEnumerator<CodeInstruction> instructionsEnumerator = instructions.GetEnumerator();
-            while (instructionsEnumerator.MoveNext())
+            IEnumerator<CodeInstruction> instructionEnumerator = instructions.GetEnumerator();
+            while (instructionEnumerator.MoveNext())
             {
-                CodeInstruction instruction = instructionsEnumerator.Current;
+                CodeInstruction instruction = instructionEnumerator.Current;
 
                 // Skip 'header'.
                 if (!transpiling)
@@ -657,7 +657,7 @@ namespace EightyOne2.Patches
                     {
                         // Skip ldloc.s 14 and following add.
                         Logging.Message("skipping ldloc.s 14");
-                        instructionsEnumerator.MoveNext();
+                        instructionEnumerator.MoveNext();
                         continue;
                     }
                 }
