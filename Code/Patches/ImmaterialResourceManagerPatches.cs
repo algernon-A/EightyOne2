@@ -47,12 +47,12 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Game immaterial resource grid maximum bound (length - 1) = 256 - 1 = 255.
         /// </summary>
-        private const int GameImmaterialResourceGridMax = GameImmaterialResourceGridResolution - 1;
+        internal const int GameImmaterialResourceGridMax = GameImmaterialResourceGridResolution - 1;
 
         /// <summary>
         /// Expanded immaterial resource grid maximum bound (length - 1) = 450 - 1 = 449.
         /// </summary>
-        private const int ExpandedImmaterialResourceGridMax = ExpandedImmaterialResourceGridResolution - 1;
+        internal const int ExpandedImmaterialResourceGridMax = ExpandedImmaterialResourceGridResolution - 1;
 
         /// <summary>
         /// Replacement for m_tempAreaIndexes using expanded cell location struct.
@@ -124,8 +124,8 @@ namespace EightyOne2.Patches
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
-        [HarmonyPatch("Awake")]
-        [HarmonyTranspiler]
+        //[HarmonyPatch("Awake")]
+        //[HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             bool replacing255 = false;

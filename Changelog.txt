@@ -2,6 +2,7 @@
 
 - Implement milestone area unlocking progression (with option to ignore)
 - Add fix for game TransferOffer.Position inaccuracy (causes occasional issues with pedestrian area cargo and garbage outside the 25 tile area)
+- Add mechanism to force-fix ImmaterialResourceManager textures and arrays if another mod instantiates the manager before patches are applied
 
 
 Version 0.8 -

@@ -13,6 +13,7 @@ namespace EightyOne2
     using UnityEngine;
     using static Patches.DistrictManagerPatches;
     using static Patches.ElectricityManagerPatches;
+    using static Patches.ImmaterialResourceManagerPatches;
     using static Patches.WaterManagerPatches;
 
     /// <summary>
@@ -178,6 +179,56 @@ namespace EightyOne2
             else
             {
                 Logging.Message("WaterManager not yet instantiated");
+            }
+
+            // Immaterial resource manager.
+            if (Singleton<ImmaterialResourceManager>.exists)
+            {
+                Logging.Message("ImmaterialResourceManager already instantiated");
+
+                // Get district texture instance.
+                ImmaterialResourceManager immaterialResourceManager = Singleton<ImmaterialResourceManager>.instance;
+                FieldInfo m_resourceTexture = AccessTools.Field(typeof(ImmaterialResourceManager), "m_resourceTexture");
+                Texture2D resourceTexture = m_resourceTexture.GetValue(immaterialResourceManager) as Texture2D;
+
+                Logging.Message(resourceTexture.width);
+
+                // Check texture size.
+                if (resourceTexture.width != ExpandedImmaterialResourceGridResolution)
+                {
+                    Logging.Error("invalid ImmaterialResourceManager texture size (conflicting mod?); correcting");
+
+                    // Texture size is not expanded - reset per ImmaterialResourceManager.Awake.
+                    Texture2D newTexture = new Texture2D(ExpandedImmaterialResourceGridResolution, ExpandedImmaterialResourceGridResolution, TextureFormat.Alpha8, mipmap: false, linear: true)
+                    {
+                        wrapMode = TextureWrapMode.Clamp,
+                    };
+                    m_resourceTexture.SetValue(immaterialResourceManager, newTexture);
+                    Shader.SetGlobalTexture("_ImmaterialResources", newTexture);
+
+                    // Set array.
+                    AccessTools.Field(typeof(ImmaterialResourceManager), "m_tempCircleMinX").SetValue(immaterialResourceManager, new int[ExpandedImmaterialResourceGridResolution]);
+                    AccessTools.Field(typeof(ImmaterialResourceManager), "m_tempCircleMaxX").SetValue(immaterialResourceManager, new int[ExpandedImmaterialResourceGridResolution]);
+                    AccessTools.Field(typeof(ImmaterialResourceManager), "m_tempSectorSlopes").SetValue(immaterialResourceManager, new float[ExpandedImmaterialResourceGridResolution]);
+                    AccessTools.Field(typeof(ImmaterialResourceManager), "m_tempSectorDistances").SetValue(immaterialResourceManager, new float[ExpandedImmaterialResourceGridResolution]);
+
+                    // Create new modified area arrays.
+                    int[] modifiedX1 = new int[ExpandedImmaterialResourceGridResolution];
+                    int[] modifiedX2 = new int[ExpandedImmaterialResourceGridResolution];
+                    for (int i = 0; i < ExpandedImmaterialResourceGridResolution; ++i)
+                    {
+                        modifiedX1[i] = ExpandedImmaterialResourceGridMax;
+                        modifiedX2[i] = ExpandedImmaterialResourceGridMax;
+                    }
+
+                    // Apply new modified area arrays.
+                    AccessTools.Field(typeof(ImmaterialResourceManager), "m_modifiedX1").SetValue(immaterialResourceManager, modifiedX1);
+                    AccessTools.Field(typeof(ImmaterialResourceManager), "m_modifiedX2").SetValue(immaterialResourceManager, modifiedX2);
+                }
+            }
+            else
+            {
+                Logging.Message("ImmaterialResourceManager not yet instantiated");
             }
         }
     }
