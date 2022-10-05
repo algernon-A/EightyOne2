@@ -5,7 +5,6 @@
 
 namespace EightyOne2.Patches
 {
-    using System;
     using System.Collections.Generic;
     using System.Reflection.Emit;
     using AlgernonCommons;
