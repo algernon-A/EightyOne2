@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","Odblokowuj wszystkie 81 kafelki mapy.","Mod description displayed in content manager."
 "SET_LANGUAGE","Ustaw język"
 "UNLOCK","Obszar odblokowany"
+"IGNORE_UNLOCK","Ignoruj postęp odblokowywania obszaru","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","Gdy ta opcja jest włączona, zawsze będziesz mógł kupować nowe płytki obszaru gry, ignorując wszelkie ograniczenia dotyczące postępu miast.","Tooltip in options panel."
 "UNLOCK_25","Odblokuj 25 środkowych kafelków mapy","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Odblokuj całą mapę","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Sieci przesyłowe","Option header in options panel."

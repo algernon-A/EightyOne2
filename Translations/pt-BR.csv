@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","Desbloqueia todos os 81 blocos do jogo.","Mod description displayed in content manager."
 "SET_LANGUAGE","Definir idioma"
 "UNLOCK","Desbloquear área"
+"IGNORE_UNLOCK","Ignore a progressão de desbloqueio de área","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","Quando isso estiver ativado, você sempre poderá comprar novos blocos de área de jogo, ignorando quaisquer restrições de progresso dos marcos da cidade.","Tooltip in options panel."
 "UNLOCK_25","Desbloquear a área central de 25 blocos","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Desbloquear todas as áreas","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Redes de transmissão","Option header in options panel."

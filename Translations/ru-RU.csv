@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","Открывает все 81 клетки в игре.","Mod description displayed in content manager."
 "SET_LANGUAGE","Выбрать язык"
 "UNLOCK","Разблокировка клеток"
+"IGNORE_UNLOCK","Разблокировать ограничение клеток","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","Когда эта опция включена, вы сможете купить все клетки, несмотря на ограничения развития вашего города.","Tooltip in options panel."
 "UNLOCK_25","Разблокировать центральные 25 клеток","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Разблокировать все клетки","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Передача дорогами","Option header in options panel."

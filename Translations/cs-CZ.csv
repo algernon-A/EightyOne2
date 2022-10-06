@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","Odemkne všech 81 oblastí.","Mod description displayed in content manager."
 "SET_LANGUAGE","Nastavit jazyk"
 "UNLOCK","Odemknutí oblasti"
+"IGNORE_UNLOCK","Ignore area unlocking progression","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","When this is enabled, you will always be able to purchase new game area tiles, ignoring any city milestone progress restrictions.","Tooltip in options panel."
 "UNLOCK_25","Odemknout středních 25 oblastí","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Odemknout všechny oblasti","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Přepravní sítě","Option header in options panel."

@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","解锁所有81格游戏区域。","Mod description displayed in content manager."
 "SET_LANGUAGE","选择语言"
 "UNLOCK","解锁区域"
+"IGNORE_UNLOCK","Ignore area unlocking progression","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","When this is enabled, you will always be able to purchase new game area tiles, ignoring any city milestone progress restrictions.","Tooltip in options panel."
 "UNLOCK_25","解锁中央25格区域","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","解锁全部区域","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","传输网络","Option header in options panel."

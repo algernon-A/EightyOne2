@@ -14,6 +14,8 @@
 "MOD_DESCRIPTION","マップ内の全エリア 81タイルを全てアンロックします。","Mod description displayed in content manager."
 "SET_LANGUAGE","言語設定"
 "UNLOCK","エリアのアンロック"
+"IGNORE_UNLOCK","エリアの解放条件を無視","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","有効時は都市のマイルストーンの解放と進捗を無視して、初めからエリアのタイルが購入できます。","Tooltip in options panel."
 "UNLOCK_25","中央25タイルのエリアを解放","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","全てのエリアをアンロック","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","ネットワークの伝送","Option header in options panel."

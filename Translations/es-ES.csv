@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","Desbloquea todas las 81 celdas de área de juego.","Mod description displayed in content manager."
 "SET_LANGUAGE","Elegir idioma"
 "UNLOCK","Desbloqueo de área"
+"IGNORE_UNLOCK","Ignore area unlocking progression","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","When this is enabled, you will always be able to purchase new game area tiles, ignoring any city milestone progress restrictions.","Tooltip in options panel."
 "UNLOCK_25","Desbloquear el área central de 25 celdas","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Desbloquear todas las áreas","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Redes de transmisión","Option header in options panel."

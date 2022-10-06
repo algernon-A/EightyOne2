@@ -13,6 +13,8 @@
 "MOD_DESCRIPTION","Déverrouille toutes les 81 tuiles de la zone de jeu.","Mod description displayed in content manager."
 "SET_LANGUAGE","Définir la langue"
 "UNLOCK","Débloquer la zone"
+"IGNORE_UNLOCK","Ignorer les prérequis pour débloquer les tuiles","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","When this is enabled, you will always be able to purchase new game area tiles, ignoring any city milestone progress restrictions.","Tooltip in options panel."
 "UNLOCK_25","Débloquer la zone centrale de 25 tuiles","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Débloquer toutes les zones","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Réseaux de transmission","Option header in options panel."
