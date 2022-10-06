@@ -79,6 +79,9 @@ namespace EightyOne2
         /// <param name="unlockWidth">Grid with to unlock (centered); e.g. 5 to unock 25-tile area, 9 to unlock 81.</param>
         private void Unlock(int unlockWidth)
         {
+            int tileCount = unlockWidth * unlockWidth;
+            Logging.Message("force-unlocking ", tileCount, " tiles");
+
             // Local references
             GameAreaManager gameAreaManager = Singleton<GameAreaManager>.instance;
 
@@ -86,8 +89,12 @@ namespace EightyOne2
             int tileMargin = (GameAreaManagerPatches.ExpandedAreaGridResolution - unlockWidth) / 2;
             int maxCoord = tileMargin + unlockWidth;
 
+            // Enable forced unlocking while we do this.
+            GameAreaManagerPatches.ForceUnlocking = true;
+
             // Keep going recursively until all tiles have been unlocked.
             bool changingTiles = true;
+            int timeoutCounter = 0;
             while (changingTiles)
             {
                 // Reset flag.
@@ -109,9 +116,26 @@ namespace EightyOne2
                         }
                     }
                 }
+
+                // Check timeout.
+                if (++timeoutCounter > tileCount)
+                {
+                    break;
+                }
             }
 
-            Logging.Message("unlocking done");
+            // Disable forced unlocking.
+            GameAreaManagerPatches.ForceUnlocking = false;
+
+            // Check result.
+            if (changingTiles)
+            {
+                Logging.Error("unable to properly force-unlock all", tileCount, " tiles");
+            }
+            else
+            {
+                Logging.Message("unlocking done");
+            }
         }
     }
 }

@@ -70,6 +70,11 @@ namespace EightyOne2.Patches
         internal static bool IgnoreUnlocking { get => s_ignoreUnlocking; set => s_ignoreUnlocking = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether forced unlocking is enabled..
+        /// </summary>
+        internal static bool ForceUnlocking { get; set; }
+
+        /// <summary>
         /// Replication ofGameAreaManager.GetStartTile to implement new area grid size.
         /// Needed as a separate method due to JITter inlining of original method.
         /// </summary>
@@ -305,15 +310,6 @@ namespace EightyOne2.Patches
                 return false;
             }
 
-            // Milestone unlock check.
-            if (!s_ignoreUnlocking && !Singleton<UnlockManager>.instance.Unlocked(__instance.m_areaCount))
-            {
-                __result = false;
-
-                // Don't execute original method.
-                return false;
-            }
-
             // Already unlocked check.
             if (__instance.m_areaGrid[(z * ExpandedAreaGridResolution) + x] != 0)
             {
@@ -326,8 +322,21 @@ namespace EightyOne2.Patches
             // Adjacency check.
             __result = IsUnlocked(__instance, x, z - 1) || IsUnlocked(__instance, x - 1, z) || IsUnlocked(__instance, x + 1, z) || IsUnlocked(__instance, x, z + 1);
 
-            // Invoke area wrappers.
-            __instance.m_AreasWrapper.OnCanUnlockArea(x, z, ref __result);
+            // Game checks that are overriden by forced unlocking.
+            if (!ForceUnlocking)
+            {
+                // Milestone unlock check.
+                if (!s_ignoreUnlocking && !Singleton<UnlockManager>.instance.Unlocked(__instance.m_areaCount))
+                {
+                    __result = false;
+
+                    // Don't execute original method.
+                    return false;
+                }
+
+                // Invoke area wrappers.
+                __instance.m_AreasWrapper.OnCanUnlockArea(x, z, ref __result);
+            }
 
             // Don't execute original method.
             return false;
