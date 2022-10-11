@@ -1,4 +1,7 @@
-﻿Version 0.9.1 -
+﻿- Disable the in-game 'Load game' button to prevent second-loading
+
+
+Version 0.9.1 -
 
 - Fix simulation thread hang when force-unlocking tiles when game unlocking progression doesn't allow additional tiles
 

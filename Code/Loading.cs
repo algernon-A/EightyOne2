@@ -5,8 +5,11 @@
 
 namespace EightyOne2
 {
+    using AlgernonCommons;
     using AlgernonCommons.Patching;
+    using AlgernonCommons.Translation;
     using ColossalFramework;
+    using ColossalFramework.UI;
     using ICities;
     using UnityEngine;
 
@@ -23,9 +26,20 @@ namespace EightyOne2
         {
             base.LoadedActions(mode);
 
-            SimulationManager simulationManager = Singleton<SimulationManager>.instance;
+            // Disable pause menu 'load game' button (if another mod hasn't already disabled it).
+            UIButton loadButton = UIView.library.Get<PauseMenu>("PauseMenu")?.Find<UIPanel>("Menu")?.Find<UIButton>("LoadGame");
+            if (loadButton != null && loadButton.enabled)
+            {
+                loadButton.tooltip = Translations.Translate("LOAD_DISABLED");
+                loadButton.Disable();
+            }
+            else
+            {
+                Logging.Error("load game button not found");
+            }
 
             // Push back edge fog to match original 81 tiles mod.
+            SimulationManager simulationManager = Singleton<SimulationManager>.instance;
             simulationManager.AddAction(() => Object.FindObjectOfType<RenderProperties>().m_edgeFogDistance = 2800f);
             simulationManager.AddAction(() => Object.FindObjectOfType<FogEffect>().m_edgeFogDistance = 2800f);
             simulationManager.AddAction(() => Object.FindObjectOfType<FogProperties>().m_EdgeFogDistance = 2800f);
