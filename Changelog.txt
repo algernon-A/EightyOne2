@@ -1,4 +1,4 @@
-﻿- Disable the in-game 'Load game' button to prevent second-loading
+﻿- Disable the in-game 'Load game' and 'quit to main menu' buttons to prevent second-loading
 
 
 Version 0.9.1 -

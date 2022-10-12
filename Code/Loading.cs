@@ -8,6 +8,7 @@ namespace EightyOne2
     using AlgernonCommons;
     using AlgernonCommons.Patching;
     using AlgernonCommons.Translation;
+    using AlgernonCommons.UI;
     using ColossalFramework;
     using ColossalFramework.UI;
     using ICities;
@@ -31,11 +32,16 @@ namespace EightyOne2
             if (loadButton != null && loadButton.enabled)
             {
                 loadButton.tooltip = Translations.Translate("LOAD_DISABLED");
+                loadButton.tooltipBox = UIToolTips.WordWrapToolTip;
                 loadButton.Disable();
             }
-            else
+
+            UIButton mainMenuButton = UIView.library.Get<ExitConfirmPanel>("ExitConfirmPanel")?.Find<UIButton>("ToMainMenu");
+            if (mainMenuButton != null && mainMenuButton.enabled)
             {
-                Logging.Error("load game button not found");
+                mainMenuButton.tooltip = Translations.Translate("MAIN_MENU_DISABLED");
+                mainMenuButton.tooltipBox = UIToolTips.WordWrapToolTip;
+                mainMenuButton.Disable();
             }
 
             // Push back edge fog to match original 81 tiles mod.
