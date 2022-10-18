@@ -501,7 +501,7 @@ namespace EightyOne2.Patches
             // This does mean that all processing will take place over frames 0 - 225 inclusive,
             // With nothing being done on frames 226-254 (255 is the final step calculations).
             // A bit unbalanced, but given the comparatively low workload here, it wasn't worth getting too fancy.
-            uint subFrameIndex = ColossalFramework.Singleton<SimulationManager>.instance.m_currentFrameIndex & 0xFF;
+            uint subFrameIndex = Singleton<SimulationManager>.instance.m_currentFrameIndex & 0xFF;
             int startZ = (int)subFrameIndex * 2;
             int endZ = startZ + 1;
 
@@ -549,7 +549,7 @@ namespace EightyOne2.Patches
             if (subFrameIndex == 255)
             {
                 CalculateTotalResources(m_totalTempResources, m_totalTempResourcesMul, m_totalFinalResources);
-                StatisticsManager statisticsManager = ColossalFramework.Singleton<StatisticsManager>.instance;
+                StatisticsManager statisticsManager = Singleton<StatisticsManager>.instance;
                 StatisticBase statisticBase = statisticsManager.Acquire<StatisticArray>(StatisticType.ImmaterialResource);
                 for (int i = 0; i < RESOURCE_COUNT; ++i)
                 {
