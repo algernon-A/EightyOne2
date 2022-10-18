@@ -262,10 +262,10 @@ namespace EightyOne2.Patches
             ExpandedCellLocation cellLocation = default;
 
             // cellLocation.m_x = (byte)Mathf.Clamp((int)((nameLocation.x / 38.4f) + 128f), 0, 255);
-            cellLocation.m_x = (byte)Mathf.Clamp((int)((nameLocation.x / 38.4f) + ExpandedImmaterialResourceGridHalfResolution), 0, ExpandedImmaterialResourceGridMax);
+            cellLocation.m_x = (ushort)Mathf.Clamp((int)((nameLocation.x / 38.4f) + ExpandedImmaterialResourceGridHalfResolution), 0, ExpandedImmaterialResourceGridMax);
 
             // cellLocation.m_z = (byte)Mathf.Clamp((int)((nameLocation.z / 38.4f) + 128f), 0, 255);
-            cellLocation.m_z = (byte)Mathf.Clamp((int)((nameLocation.z / 38.4f) + ExpandedImmaterialResourceGridHalfResolution), 0, ExpandedImmaterialResourceGridMax);
+            cellLocation.m_z = (ushort)Mathf.Clamp((int)((nameLocation.z / 38.4f) + ExpandedImmaterialResourceGridHalfResolution), 0, ExpandedImmaterialResourceGridMax);
 
             ExpandedAreaQueueItem item = default;
             item.m_cost = 0;
@@ -287,12 +287,12 @@ namespace EightyOne2.Patches
                     ProcessParkArea(ref item2, park, num3, AreaQueueItemDirection.Down);
                 }
 
-                if (item2.m_location.m_x < byte.MaxValue && (item2.m_direction & AreaQueueItemDirection.Right) != 0)
+                if (item2.m_location.m_x < ExpandedImmaterialResourceGridMax && (item2.m_direction & AreaQueueItemDirection.Right) != 0)
                 {
                     ProcessParkArea(ref item2, park, num3, AreaQueueItemDirection.Right);
                 }
 
-                if (item2.m_location.m_z < byte.MaxValue && (item2.m_direction & AreaQueueItemDirection.Up) != 0)
+                if (item2.m_location.m_z < ExpandedImmaterialResourceGridMax && (item2.m_direction & AreaQueueItemDirection.Up) != 0)
                 {
                     ProcessParkArea(ref item2, park, num3, AreaQueueItemDirection.Up);
                 }
