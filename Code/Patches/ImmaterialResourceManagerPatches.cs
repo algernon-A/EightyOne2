@@ -623,10 +623,10 @@ namespace EightyOne2.Patches
             switch (direction)
             {
                 case AreaQueueItemDirection.Left:
-                    cellLocation.m_x = (byte)(item.m_location.m_x - 1);
+                    cellLocation.m_x = (ushort)(item.m_location.m_x - 1);
                     break;
                 case AreaQueueItemDirection.Right:
-                    cellLocation.m_x = (byte)(item.m_location.m_x + 1);
+                    cellLocation.m_x = (ushort)(item.m_location.m_x + 1);
                     break;
                 default:
                     cellLocation.m_x = item.m_location.m_x;
@@ -636,10 +636,10 @@ namespace EightyOne2.Patches
             switch (direction)
             {
                 case AreaQueueItemDirection.Up:
-                    cellLocation.m_z = (byte)(item.m_location.m_z - 1);
+                    cellLocation.m_z = (ushort)(item.m_location.m_z - 1);
                     break;
                 case AreaQueueItemDirection.Down:
-                    cellLocation.m_z = (byte)(item.m_location.m_z + 1);
+                    cellLocation.m_z = (ushort)(item.m_location.m_z + 1);
                     break;
                 default:
                     cellLocation.m_z = item.m_location.m_z;
