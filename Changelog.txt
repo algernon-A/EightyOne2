@@ -1,4 +1,9 @@
-﻿- Disable the in-game 'Load game' and 'quit to main menu' buttons to prevent second-loading
+﻿[Carried forward]
+- Disable the in-game 'Load game' and 'quit to main menu' buttons to prevent second-loading
+
+
+Version 0.9.2 -
+
 - Fix bounds checks in ImmaterialResourceManager park area calculations (caused pedestrian area entertainment values to not be correctly calculated in some map areas)
 
 
