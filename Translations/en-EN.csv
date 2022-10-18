@@ -29,5 +29,5 @@
 "IGNORE_EXPANDED_TIP","Use this as an emergency fallback option if you're having issues when loading games saved by earlier 81 tile mods (especially any issues with disappearing districts or areas).
 WARNING: using this option will cause any districts outside the central 25-tile area to be malformed.
 This option will automatically clear after the next city load is complete.","Tooltip in options panel."
-"LOAD_DISABLED","The load button has been disabled to stop second-loading in-game when using the 81 Tiles mod. When using mods you must always restart the game between loads.","Tooltip on 'load game' button when in-game."
-"MAIN_MENU_DISABLED","The quit to main menu button has been disabled to prevent returning to the main menu after loading a game when using the 81 Tiles mod. When using mods you must always exit to desktop instead of returning to the main menu.","Tooltip on 'exit to main menu' button when in-game."
+"LOAD_DISABLED","The Load Game button has been disabled by the 81 Tiles mod to protect your save file from corruption. Use the Quit Game button and completely relaunch the game before loading any save file or starting a new city.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","The Exit to Main Menu button has been disabled by the 81 Tiles mod to protect your save file from corruption. Use the Quit Game button and completely relaunch the game before loading any save file or starting a new city.","Tooltip on 'exit to main menu' button when in-game."
