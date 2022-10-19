@@ -307,7 +307,7 @@ namespace EightyOne2.Patches
                     ParkAreaIndex parkAreaIndex = default;
 
                     // parkAreaIndex.m_index = ((areaQueueItem.m_location.m_z * 256) + areaQueueItem.m_location.m_x) * 29;
-                    parkAreaIndex.m_index = ((areaQueueItem.m_location.m_z * ExpandedImmaterialResourceGridResolution) + areaQueueItem.m_location.m_x) * RESOURCE_COUNT;
+                    parkAreaIndex.m_index = ((Mathf.Min(areaQueueItem.m_location.m_z, ExpandedImmaterialResourceGridMax) * ExpandedImmaterialResourceGridResolution) + Mathf.Min(areaQueueItem.m_location.m_x, ExpandedImmaterialResourceGridMax)) * RESOURCE_COUNT;
 
                     parkAreaIndex.m_cost = areaQueueItem.m_cost;
                     ParkAreaIndex item3 = parkAreaIndex;
