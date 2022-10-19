@@ -646,6 +646,10 @@ namespace EightyOne2.Patches
                     break;
             }
 
+            // Inserted bounds checks due to expanded ranges.
+            cellLocation.m_x = (ushort)Mathf.Min(cellLocation.m_x, ExpandedImmaterialResourceGridMax);
+            cellLocation.m_z = (ushort)Mathf.Min(cellLocation.m_z, ExpandedImmaterialResourceGridMax);
+
             ExpandedAreaQueueItem value2 = default;
             if (TempAreaIndexes.TryGetValue(cellLocation, out var value))
             {

@@ -1,6 +1,11 @@
 ﻿[Carried forward]
 - Disable the in-game 'Load game' and 'quit to main menu' buttons to prevent second-loading
 
+Version 0.9.2.2 -
+
+- Add bounds check to ImmaterialResourceManager.ProcessParkArea
+
+
 Version 0.9.2.1 -
 
 - Add bounds check to ImmaterialResourceManager.GetParkAreaResourceIndexes
