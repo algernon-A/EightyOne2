@@ -21,8 +21,6 @@ namespace EightyOne2
         [XmlIgnore]
         private static readonly string SettingsFileName = Path.Combine(DataLocation.localApplicationData, "EightyOneTiles.xml");
 
-
-
         /// <summary>
         /// Gets or sets a value indicating whether area unlocking progression is ignored.
         /// </summary>

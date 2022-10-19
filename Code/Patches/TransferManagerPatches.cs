@@ -80,7 +80,6 @@ namespace EightyOne2.Patches
                     {
                         if (!instructionEnumerator.MoveNext())
                         {
-
                             Logging.Error("Stloc.2 not found");
                             break;
                         }
