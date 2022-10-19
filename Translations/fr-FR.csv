@@ -14,7 +14,7 @@
 "SET_LANGUAGE","Définir la langue"
 "UNLOCK","Débloquer la zone"
 "IGNORE_UNLOCK","Ignorer les prérequis pour débloquer les tuiles","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
-"IGNORE_UNLOCK_TIP","When this is enabled, you will always be able to purchase new game area tiles, ignoring any city milestone progress restrictions.","Tooltip in options panel."
+"IGNORE_UNLOCK_TIP","Quand cette option est activée, vous pourrez à tout moment acheter de nouvelles tuiles de jeu, en ignorant tout palier de progression de la ville.","Tooltip in options panel."
 "UNLOCK_25","Débloquer la zone centrale de 25 tuiles","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Débloquer toutes les zones","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Réseaux de transmission","Option header in options panel."
@@ -29,3 +29,5 @@
 "IGNORE_EXPANDED_TIP","Utilisez cette option comme option de secours si vous rencontrez des problèmes lors du chargement des parties sauvegardées par les mods 81 tiles antérieurs (en particulier tout problème avec les quartiers ou les zones qui disparaissent).
 AVERTISSEMENT : utiliser cette option provoquera une malformation des zones situées en dehors de la zone centrale de 25 tuiles.
 Cette option sera automatiquement désactivée une fois la prochaine charge de la ville terminée.","Tooltip in options panel."
+"LOAD_DISABLED","Le bouton Charger le jeu a été désactivé par le mod 81 Tiles pour protéger votre fichier de sauvegarde contre la corruption. Utilisez le bouton Quitter le jeu et relancez complètement le jeu avant de charger un fichier de sauvegarde ou de démarrer une nouvelle ville.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","Le bouton ""Quitter vers le menu principal"" a été désactivé par le mod 81 tiles pour protéger votre fichier de sauvegarde contre la corruption. Utilisez le bouton Quitter le jeu et relancez complètement le jeu avant de charger un fichier de sauvegarde ou de démarrer une nouvelle ville.","Tooltip on 'exit to main menu' button when in-game."

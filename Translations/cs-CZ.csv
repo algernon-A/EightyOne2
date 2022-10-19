@@ -29,3 +29,5 @@
 "IGNORE_EXPANDED_TIP","Použijte toto jako nouzovou záložní možnost, pokud máte problémy při načítání her uložených dřívějšími 81 Tiles módy (zejména problémy s mizejícími distrikty nebo oblastmi).
 VAROVÁNÍ: použití této možnosti způsobí deformaci všech okresů mimo střední 25-dlaždicovou oblast.
 Tato možnost bude automaticky odebrána po dokončení dalšího načítání města.","Tooltip in options panel."
+"LOAD_DISABLED","The Load Game button has been disabled by the 81 Tiles mod to protect your save file from corruption. Use the Quit Game button and completely relaunch the game before loading any save file or starting a new city.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","The Exit to Main Menu button has been disabled by the 81 Tiles mod to protect your save file from corruption. Use the Quit Game button and completely relaunch the game before loading any save file or starting a new city.","Tooltip on 'exit to main menu' button when in-game."

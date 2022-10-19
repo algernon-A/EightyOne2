@@ -29,3 +29,5 @@
 "IGNORE_EXPANDED_TIP","Use isso como uma opção de reserva de emergência se estiver tendo problemas ao carregar jogos anteriores salvos por mods de 81 blocos (especialmente quaisquer problemas com desaparecimentos de distritos ou áreas).
 AVISO: usar esta opção fará com que quaisquer distritos fora da área central de 25 blocos estejam malformados.
 Esta opção irá limpar automaticamente após a conclusão do próximo carregamento da cidade.","Tooltip in options panel."
+"LOAD_DISABLED","O botão de carregamento do jogo foi desativado pelo mod 81 blocos para proteger seu arquivo salvo contra corrupção. Use o botão sair e reinicie completamente o jogo antes de carregar qualquer arquivo salvo ou iniciar uma nova cidade.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","O botão Sair para o Menu Principal foi desativado pelo mod 81 Tiles para proteger seu arquivo salvo contra corrupção. Use o botão Sair e reinicie completamente o jogo antes de carregar qualquer arquivo salvo ou iniciar uma nova cidade.","Tooltip on 'exit to main menu' button when in-game."
