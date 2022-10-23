@@ -5,7 +5,6 @@
 
 namespace EightyOne2
 {
-    using AlgernonCommons;
     using AlgernonCommons.Patching;
     using AlgernonCommons.Translation;
     using AlgernonCommons.UI;
@@ -28,7 +27,7 @@ namespace EightyOne2
             base.LoadedActions(mode);
 
             // Disable pause menu 'load game' button (if another mod hasn't already disabled it).
-            /*UIButton loadButton = UIView.library.Get<PauseMenu>("PauseMenu")?.Find<UIPanel>("Menu")?.Find<UIButton>("LoadGame");
+            UIButton loadButton = UIView.library.Get<PauseMenu>("PauseMenu")?.Find<UIPanel>("Menu")?.Find<UIButton>("LoadGame");
             if (loadButton != null && loadButton.enabled)
             {
                 loadButton.tooltip = Translations.Translate("LOAD_DISABLED");
@@ -42,7 +41,7 @@ namespace EightyOne2
                 mainMenuButton.tooltip = Translations.Translate("MAIN_MENU_DISABLED");
                 mainMenuButton.tooltipBox = UIToolTips.WordWrapToolTip;
                 mainMenuButton.Disable();
-            }*/
+            }
 
             // Push back edge fog to match original 81 tiles mod.
             SimulationManager simulationManager = Singleton<SimulationManager>.instance;
