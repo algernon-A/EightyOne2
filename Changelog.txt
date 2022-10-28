@@ -1,4 +1,6 @@
-﻿- Fix edge fog removal thread allocation
+﻿Version 0.9.3.1 -
+
+- Fix edge fog removal thread allocation
 
 
 Version 0.9.3 -
