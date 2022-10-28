@@ -1,4 +1,7 @@
-﻿Version 0.9.3 -
+﻿- Fix edge fog removal thread allocation
+
+
+Version 0.9.3 -
 
 - Disable the main menu editor button when the mod has been activated to prevent loading into an editor with the mod
 - Disable the in-game 'Load game' and 'quit to main menu' buttons to prevent second-loading
