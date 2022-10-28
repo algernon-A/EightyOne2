@@ -29,6 +29,6 @@
 "IGNORE_EXPANDED_TIP","如果你在加载使用旧版本81格的存档出现问题（尤其是区域/地区消失的问题），请使用这个紧急备用选项。
 警告：这个选项会导致25格以外的任何区域会出现畸形。
 该选项将在下次加载的时候自动关闭。","Tooltip in options panel."
-"LOAD_DISABLED","加载游戏按钮已被81 Tiles 2禁用，以保护您的存档免受损坏。 在加载任何存档或开始一个新城市之前，使用退出游戏按钮并完全重新启动游戏。","Tooltip on 'load game' button when in-game."
-"MAIN_MENU_DISABLED","返回主菜单按钮已被81 Tiles 2禁用，以保护您的存档免受损坏。 在加载任何存档或开始一个新城市之前，使用退出游戏按钮并完全重新启动游戏。","Tooltip on 'exit to main menu' button when in-game."
-"EDITOR_DISABLED","编辑器按钮已被禁用，因为 81 Tiles mod 处于启用状态。 若要使用编辑器，您必须禁用 81 Tiles mod 并重启游戏。","Tooltip on disabled editor button in main menu."
+"LOAD_DISABLED","加载游戏按钮已被 81 Tiles 2 模组禁用，以保护您的存档免受损坏。 在加载任何存档或开始一个新城市之前，请选择“退出到桌面”按钮，并完全重新启动游戏。","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","返回主菜单按钮已被 81 Tiles 2 模组禁用，以保护您的存档免受损坏。 在加载任何存档或开始一个新城市之前，请选择“退出到桌面”按钮，并完全重新启动游戏。","Tooltip on 'exit to main menu' button when in-game."
+"EDITOR_DISABLED","编辑器按钮已被禁用，因为 81 Tiles 2 模组处于启用状态。 若要使用编辑器，您必须禁用 81 Tiles 2 模组并重启游戏。","Tooltip on disabled editor button in main menu."

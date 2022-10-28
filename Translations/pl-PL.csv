@@ -26,9 +26,9 @@
 "NO_PIPES_TIP","Gdy ta opcja jest włączona, budynki nie muszą być przyłączone do rur przesyłających wodę, ścieki i ogrzewanie (nadal będziesz musiał produkować energię elektryczną i ogrzewanie jeśli jest potrzebne).","Tooltip in options panel."
 "RESCUE_OPTIONS","Awaryjne opcje – UŻYWAJ UWAŻNIE","Option header in options panel."
 "IGNORE_EXPANDED","Ignoruj rozszerzenie o 81 kafelków podczas następnego wczytywania zapisu."
-"IGNORE_EXPANDED_TIP","Use this as an emergency fallback option if you're having issues when loading games saved by earlier 81 tile mods (especially any issues with disappearing districts or areas).
-WARNING: using this option will cause any districts outside the central 25-tile area to be malformed.
-This option will automatically clear after the next city load is complete.","Tooltip in options panel."
-"LOAD_DISABLED","The Load Game button has been disabled by the 81 Tiles mod to protect your save file from corruption. Use the Quit Game button and completely relaunch the game before loading any save file or starting a new city.","Tooltip on 'load game' button when in-game."
-"MAIN_MENU_DISABLED","The Exit to Main Menu button has been disabled by the 81 Tiles mod to protect your save file from corruption. Use the Quit Game button and completely relaunch the game before loading any save file or starting a new city.","Tooltip on 'exit to main menu' button when in-game."
-"EDITOR_DISABLED","The editors button has been disabled because the 81 Tiles mod is active. To use the editors, you must disable the 81 Tiles mod and restart the game.","Tooltip on disabled editor button in main menu."
+"IGNORE_EXPANDED_TIP","Użyj tej opcji jako opcji awaryjnej, jeśli masz problemy podczas ładowania gier zapisanych za pomocą wcześniejszych 81 modów kafelek (przedewszystkim problemy z zniknięciem terenu lub obszarów).
+UWAGA: użycie tej opcji spowoduje zniekształcenie wszystkich terenów poza centralnym obszarem podstawowych 25 kafelków.
+Ta opcja zostanie automatycznie wyczyszczona po zakończeniu następnego ładowania miasta.","Tooltip in options panel."
+"LOAD_DISABLED","Przycisk wczytywania gry został wyłączony przez mod 81 kafelków, by uniknąć utraty zapisu. Użyj przycisku ""Zakończ grę"" i uruchom ponownie grę przed wczytaniem zapisu lub stworzeniem nowego miasta.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","Przycisk ""Wyjdź do menu głównego"" został wyłączony przez mod 81 kafelków, aby uniknąć utraty zapisu gry. Użyj przycisku ""Zakończ grę"" i uruchom ponownie grę przed załadowaniem zapisu lub stworzeniem nowego miasta.","Tooltip on 'exit to main menu' button when in-game."
+"EDITOR_DISABLED","Przycisk edycji został wyłączony, ponieważ mod 81 kafelek jest aktywny. Aby korzystać z edytora, musisz wyłączyć mod 81 kafelków i ponownie uruchomić grę.","Tooltip on disabled editor button in main menu."
