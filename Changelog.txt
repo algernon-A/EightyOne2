@@ -1,4 +1,4 @@
-﻿Verion 0.9.3.2 -
+﻿Version 0.9.3.2 -
 
 - Fix editors button disabling being confused by NExt2 options panel
 
