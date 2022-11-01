@@ -1,4 +1,6 @@
-﻿- Fix editors button disabling being confused by NExt2 options panel
+﻿Verion 0.9.3.2 -
+
+- Fix editors button disabling being confused by NExt2 options panel
 
 
 Version 0.9.3.1 -
