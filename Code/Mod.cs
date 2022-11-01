@@ -77,7 +77,7 @@ namespace EightyOne2
                 mapEditorButton.Disable();
             }
 
-            UIButton editorsButton = GameObject.Find("Tools")?.GetComponent<UIButton>();
+            UIButton editorsButton = GameObject.Find("MenuContainer")?.GetComponent<UIPanel>().Find<UISlicedSprite>("CenterPart")?.Find<UIPanel>("MenuArea")?.Find<UIPanel>("Menu")?.Find<UIButton>("Tools");
             if (editorsButton != null && editorsButton.enabled)
             {
                 editorsButton.tooltip = Translations.Translate("EDITOR_DISABLED");

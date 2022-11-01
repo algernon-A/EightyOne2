@@ -1,4 +1,7 @@
-﻿Version 0.9.3.1 -
+﻿- Fix editors button disabling being confused by NExt2 options panel
+
+
+Version 0.9.3.1 -
 
 - Fix edge fog removal thread allocation
 
