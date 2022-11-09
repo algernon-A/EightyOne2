@@ -1,4 +1,9 @@
-﻿Version 0.9.3.2 -
+﻿Version 0.9.4 -
+
+- Add mechanism to force-fix NetManager.m_tileNodesCount array if another mod instantiates the manager before patches are applied
+
+
+Version 0.9.3.2 -
 
 - Fix editors button disabling being confused by NExt2 options panel
 

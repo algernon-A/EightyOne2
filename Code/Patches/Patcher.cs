@@ -14,6 +14,7 @@ namespace EightyOne2
     using static Patches.DistrictManagerPatches;
     using static Patches.ElectricityManagerPatches;
     using static Patches.ImmaterialResourceManagerPatches;
+    using static Patches.NetManagerPatches;
     using static Patches.WaterManagerPatches;
 
     /// <summary>
@@ -191,7 +192,7 @@ namespace EightyOne2
                 FieldInfo m_resourceTexture = AccessTools.Field(typeof(ImmaterialResourceManager), "m_resourceTexture");
                 Texture2D resourceTexture = m_resourceTexture.GetValue(immaterialResourceManager) as Texture2D;
 
-                Logging.Message(resourceTexture.width);
+                Logging.Message("resource texture width is ", resourceTexture.width);
 
                 // Check texture size.
                 if (resourceTexture.width != ExpandedImmaterialResourceGridResolution)
@@ -229,6 +230,27 @@ namespace EightyOne2
             else
             {
                 Logging.Message("ImmaterialResourceManager not yet instantiated");
+            }
+
+            // Immaterial resource manager.
+            if (Singleton<NetManager>.exists)
+            {
+                Logging.Message("NetManager already instantiated");
+
+                // Get district texture instance.
+                NetManager netManager = Singleton<NetManager>.instance;
+                FieldInfo tileNodesCountField = AccessTools.Field(typeof(NetManager), "m_tileNodesCount");
+
+                int[] m_tileNodesCount = tileNodesCountField.GetValue(netManager) as int[];
+                if (m_tileNodesCount == null || m_tileNodesCount.Length != ExpandedTileNodesCount)
+                {
+                    Logging.Error("invalid NetManager.m_tileNodesCount size of ", m_tileNodesCount?.Length, " (conflicting mod?); correcting");
+                    tileNodesCountField.SetValue(netManager, new int[ExpandedTileNodesCount]);
+                }
+            }
+            else
+            {
+                Logging.Message("NetManager not yet instantiated");
             }
         }
     }

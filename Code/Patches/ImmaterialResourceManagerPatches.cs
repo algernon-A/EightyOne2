@@ -557,7 +557,7 @@ namespace EightyOne2.Patches
                     m_globalTempResources[i] = 0;
                     m_totalTempResources[i] = 0;
                     m_totalTempResourcesMul[i] = 0L;
-                    statisticBase.Acquire<StatisticInt32>(i, 29).Set(m_totalFinalResources[i]);
+                    statisticBase.Acquire<StatisticInt32>(i, RESOURCE_COUNT).Set(m_totalFinalResources[i]);
                 }
             }
 
