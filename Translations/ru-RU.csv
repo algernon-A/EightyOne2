@@ -1,5 +1,5 @@
 ﻿"LANGUAGE","Русский","Language name (in native language)."
-"LANGUAGE_GAME","Язык игры","Default selection in language selection menu."
+"LANGUAGE_GAME","Использ. язык игры","Default selection in language selection menu."
 "NOTE_CLOSE","Закрыть","Notification button text - closes the notification."
 "NOTE_DONTSHOWAGAIN","Не показывать снова","Notification button text - don't show this notification again."
 "CONFLICT_DETECTED","Обнаружен конфликт модов!","Warning message that a mod conflict was detected."
