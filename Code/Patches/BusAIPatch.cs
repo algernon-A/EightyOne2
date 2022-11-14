@@ -9,7 +9,7 @@ namespace EightyOne2.Patches
     using HarmonyLib;
 
     /// <summary>
-    /// Harmony patch to enable intercity busses 
+    /// Harmony patch to enable intercity buses.
     /// </summary>
     [HarmonyPatch(typeof(BusAI), "ArriveAtDestination")]
     internal static class BusAIPatch
