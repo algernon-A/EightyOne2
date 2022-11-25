@@ -1,4 +1,6 @@
-﻿- Add explicit conflict detection for several of the most common conflicting mods
+﻿Version 0.9.5 -
+
+- Add explicit conflict detection for several of the most common conflicting mods
 
 
 Version 0.9.4 -
