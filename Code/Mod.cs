@@ -5,9 +5,11 @@
 
 namespace EightyOne2
 {
+    using AlgernonCommons;
     using AlgernonCommons.Patching;
     using AlgernonCommons.Translation;
     using AlgernonCommons.UI;
+    using ColossalFramework.Plugins;
     using ColossalFramework.UI;
     using ICities;
     using UnityEngine;
@@ -47,6 +49,23 @@ namespace EightyOne2
         /// </summary>
         public override void OnEnabled()
         {
+            // Perform conflict detection.
+            ConflictDetection conflictDetection = new ConflictDetection();
+            if (conflictDetection.CheckModConflicts())
+            {
+                Logging.Error("aborting activation due to conflicting mods");
+
+                // Disable mod.
+                if (AssemblyUtils.ThisPlugin is PluginManager.PluginInfo plugin)
+                {
+                    Logging.KeyMessage("disabling mod");
+                    plugin.isEnabled = false;
+                }
+
+                // Don't do anything further.
+                return;
+            }
+
             base.OnEnabled();
 
             // Disable the map editor button.

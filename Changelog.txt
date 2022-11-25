@@ -1,4 +1,7 @@
-﻿Version 0.9.4 -
+﻿- Add explicit conflict detection for several of the most common conflicting mods
+
+
+Version 0.9.4 -
 
 - Add mechanism to force-fix NetManager.m_tileNodesCount array if another mod instantiates the manager before patches are applied
 
