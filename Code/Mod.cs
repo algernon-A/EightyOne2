@@ -55,6 +55,9 @@ namespace EightyOne2
             {
                 Logging.Error("aborting activation due to conflicting mods");
 
+                // Load mod settings to ensure that correct language is selected for notification display.
+                LoadSettings();
+
                 // Disable mod.
                 if (AssemblyUtils.ThisPlugin is PluginManager.PluginInfo plugin)
                 {
