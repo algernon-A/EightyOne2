@@ -29,7 +29,7 @@ namespace EightyOne2
             UIHelper helper = new UIHelper(this);
 
             // Language options.
-            UIHelperBase languageGroup = helper.AddGroup(Translations.Translate("SET_LANGUAGE"));
+            UIHelperBase languageGroup = helper.AddGroup(Translations.Translate("LANGUAGE_CHOICE"));
             UIDropDown languageDropDown = (UIDropDown)languageGroup.AddDropdown(Translations.Translate("LANGUAGE_CHOICE"), Translations.LanguageList, Translations.Index, (value) =>
             {
                 Translations.Index = value;

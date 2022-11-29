@@ -73,6 +73,12 @@ namespace EightyOne2
                             conflictingModNames.Add("Cross the Line");
                             break;
 
+                        case "PurchaseIt":
+                            // Purchase it.
+                            conflictDetected = true;
+                            conflictingModNames.Add("Purchase It");
+                            break;
+
                         case "EManagersLib":
                             // Extended Managers library - check for Beta.
                             if (assembly.GetName().Version == new Version("1.1.1.0"))
@@ -122,6 +128,8 @@ namespace EightyOne2
                 {
                     Logging.Error("Conflicting mod found: ", conflictingMod);
                 }
+
+                return conflictingModNames;
             }
 
             // If we got here, no conflict was detected; return null.
