@@ -30,7 +30,7 @@ namespace EightyOne2
 
             // Language options.
             UIHelperBase languageGroup = helper.AddGroup(Translations.Translate("SET_LANGUAGE"));
-            UIDropDown languageDropDown = (UIDropDown)languageGroup.AddDropdown(Translations.Translate("SET_LANGUAGE"), Translations.LanguageList, Translations.Index, (value) =>
+            UIDropDown languageDropDown = (UIDropDown)languageGroup.AddDropdown(Translations.Translate("LANGUAGE_CHOICE"), Translations.LanguageList, Translations.Index, (value) =>
             {
                 Translations.Index = value;
                 OptionsPanelManager<OptionsPanel>.LocaleChanged();
