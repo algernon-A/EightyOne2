@@ -12,36 +12,67 @@ namespace EightyOne2
     using AlgernonCommons.Notifications;
     using AlgernonCommons.Translation;
     using ColossalFramework.Plugins;
+    using ColossalFramework.UI;
 
     /// <summary>
     /// Mod conflict detection.
     /// </summary>
     internal class ConflictDetection
     {
+        // List of conflicting mods.
+        private List<string> _conflictingModNames;
+
         /// <summary>
         /// Checks for mod conflicts and displays a notification when a conflict is detected.
         /// </summary>
         /// <returns>True if a mod conflict was detected, false otherwise.</returns>
         internal bool CheckModConflicts()
         {
-            List<string> conflictingModNames = CheckConflictingMods();
+            _conflictingModNames = CheckConflictingMods();
 
-            bool conflictDetected = conflictingModNames != null && conflictingModNames.Count > 0;
+            bool conflictDetected = _conflictingModNames != null && _conflictingModNames.Count > 0;
             if (conflictDetected)
             {
-                // Mod conflict detected - display warning notification.
-                ListNotification modConflictNotification = NotificationBase.ShowNotification<ListNotification>();
-                if (modConflictNotification != null)
+                // First, check to see if UIView is ready.
+                if (UIView.GetAView() != null)
                 {
-                    // Key text items.
-                    modConflictNotification.AddParas(Translations.Translate("CONFLICT_DETECTED"), Translations.Translate("UNABLE_TO_OPERATE"), Translations.Translate("CONFLICTING_MODS"));
+                    // It's ready - display the notification now.
+                    DisplayNotification();
+                }
+                else
+                {
+                    // Otherwise, queue the notification for when the intro's finished loading.
+                    LoadingManager.instance.m_introLoaded += DisplayNotification;
 
-                    // Add conflicting mod name(s).
-                    modConflictNotification.AddList(conflictingModNames.ToArray());
+                    // Also queue the notification for level loading.
+                    LoadingManager.instance.m_levelLoaded += (updateMode) =>
+                    {
+                        if (updateMode == SimulationManager.UpdateMode.LoadGame || updateMode == SimulationManager.UpdateMode.NewGameFromMap)
+                        {
+                            DisplayNotification();
+                        }
+                    };
                 }
             }
 
             return conflictDetected;
+        }
+
+        /// <summary>
+        /// Displays the mod conflict notification.
+        /// </summary>
+        private void DisplayNotification()
+        {
+            // Mod conflict detected - display warning notification.
+            ListNotification modConflictNotification = NotificationBase.ShowNotification<ListNotification>();
+            if (modConflictNotification != null)
+            {
+                // Key text items.
+                modConflictNotification.AddParas(Translations.Translate("CONFLICT_DETECTED"), Translations.Translate("UNABLE_TO_OPERATE"), Translations.Translate("CONFLICTING_MODS"));
+
+                // Add conflicting mod name(s).
+                modConflictNotification.AddList(_conflictingModNames.ToArray());
+            }
         }
 
         /// <summary>
