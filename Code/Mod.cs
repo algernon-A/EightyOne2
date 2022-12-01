@@ -9,6 +9,7 @@ namespace EightyOne2
     using AlgernonCommons.Patching;
     using AlgernonCommons.Translation;
     using AlgernonCommons.UI;
+    using ColossalFramework.Globalization;
     using ColossalFramework.Plugins;
     using ColossalFramework.UI;
     using ICities;
@@ -77,12 +78,23 @@ namespace EightyOne2
             {
                 // It's ready - disable the button now.
                 DisableMapEditorButton();
+
+                // Ensure button is re-disabled on locale change.
+                LocaleManager.eventLocaleChanged += DisableMapEditorButton;
             }
             else
             {
                 // Otherwise, queue the button disablement for when the intro's finished loading.
-                LoadingManager.instance.m_introLoaded += DisableMapEditorButton;
+                LoadingManager.instance.m_introLoaded += () =>
+                {
+                    DisableMapEditorButton();
+
+                    // Ensure button is re-disabled on locale change.
+                    LocaleManager.eventLocaleChanged += DisableMapEditorButton;
+                };
             }
+
+            // Also disable the map editor button on locale change.
         }
 
         /// <summary>
@@ -90,6 +102,8 @@ namespace EightyOne2
         /// </summary>
         private void DisableMapEditorButton()
         {
+            Logging.Message("disabling map editor buttons");
+
             // Disable map editor button.
             UIButton mapEditorButton = GameObject.FindObjectOfType<ToolsMenu>()?.Find<UIPanel>("Panel Layout")?.Find<UIButton>("MapEditor");
             if (mapEditorButton != null && mapEditorButton.enabled)
