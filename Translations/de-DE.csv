@@ -3,6 +3,8 @@
 "UNLOCK","Bereich entsperren"
 "IGNORE_UNLOCK","Freischaltungsfortschritt für Kacheln ignorieren","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","Wenn diese Option aktiviert ist, kann man immer neue Spielbereichskacheln erwerben und dabei alle Meilenstein-Fortschrittsbeschränkungen ignorieren.","Tooltip in options panel."
+"CROSS_THE_LINE","Bauen außerhalb der erworbenen Kacheln erlauben","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","Wenn diese Option aktiviert ist, kannst du außerhalb von bereits erworbenen Kacheln bauen.","Tooltip in options panel."
 "UNLOCK_25","Die 25 inneren Spielbereiche freischalten","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Alle Bereiche freischalten","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Übertragungsnetzwerke","Option header in options panel."

@@ -3,6 +3,8 @@
 "UNLOCK","Разблокировка клеток"
 "IGNORE_UNLOCK","Разблокировать ограничение клеток","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","Когда эта опция включена, вы сможете купить все клетки, несмотря на ограничения развития вашего города.","Tooltip in options panel."
+"CROSS_THE_LINE","Разрешить строительство за пределами собственных участков","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","Если это включено, вы можете строить за пределами собственных участков.","Tooltip in options panel."
 "UNLOCK_25","Разблокировать центральные 25 клеток","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Разблокировать все клетки","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Передача дорогами","Option header in options panel."

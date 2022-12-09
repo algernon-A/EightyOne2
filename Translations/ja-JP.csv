@@ -3,6 +3,8 @@
 "UNLOCK","エリアのアンロック"
 "IGNORE_UNLOCK","エリアの解放条件を無視","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","有効時は都市のマイルストーンの解放と進捗を無視して、初めからエリアのタイルが購入できます。","Tooltip in options panel."
+"CROSS_THE_LINE","所有タイルの外側に建物を許可","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","これを有効にすると、所有タイルの外側に建物の配置が可能になります。","Tooltip in options panel."
 "UNLOCK_25","中央25タイルのエリアを解放","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","全てのエリアをアンロック","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","ネットワークの伝送","Option header in options panel."
