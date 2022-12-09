@@ -1,4 +1,4 @@
-﻿- Make 'no need for pipes' functionality more responsive to capacity deficits
+﻿- Make 'no need for pipes' and 'no need for powerlines' functionality more responsive to capacity deficits
 
 
 Version 0.9.5 -

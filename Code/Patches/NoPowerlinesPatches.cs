@@ -6,6 +6,7 @@
 namespace EightyOne2.Patches
 {
     using System;
+    using ColossalFramework;
     using HarmonyLib;
     using UnityEngine;
 
@@ -19,8 +20,9 @@ namespace EightyOne2.Patches
         // Enabled status.
         private static bool s_noPowerlinesEnabled = false;
 
-        // Centralised electricity pool.
-        private static int s_electricityPool = 0;
+        // Centralised electricity pools.
+        private static int s_electricityConsumptionPool = 32767;
+        private static int s_electricityProductionPool = 0;
 
         /// <summary>
         /// Gets or sets a value indicating whether the 'no powerlines' functionality is enabled.
@@ -38,7 +40,7 @@ namespace EightyOne2.Patches
         {
             if (s_noPowerlinesEnabled)
             {
-                electricity = s_electricityPool > 0;
+                electricity = s_electricityConsumptionPool > 0;
 
                 // Pre-empt original method.
                 return false;
@@ -61,7 +63,7 @@ namespace EightyOne2.Patches
             if (s_noPowerlinesEnabled)
             {
                 __result = Mathf.Clamp(rate, 0, max);
-                s_electricityPool += __result;
+                s_electricityProductionPool += __result;
 
                 // Pre-empt original method.
                 return false;
@@ -84,7 +86,7 @@ namespace EightyOne2.Patches
             if (s_noPowerlinesEnabled)
             {
                 __result = Mathf.Clamp(rate, 0, max);
-                s_electricityPool += __result;
+                s_electricityProductionPool += __result;
 
                 // Pre-empt original method.
                 return false;
@@ -106,14 +108,34 @@ namespace EightyOne2.Patches
         {
             if (s_noPowerlinesEnabled)
             {
-                __result = Mathf.Clamp(Math.Min(rate, max), 0, s_electricityPool);
-                s_electricityPool -= __result;
+                __result = Mathf.Clamp(Math.Min(rate, max), 0, s_electricityConsumptionPool);
+                s_electricityConsumptionPool -= __result;
 
                 // Pre-empt original method.
                 return false;
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Harmony prefix patch to ElectricityManager.SimulationStepImpl to implement 'no pipes' functionality.
+        /// </summary>
+        [HarmonyPatch("SimulationStepImpl")]
+        [HarmonyPrefix]
+        private static void OnBeforeSimulationTick()
+        {
+            // Only doing this on every 256th frame.
+            if ((Singleton<SimulationManager>.instance.m_currentFrameIndex & 0xFF) != 0)
+            {
+                return;
+            }
+
+            // Transfer last tick's production to new tick's consumption pool.
+            s_electricityConsumptionPool = s_electricityProductionPool;
+
+            // Reset production pool.
+            s_electricityProductionPool = 0;
         }
     }
 }

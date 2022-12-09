@@ -355,7 +355,7 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Harmony prefix patch to WaterManager.SimulationStepImpl to implement 'no pipes' functionality.
         /// </summary>
-        [HarmonyPatch(typeof(WaterManager), "SimulationStepImpl")]
+        [HarmonyPatch("SimulationStepImpl")]
         [HarmonyPrefix]
         private static void OnBeforeSimulationTick()
         {
