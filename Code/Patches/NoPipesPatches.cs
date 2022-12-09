@@ -22,14 +22,17 @@ namespace EightyOne2.Patches
         // Enabled status.
         private static bool s_noPipesEnabled = false;
 
-        // Centralised electricity pool.
-        private static int s_waterPool = 0;
+        // Centralised electricity pools.
+        private static int s_waterConsumptionPool = 32767;
+        private static int s_waterProductionPool = 0;
 
-        // Centralised sewage pool (care for a swim?).
-        private static int s_sewagePool = 0;
+        // Centralised sewage pools (care for a swim?).
+        private static int s_sewageConsumptionPool = 32767;
+        private static int s_sewageProductionPool = 0;
 
-        // Centralised heating pool.
-        private static int s_heatingPool = 0;
+        // Centralised heating pools.
+        private static int s_heatingConsumptionPool = 32767;
+        private static int s_heatingProductionPool = 0;
 
         // Water pollution level (global).
         private static byte s_waterPollution = 0;
@@ -112,7 +115,7 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                heating = s_heatingPool > 0;
+                heating = s_heatingConsumptionPool > 0;
 
                 // Pre-empt original method.
                 return false;
@@ -134,11 +137,11 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                water = s_waterPool > 0;
-                sewage = s_sewagePool > 0;
+                water = s_waterConsumptionPool > 0;
+                sewage = s_sewageConsumptionPool > 0;
 
                 // Return zero for water pollution if no water.
-                waterPollution = s_waterPool > 0 ? s_waterPollution : byte.MinValue;
+                waterPollution = s_waterConsumptionPool > 0 ? s_waterPollution : byte.MinValue;
 
                 // Pre-empt original method.
                 return false;
@@ -161,7 +164,7 @@ namespace EightyOne2.Patches
             if (s_noPipesEnabled)
             {
                 __result = Mathf.Clamp(rate, 0, max);
-                s_heatingPool += __result;
+                s_heatingProductionPool += __result;
 
                 // Pre-empt original method.
                 return false;
@@ -173,7 +176,7 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Pre-emptive Harmony prefix patch to WaterManager.TryDumpSewage to implement 'no pipes' functionality.
         /// </summary>
-        /// <param name="__result">Original method result (sewage removal dumped 'to' grid).</param>
+        /// <param name="__result">Original method result (sewage dumped to grid).</param>
         /// <param name="rate">Water production rate.</param>
         /// <param name="max">Maximum water production rate.</param>
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
@@ -185,8 +188,8 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                __result = Mathf.Clamp(rate, 0, max);
-                s_sewagePool += __result;
+                __result = Mathf.Min(Mathf.Min(rate, max), s_sewageConsumptionPool);
+                s_sewageConsumptionPool -= __result;
 
                 // Pre-empt original method.
                 return false;
@@ -198,7 +201,7 @@ namespace EightyOne2.Patches
         /// <summary>
         /// Pre-emptive Harmony prefix patch to WaterManager.TryDumpSewage to implement 'no pipes' functionality.
         /// </summary>
-        /// <param name="__result">Original method result (sewage removal dumped 'to' grid).</param>
+        /// <param name="__result">Original method result (sewage dumped to grid).</param>
         /// <param name="rate">Water production rate.</param>
         /// <param name="max">Maximum water production rate.</param>
         /// <returns>False (pre-empt original game method) if no pipes functionality is enabled, true (continue execution) otherwise.</returns>
@@ -210,8 +213,8 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                __result = Mathf.Clamp(rate, 0, max);
-                s_sewagePool += __result;
+                __result = Mathf.Min(Mathf.Min(rate, max), s_sewageConsumptionPool);
+                s_sewageConsumptionPool -= __result;
 
                 // Pre-empt original method.
                 return false;
@@ -235,7 +238,7 @@ namespace EightyOne2.Patches
             if (s_noPipesEnabled)
             {
                 __result = Mathf.Clamp(rate, 0, max);
-                s_waterPool += __result;
+                s_waterProductionPool += __result;
 
                 // TODO: implement pollution scaling.
                 s_waterPollution = waterPollution;
@@ -261,8 +264,8 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                __result = Math.Min(Math.Min(rate, max), s_heatingPool);
-                s_heatingPool -= __result;
+                __result = Math.Min(Math.Min(rate, max), s_heatingConsumptionPool);
+                s_heatingConsumptionPool -= __result;
 
                 // Assign connected status (true if we have any current heating capacity).
                 connected = Singleton<DistrictManager>.instance.m_districts.m_buffer[0].GetHeatingCapacity() > 0;
@@ -287,8 +290,8 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                __result = Math.Min(Math.Min(rate, max), s_sewagePool);
-                s_sewagePool -= __result;
+                __result = Mathf.Clamp(rate, 0, max);
+                s_sewageProductionPool += __result;
 
                 // Pre-empt original method.
                 return false;
@@ -313,8 +316,8 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                __result = Math.Min(Math.Min(rate, max), s_waterPool);
-                s_waterPool -= __result;
+                __result = Math.Min(Math.Min(rate, max), s_waterConsumptionPool);
+                s_waterConsumptionPool -= __result;
 
                 // Pre-empt original method.
                 return false;
@@ -339,14 +342,38 @@ namespace EightyOne2.Patches
         {
             if (s_noPipesEnabled)
             {
-                __result = Math.Min(Math.Min(rate, max), s_waterPool);
-                s_waterPool -= __result;
+                __result = Math.Min(Math.Min(rate, max), s_waterConsumptionPool);
+                s_waterConsumptionPool -= __result;
 
                 // Pre-empt original method.
                 return false;
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Harmony prefix patch to WaterManager.SimulationStepImpl to implement 'no pipes' functionality.
+        /// </summary>
+        [HarmonyPatch(typeof(WaterManager), "SimulationStepImpl")]
+        [HarmonyPrefix]
+        private static void OnBeforeSimulationTick()
+        {
+            // Only doing this on every 256th frame.
+            if ((Singleton<SimulationManager>.instance.m_currentFrameIndex & 0xFF) != 0)
+            {
+                return;
+            }
+
+            // Transfer last tick's production to new tick's consumption pools.
+            s_heatingConsumptionPool = s_heatingProductionPool;
+            s_waterConsumptionPool = s_waterProductionPool;
+            s_sewageConsumptionPool = s_sewageProductionPool;
+
+            // Reset production pools.
+            s_heatingProductionPool = 0;
+            s_waterProductionPool = 0;
+            s_sewageProductionPool = 0;
         }
     }
 }

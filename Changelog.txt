@@ -1,4 +1,7 @@
-﻿Version 0.9.5 -
+﻿- Make 'no need for pipes' functionality more responsive to capacity deficits
+
+
+Version 0.9.5 -
 
 - Add explicit conflict detection for several of the most common conflicting mods
 
