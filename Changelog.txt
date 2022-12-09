@@ -1,4 +1,6 @@
-﻿- Add 'Cross the Line' option (permit building outside owned tiles)
+﻿Version 0.9.6 -
+
+- Add 'Cross the Line' option (permit building outside owned tiles)
 - Make 'no need for pipes' and 'no need for powerlines' functionality more responsive to capacity deficits
 
 
