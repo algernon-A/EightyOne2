@@ -1,4 +1,5 @@
-﻿- Make 'no need for pipes' and 'no need for powerlines' functionality more responsive to capacity deficits
+﻿- Add 'Cross the Line' option (permit building outside owned tiles)
+- Make 'no need for pipes' and 'no need for powerlines' functionality more responsive to capacity deficits
 
 
 Version 0.9.5 -

@@ -28,6 +28,12 @@ namespace EightyOne2
         public bool XMLIgnoreUnlocking { get => GameAreaManagerPatches.IgnoreUnlocking; set => GameAreaManagerPatches.IgnoreUnlocking = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether building outside of owned tiles is permitted.
+        /// </summary>
+        [XmlElement("CrossTheLine")]
+        public bool XMLCrossTheLine { get => GameAreaManagerPatches.CrossTheLine; set => GameAreaManagerPatches.CrossTheLine = value; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'no powerlines' functionality is enabled.
         /// </summary>
         [XmlElement("NoPowerlines")]

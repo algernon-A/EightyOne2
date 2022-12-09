@@ -64,10 +64,18 @@ namespace EightyOne2.Patches
         // Ignore game area unlocking progression.
         private static bool s_ignoreUnlocking = false;
 
+        // Restrict building to owned tiles only.
+        private static bool s_restrictToOwned = true;
+
         /// <summary>
         /// Gets or sets a value indicating whether area unlocking progression is ignored.
         /// </summary>
         internal static bool IgnoreUnlocking { get => s_ignoreUnlocking; set => s_ignoreUnlocking = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether building outside of owned tiles is permitted.
+        /// </summary>
+        internal static bool CrossTheLine { get => !s_restrictToOwned; set => s_restrictToOwned = !value; }
 
         /// <summary>
         /// Gets or sets a value indicating whether forced unlocking is enabled..
@@ -480,6 +488,19 @@ namespace EightyOne2.Patches
         [HarmonyPatch(nameof(GameAreaManager.QuadOutOfArea))]
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> QuadOutOfAreaTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
+
+        /// <summary>
+        /// Harmony prefix for GameAreaManager.QuadOutOfArea to permit building outside owned tiles.
+        /// </summary>
+        /// <param name="__result">Original method result.</param>
+        /// <returns>False (don't execute original method) if building outside owned areas is permitted, true otherwise.</returns>
+        [HarmonyPatch(nameof(GameAreaManager.QuadOutOfArea))]
+        [HarmonyPrefix]
+        private static bool QuadOutOfAreaPrefix(ref bool __result)
+        {
+            __result = s_restrictToOwned;
+            return s_restrictToOwned;
+        }
 
         /// <summary>
         /// Harmony transpiler for GameAreaManager.SetStartTile to update code constants.

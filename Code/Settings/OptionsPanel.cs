@@ -59,6 +59,10 @@ namespace EightyOne2
             ignoreUnlockCheck.tooltip = Translations.Translate("IGNORE_UNLOCK_TIP");
             ignoreUnlockCheck.tooltipBox = UIToolTips.WordWrapToolTip;
 
+            UICheckBox crossTheLineCheck = unlockGroup.AddCheckbox(Translations.Translate("CROSS_THE_LINE"), GameAreaManagerPatches.CrossTheLine, (isChecked) => GameAreaManagerPatches.CrossTheLine = isChecked) as UICheckBox;
+            crossTheLineCheck.tooltip = Translations.Translate("CROSS_THE_LINE_TIP");
+            crossTheLineCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+
             // Unlock buttons (only if in-game).
             if (Loading.IsLoaded)
             {
