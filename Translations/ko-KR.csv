@@ -3,6 +3,8 @@
 "UNLOCK","영역 잠금해제"
 "IGNORE_UNLOCK","영역 잠금해제 진전을 무시","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","이것을 활성화하면 도시 마일스톤 진행 제한을 무시하고 항상 새 게임 영역 타일을 구입할 수 있습니다.","Tooltip in options panel."
+"CROSS_THE_LINE","소유한 타일 밖에서의 건축 허용","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","이것을 활성화하면 소유한 타일 밖에서 건설을 할 수 있습니다.","Tooltip in options panel."
 "UNLOCK_25","중앙 25타일 영역 잠금해제","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","모든 영역 잠금해제","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","전송 네트워크","Option header in options panel."
