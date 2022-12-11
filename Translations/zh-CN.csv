@@ -3,6 +3,8 @@
 "UNLOCK","解锁区域"
 "IGNORE_UNLOCK","忽略区域解锁进度","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","启用后，您将总是能够购买新的区域，忽略任何城市里程碑进度限制。","Tooltip in options panel."
+"CROSS_THE_LINE","允许在未解锁的地块建设","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","如果启用该功能，您可以在未解锁的区域上建设。","Tooltip in options panel."
 "UNLOCK_25","解锁中央25格区域","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","解锁全部区域","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","传输网络","Option header in options panel."
