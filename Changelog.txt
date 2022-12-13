@@ -1,4 +1,9 @@
-﻿Version 0.9.6 -
+﻿Version 0.9.7 -
+
+- Compatibility updates for game version 1.16
+
+
+Version 0.9.6 -
 
 - Add 'Cross the Line' option (permit building outside owned tiles)
 - Make 'no need for pipes' and 'no need for powerlines' functionality more responsive to capacity deficits

@@ -16,17 +16,17 @@ namespace EightyOne2.Patches
     internal class NetManagerPatches
     {
         /// <summary>
-        /// Game tile nodes count array size (39 * 25 = 975).
+        /// Game tile nodes count array size (40 * 25 = 1000).
         /// </summary>
         internal const int OriginalTileNodesCount = AreaIndexMax * GameAreaManagerPatches.GameGridArea;
 
         /// <summary>
-        /// Expanded tile nodes count array size (39 * 81  = 3159).
+        /// Expanded tile nodes count array size (40 * 81  = 3240).
         /// </summary>
         internal const int ExpandedTileNodesCount = AreaIndexMax * GameAreaManagerPatches.ExpandedMaxAreaCount;
 
         // Area indexing max.
-        private const int AreaIndexMax = 39;
+        private const int AreaIndexMax = 40;
 
         /// <summary>
         /// Harmony transpiler for NetManager.Awake to replace hardcoded game constants.
@@ -38,7 +38,7 @@ namespace EightyOne2.Patches
         private static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             // Need to make sure m_tileNodesCount is initialized using a larger array for 81 tiles.
-            // Looking for the hardcoded constant 975, being AreaIndexMax * 25 (original game area grid count), and replacing it with AreaIndexMax * 81 (new area grid count).
+            // Looking for the hardcoded constant 1000, being AreaIndexMax * 25 (original game area grid count), and replacing it with AreaIndexMax * 81 (new area grid count).
             foreach (CodeInstruction instruction in instructions)
             {
                 if (instruction.LoadsConstant(OriginalTileNodesCount))

@@ -23,7 +23,10 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result.</param>
         /// <param name="data">Network segment data.</param>
         /// <param name="infoMode">Current display infomode.</param>
-        [HarmonyPatch(nameof(RoadBaseAI.GetColor), new Type[] { typeof(ushort), typeof(NetSegment), typeof(InfoManager.InfoMode) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref, ArgumentType.Normal })]
+        [HarmonyPatch(
+            nameof(RoadBaseAI.GetColor),
+            new Type[] { typeof(ushort), typeof(NetSegment), typeof(InfoManager.InfoMode), typeof(InfoManager.SubInfoMode) },
+            new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref, ArgumentType.Normal, ArgumentType.Normal })]
         [HarmonyPostfix]
         private static void GetColor(ref Color __result, ref NetSegment data, InfoManager.InfoMode infoMode)
         {
@@ -56,7 +59,10 @@ namespace EightyOne2.Patches
         /// <param name="__result">Original method result.</param>
         /// <param name="data">Network node data.</param>
         /// <param name="infoMode">Current display infomode.</param>
-        [HarmonyPatch(nameof(RoadBaseAI.GetColor), new Type[] { typeof(ushort), typeof(NetNode), typeof(InfoManager.InfoMode) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref, ArgumentType.Normal })]
+        [HarmonyPatch(
+            nameof(RoadBaseAI.GetColor),
+            new Type[] { typeof(ushort), typeof(NetNode), typeof(InfoManager.InfoMode), typeof(InfoManager.SubInfoMode) },
+            new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref, ArgumentType.Normal, ArgumentType.Normal })]
         [HarmonyPostfix]
         private static void GetColorNode(ref Color __result, ref NetNode data, InfoManager.InfoMode infoMode)
         {
