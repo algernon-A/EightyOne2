@@ -3,6 +3,8 @@
 "UNLOCK","Odomknutie oblastí"
 "IGNORE_UNLOCK","Ignorovať postup odomykania oblasti","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","Keď je táto možnosť povolená, budete môcť vždy kúpiť nové oblasti, pričom budete ignorovať obmedzenia postupu v míľnikoch mesta.","Tooltip in options panel."
+"CROSS_THE_LINE","Povoliť výstavbu mimo vlastnených oblastí","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","Keď je táto možnosť povolená, môžete stavať mimo vlastnených oblastí.","Tooltip in options panel."
 "UNLOCK_25","Odomknúť 25 prostredných oblastí","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Odomknúť všetky oblasti","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Prenosová sústava","Option header in options panel."

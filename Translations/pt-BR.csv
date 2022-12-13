@@ -3,6 +3,8 @@
 "UNLOCK","Desbloquear área"
 "IGNORE_UNLOCK","Ignore a progressão de desbloqueio de área","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","Quando isso estiver ativado, você sempre poderá comprar novos blocos de área de jogo, ignorando quaisquer restrições de progresso dos marcos da cidade.","Tooltip in options panel."
+"CROSS_THE_LINE","Permite construir fora dos blocos de propriedade","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","Quando ativado, você pode construir fora dos blocos de propriedade.","Tooltip in options panel."
 "UNLOCK_25","Desbloquear a área central de 25 blocos","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Desbloquear todas as áreas","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Redes de transmissão","Option header in options panel."
