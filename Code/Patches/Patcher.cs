@@ -11,6 +11,7 @@ namespace EightyOne2
     using ColossalFramework;
     using HarmonyLib;
     using UnityEngine;
+    using static Patches.DisasterManagerPatches;
     using static Patches.DistrictManagerPatches;
     using static Patches.ElectricityManagerPatches;
     using static Patches.ImmaterialResourceManagerPatches;
@@ -232,25 +233,76 @@ namespace EightyOne2
                 Logging.Message("ImmaterialResourceManager not yet instantiated");
             }
 
-            // Immaterial resource manager.
+            // NetManager.
             if (Singleton<NetManager>.exists)
             {
                 Logging.Message("NetManager already instantiated");
 
-                // Get district texture instance.
+                // Tile nodes count array.
                 NetManager netManager = Singleton<NetManager>.instance;
-                FieldInfo tileNodesCountField = AccessTools.Field(typeof(NetManager), "m_tileNodesCount");
+                FieldInfo m_tileNodesCount = AccessTools.Field(typeof(NetManager), "m_tileNodesCount");
 
-                int[] m_tileNodesCount = tileNodesCountField.GetValue(netManager) as int[];
-                if (m_tileNodesCount == null || m_tileNodesCount.Length != ExpandedTileNodesCount)
+                int[] tileNodesCount = m_tileNodesCount.GetValue(netManager) as int[];
+                if (tileNodesCount == null || tileNodesCount.Length != ExpandedTileNodesCount)
                 {
-                    Logging.Error("invalid NetManager.m_tileNodesCount size of ", m_tileNodesCount?.Length, " (conflicting mod?); correcting");
-                    tileNodesCountField.SetValue(netManager, new int[ExpandedTileNodesCount]);
+                    Logging.Error("invalid NetManager.m_tileNodesCount size of ", tileNodesCount?.Length, " (conflicting mod?); correcting");
+                    m_tileNodesCount.SetValue(netManager, new int[ExpandedTileNodesCount]);
                 }
             }
             else
             {
                 Logging.Message("NetManager not yet instantiated");
+            }
+
+            // Disaster manager.
+            if (Singleton<DisasterManager>.exists)
+            {
+                Logging.Message("DisasterManager already instantiated");
+
+                // Get district texture instance.
+                DisasterManager disasterManager = Singleton<DisasterManager>.instance;
+                FieldInfo m_hazardAmount = AccessTools.Field(typeof(DisasterManager), "m_hazardAmount");
+                FieldInfo m_hazardTexture = AccessTools.Field(typeof(DisasterManager), "m_hazardTexture");
+                FieldInfo m_evacuationMap = AccessTools.Field(typeof(DisasterManager), "m_evacuationMap");
+
+                // Hazard amount array.
+                byte[] hazardAmount = m_hazardAmount.GetValue(disasterManager) as byte[];
+                if (hazardAmount == null || hazardAmount.Length != ExpandedDisasterGridArraySize)
+                {
+                    Logging.Error("invalid DisasterManager.m_hazardAmount size of ", hazardAmount?.Length, " (conflicting mod?); correcting");
+                    m_hazardAmount.SetValue(disasterManager, new byte[ExpandedDisasterGridArraySize]);
+                }
+                else
+                {
+                    Logging.Message("hazard amount array size was ", hazardAmount?.Length);
+                }
+
+                // Evacuation map.
+                uint[] evacuationMap = m_evacuationMap.GetValue(disasterManager) as uint[];
+                if (evacuationMap == null || evacuationMap.Length != ExpandedDisasterGridArraySize / 16)
+                {
+                    Logging.Error("invalid DisasterManager.m_evacuationMap size of ", evacuationMap?.Length, " (conflicting mod?); correcting");
+                    m_evacuationMap.SetValue(disasterManager, new uint[ExpandedDisasterGridArraySize / 16]);
+                }
+
+                // Check texture size.
+                Texture2D hazardTexture = m_hazardTexture.GetValue(disasterManager) as Texture2D;
+                if (hazardTexture.width != ExpandedDisasterGridResolution)
+                {
+                    Logging.Error("invalid DisasterManager hazard texture size (conflicting mod?); correcting");
+
+                    // Texture size is not expanded - reset per ImmaterialResourceManager.Awake.
+                    Texture2D newTexture = new Texture2D(ExpandedDisasterGridResolution, ExpandedDisasterGridResolution, TextureFormat.Alpha8, mipmap: false, linear: true)
+                    {
+                        wrapMode = TextureWrapMode.Clamp,
+                    };
+                    m_hazardTexture.SetValue(disasterManager, newTexture);
+                    Shader.SetGlobalTexture("_DisasterHazardTexture", newTexture);
+                }
+            }
+            else
+            {
+                Logging.Message("DisasterManager not yet instantiated");
             }
         }
     }

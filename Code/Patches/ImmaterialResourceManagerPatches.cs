@@ -424,7 +424,7 @@ namespace EightyOne2.Patches
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
-                    // Maximum iteration value: immaterial resource resolution - 1 , i.e. 128f -> 225f.
+                    // Maximum iteration value: immaterial resource resolution / 2 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
                 }
 
@@ -452,7 +452,7 @@ namespace EightyOne2.Patches
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridHalfResolution))
                 {
-                    // Immaterial resource half-resolution - 1 , i.e. 128f -> 225f.
+                    // Immaterial resource half-resolution / 2 , i.e. 128f -> 225f.
                     instruction.operand = ExpandedImmaterialResourceGridHalfResolution;
                 }
                 else if (instruction.LoadsConstant(GameImmaterialResourceGridMax - 2))
@@ -473,13 +473,13 @@ namespace EightyOne2.Patches
         /// </summary>
         /// <param name="instance">ImmagterialResourceManager instance.</param>
         /// <param name="subStep">Simulation sub-step.</param>
-        /// <param name="m_localTempResources">ImmagterialResourceManager private array m_localTempResources.</param>
-        /// <param name="m_localFinalResources">ImmagterialResourceManager private array m_localFinalResources.</param>
-        /// <param name="m_globalTempResources">ImmagterialResourceManager private array m_globalTempResources.</param>
-        /// <param name="m_globalFinalResources">ImmagterialResourceManager private array m_globalFinalResources.</param>
-        /// <param name="m_totalTempResources">ImmagterialResourceManager private array m_totalTempResources.</param>
-        /// <param name="m_totalFinalResources">ImmagterialResourceManager private array m_totalFinalResources.</param>
-        /// <param name="m_totalTempResourcesMul">ImmagterialResourceManager private array m_totalTempResourcesMul.</param>
+        /// <param name="m_localTempResources">ImmaterialResourceManager private array m_localTempResources.</param>
+        /// <param name="m_localFinalResources">ImmaterialResourceManager private array m_localFinalResources.</param>
+        /// <param name="m_globalTempResources">ImmaterialResourceManager private array m_globalTempResources.</param>
+        /// <param name="m_globalFinalResources">ImmaterialResourceManager private array m_globalFinalResources.</param>
+        /// <param name="m_totalTempResources">ImmaterialResourceManager private array m_totalTempResources.</param>
+        /// <param name="m_totalFinalResources">ImmaterialResourceManager private array m_totalFinalResources.</param>
+        /// <param name="m_totalTempResourcesMul">ImmaterialResourceManager private array m_totalTempResourcesMul.</param>
         private static void SimulationStepImpl(
             ImmaterialResourceManager instance,
             int subStep,

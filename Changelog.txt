@@ -1,4 +1,7 @@
-﻿Version 0.9.7 -
+﻿- Add full support for Disasters DLC (support hazard overlay and evacuation mapping outside the 25 tile area)
+
+
+Version 0.9.7 -
 
 - Compatibility updates for game version 1.16
 
