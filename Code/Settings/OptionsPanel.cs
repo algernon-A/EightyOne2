@@ -12,6 +12,7 @@ namespace EightyOne2
     using ColossalFramework.UI;
     using EightyOne2.Patches;
     using ICities;
+    using UnityEngine;
 
     /// <summary>
     /// The mod's options panel.
@@ -23,58 +24,90 @@ namespace EightyOne2
         /// </summary>
         public OptionsPanel()
         {
-            // Auto layout.
-            autoLayout = true;
-            autoLayoutDirection = LayoutDirection.Vertical;
-            UIHelper helper = new UIHelper(this);
+            const float HeaderMargin = 50f;
+            const float CheckboxMargin = 27f;
+            const float LeftMargin = 14f;
 
-            // Language options.
-            UIHelperBase languageGroup = helper.AddGroup(Translations.Translate("LANGUAGE_CHOICE"));
-            UIDropDown languageDropDown = (UIDropDown)languageGroup.AddDropdown(Translations.Translate("LANGUAGE_CHOICE"), Translations.LanguageList, Translations.Index, (value) =>
+            float currentY = 10f;
+
+            // Language choice.
+            UIDropDown languageDropDown = UIDropDowns.AddPlainDropDown(this, LeftMargin, currentY, Translations.Translate("LANGUAGE_CHOICE"), Translations.LanguageList, Translations.Index);
+            languageDropDown.eventSelectedIndexChanged += (control, index) =>
             {
-                Translations.Index = value;
+                Translations.Index = index;
                 OptionsPanelManager<OptionsPanel>.LocaleChanged();
-            });
-            languageDropDown.autoSize = false;
-            languageDropDown.width = 270f;
+            };
+            languageDropDown.parent.relativePosition = new Vector2(LeftMargin, currentY);
+            currentY += 77f;
 
             // Network options.
-            UIHelperBase netGroup = helper.AddGroup(Translations.Translate("NET_OPTIONS"));
-            UICheckBox noPowerlineCheck = netGroup.AddCheckbox(Translations.Translate("NO_POWERLINES"), NoPowerlinesPatches.NoPowerlinesEnabled, (isChecked) => NoPowerlinesPatches.NoPowerlinesEnabled = isChecked) as UICheckBox;
+            currentY += 20f;
+            UISpacers.AddTitleSpacer(this, 0f, currentY, OptionsPanelManager<OptionsPanel>.PanelWidth, Translations.Translate("NET_OPTIONS"));
+            currentY += HeaderMargin;
+
+            UICheckBox noPowerlineCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin, currentY, Translations.Translate("NO_POWERLINES"));
+            noPowerlineCheck.isChecked = NoPowerlinesPatches.NoPowerlinesEnabled;
+            noPowerlineCheck.eventCheckChanged += (c, isChecked) => NoPowerlinesPatches.NoPowerlinesEnabled = isChecked;
             noPowerlineCheck.tooltip = Translations.Translate("NO_POWERLINES_TIP");
             noPowerlineCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+            currentY += CheckboxMargin;
 
-            UICheckBox electricRoadsCheck = netGroup.AddCheckbox(Translations.Translate("ELECTRIC_ROADS"), ExpandedElectricityManager.ElectricRoadsEnabled, (isChecked) => ExpandedElectricityManager.ElectricRoadsEnabled = isChecked) as UICheckBox;
+            UICheckBox electricRoadsCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin, currentY, Translations.Translate("ELECTRIC_ROADS"));
+            electricRoadsCheck.isChecked = ExpandedElectricityManager.ElectricRoadsEnabled;
+            electricRoadsCheck.eventCheckChanged += (c, isChecked) => ExpandedElectricityManager.ElectricRoadsEnabled = isChecked;
             electricRoadsCheck.tooltip = Translations.Translate("ELECTRIC_ROADS_TIP");
             electricRoadsCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+            currentY += CheckboxMargin;
 
-            UICheckBox noPipesCheck = netGroup.AddCheckbox(Translations.Translate("NO_PIPES"), NoPipesPatches.NoPipesEnabled, (isChecked) => NoPipesPatches.NoPipesEnabled = isChecked) as UICheckBox;
+            UICheckBox noPipesCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin, currentY, Translations.Translate("NO_PIPES"));
+            noPipesCheck.isChecked = NoPipesPatches.NoPipesEnabled;
+            noPipesCheck.eventCheckChanged += (c, isChecked) => NoPipesPatches.NoPipesEnabled = isChecked;
             noPipesCheck.tooltip = Translations.Translate("NO_PIPES_TIP");
             noPipesCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+            currentY += CheckboxMargin;
 
             // Unlocking options.
-            UIHelperBase unlockGroup = helper.AddGroup(Translations.Translate("UNLOCK"));
+            currentY += 20f;
+            UISpacers.AddTitleSpacer(this, 0f, currentY, OptionsPanelManager<OptionsPanel>.PanelWidth, Translations.Translate("UNLOCK"));
+            currentY += HeaderMargin;
 
-            UICheckBox ignoreUnlockCheck = unlockGroup.AddCheckbox(Translations.Translate("IGNORE_UNLOCK"), GameAreaManagerPatches.IgnoreUnlocking, (isChecked) => GameAreaManagerPatches.IgnoreUnlocking = isChecked) as UICheckBox;
+            UICheckBox ignoreUnlockCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin, currentY, Translations.Translate("IGNORE_UNLOCK"));
+            ignoreUnlockCheck.isChecked = GameAreaManagerPatches.IgnoreUnlocking;
+            ignoreUnlockCheck.eventCheckChanged += (c, isChecked) => GameAreaManagerPatches.IgnoreUnlocking = isChecked;
             ignoreUnlockCheck.tooltip = Translations.Translate("IGNORE_UNLOCK_TIP");
             ignoreUnlockCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+            currentY += CheckboxMargin;
 
-            UICheckBox crossTheLineCheck = unlockGroup.AddCheckbox(Translations.Translate("CROSS_THE_LINE"), GameAreaManagerPatches.CrossTheLine, (isChecked) => GameAreaManagerPatches.CrossTheLine = isChecked) as UICheckBox;
+            UICheckBox crossTheLineCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin, currentY, Translations.Translate("CROSS_THE_LINE"));
+            crossTheLineCheck.isChecked = GameAreaManagerPatches.CrossTheLine;
+            crossTheLineCheck.eventCheckChanged += (c, isChecked) => GameAreaManagerPatches.CrossTheLine = isChecked;
             crossTheLineCheck.tooltip = Translations.Translate("CROSS_THE_LINE_TIP");
             crossTheLineCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+            currentY += CheckboxMargin;
 
             // Unlock buttons (only if in-game).
             if (Loading.IsLoaded)
             {
-                unlockGroup.AddButton(Translations.Translate("UNLOCK_25"), () => Singleton<SimulationManager>.instance.AddAction(() => Unlock(5)));
-                unlockGroup.AddButton(Translations.Translate("UNLOCK_ALL"), () => Singleton<SimulationManager>.instance.AddAction(() => Unlock(9)));
+                UIButton unlock25Button = UIButtons.AddButton(this, LeftMargin, currentY, Translations.Translate("UNLOCK_25"), width: 450f, height: 39.4f, scale: 1.3f, vertPad: 4);
+                unlock25Button.eventClicked += (c, p) => Singleton<SimulationManager>.instance.AddAction(() => Unlock(5));
+                currentY += 44.4f;
+
+                UIButton unlock81Button = UIButtons.AddButton(this, LeftMargin, currentY, Translations.Translate("UNLOCK_ALL"), width: 450f, height: 39.4f, scale: 1.3f, vertPad: 4);
+                unlock81Button.eventClicked += (c, p) => Singleton<SimulationManager>.instance.AddAction(() => Unlock(9));
+                currentY += 44.4f;
             }
 
             // Rescue options.
-            UIHelperBase rescueGroup = helper.AddGroup(Translations.Translate("RESCUE_OPTIONS"));
-            UICheckBox ignoreExpandedCheck = rescueGroup.AddCheckbox(Translations.Translate("IGNORE_EXPANDED"), ModSettings.IgnoreExpanded, (isChecked) => ModSettings.IgnoreExpanded = isChecked) as UICheckBox;
+            currentY += 20f;
+            UISpacers.AddTitleSpacer(this, 0f, currentY, OptionsPanelManager<OptionsPanel>.PanelWidth, Translations.Translate("RESCUE_OPTIONS"));
+            currentY += HeaderMargin;
+
+            UICheckBox ignoreExpandedCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin, currentY, Translations.Translate("IGNORE_EXPANDED"));
+            ignoreExpandedCheck.isChecked = ModSettings.IgnoreExpanded;
+            ignoreExpandedCheck.eventCheckChanged += (c, isChecked) => ModSettings.IgnoreExpanded = isChecked;
             ignoreExpandedCheck.tooltip = Translations.Translate("IGNORE_EXPANDED_TIP");
             ignoreExpandedCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+            currentY += CheckboxMargin;
         }
 
         /// <summary>
