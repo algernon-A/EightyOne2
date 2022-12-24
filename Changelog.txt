@@ -1,6 +1,5 @@
 ﻿Version 0.9.8 -
 
-
 - Add full support for Disasters DLC (support hazard overlay and evacuation mapping outside the 25 tile area)
 
 
