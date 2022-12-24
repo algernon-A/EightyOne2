@@ -190,7 +190,7 @@ namespace EightyOne2.Patches
         /// <param name="instructions">Original ILCode.</param>
         /// <param name="original">Method being transpiled.</param>
         /// <returns>Modified ILCode.</returns>
-        internal static IEnumerable<CodeInstruction> ReplaceDisasterConstants(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        private static IEnumerable<CodeInstruction> ReplaceDisasterConstants(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
             Logging.Message("transpiling ", PatcherBase.PrintMethod(original));
 
