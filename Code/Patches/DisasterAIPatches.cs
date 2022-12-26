@@ -31,7 +31,6 @@ namespace EightyOne2.Patches
             yield return AccessTools.Method(typeof(SinkholeAI), nameof(SinkholeAI.UpdateHazardMap));
             yield return AccessTools.Method(typeof(ThunderStormAI), nameof(ThunderStormAI.UpdateHazardMap));
             yield return AccessTools.Method(typeof(TornadoAI), nameof(TornadoAI.UpdateHazardMap));
-            yield return AccessTools.Method(typeof(TsunamiAI), nameof(TsunamiAI.UpdateHazardMap));
         }
 
         /// <summary>

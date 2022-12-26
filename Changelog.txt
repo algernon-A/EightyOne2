@@ -1,4 +1,5 @@
-﻿- Redo options panel code, including making unlocking buttons BIG and BRIGHT so hopefully fewer people miss seeing them
+﻿- Fix Tsuanmi disaster overlay
+- Redo options panel code, including making unlocking buttons BIG and BRIGHT so hopefully fewer people miss seeing them
 
 
 Version 0.9.8 -
