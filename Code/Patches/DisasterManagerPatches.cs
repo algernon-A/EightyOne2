@@ -87,13 +87,13 @@ namespace EightyOne2.Patches
                 }
                 else if (instruction.LoadsConstant(GameDisasterGridResolution * GameDisasterGridResolution))
                 {
-                    // Disaster map resolution squared, i.e. 65536 -> 202500 (m_hazardAmount array).
-                    instruction.operand = ExpandedDisasterGridArraySize;
+                    // Disaster map resolution squared, i.e. 65536 -> 202501 (m_hazardAmount array - expanded size includes extra 1 for rounding).
+                    instruction.operand = ExpandedDisasterGridArraySize + 1;
                 }
                 else if (instruction.LoadsConstant(4096))
                 {
-                    // Grid area divided by 16.
-                    instruction.operand = ExpandedDisasterGridArraySize / 16;
+                    // Grid area divided by 16 - add one for rounding on non-modulo-16 maximum.
+                    instruction.operand = (ExpandedDisasterGridArraySize / 16) + 1;
                 }
 
                 yield return instruction;

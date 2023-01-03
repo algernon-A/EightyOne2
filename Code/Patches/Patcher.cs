@@ -269,8 +269,9 @@ namespace EightyOne2
                 byte[] hazardAmount = m_hazardAmount.GetValue(disasterManager) as byte[];
                 if (hazardAmount == null || hazardAmount.Length != ExpandedDisasterGridArraySize)
                 {
+                    // Disaster map resolution squared, i.e. 65536 -> 202501 (expanded size includes extra 1 for rounding).
                     Logging.Error("invalid DisasterManager.m_hazardAmount size of ", hazardAmount?.Length, " (conflicting mod?); correcting");
-                    m_hazardAmount.SetValue(disasterManager, new byte[ExpandedDisasterGridArraySize]);
+                    m_hazardAmount.SetValue(disasterManager, new byte[ExpandedDisasterGridArraySize + 1]);
                 }
                 else
                 {
@@ -281,8 +282,9 @@ namespace EightyOne2
                 uint[] evacuationMap = m_evacuationMap.GetValue(disasterManager) as uint[];
                 if (evacuationMap == null || evacuationMap.Length != ExpandedDisasterGridArraySize / 16)
                 {
+                    // Grid area divided by 16 - add one for rounding on non-modulo-16 maximum.
                     Logging.Error("invalid DisasterManager.m_evacuationMap size of ", evacuationMap?.Length, " (conflicting mod?); correcting");
-                    m_evacuationMap.SetValue(disasterManager, new uint[ExpandedDisasterGridArraySize / 16]);
+                    m_evacuationMap.SetValue(disasterManager, new uint[(ExpandedDisasterGridArraySize / 16) + 1]);
                 }
 
                 // Check texture size.
