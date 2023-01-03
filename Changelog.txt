@@ -1,4 +1,6 @@
-﻿- Fix index out-of-bounds error caused by placing disaster buildings in extreme bottom-right corner of map
+﻿Version 0.9.9 -
+
+- Fix index out-of-bounds error caused by placing disaster buildings in extreme bottom-right corner of map
 - Fix Tsuanmi disaster overlay
 - Redo options panel code, including making unlocking buttons BIG and BRIGHT so hopefully fewer people miss seeing them
 
