@@ -1,4 +1,7 @@
-﻿- Fix random disasters not occuring evenly across the 81-tile area
+﻿Version 0.9.9.1 -
+
+
+- Fix random disasters not occuring evenly across the 81-tile area
 
 
 Version 0.9.9 -
