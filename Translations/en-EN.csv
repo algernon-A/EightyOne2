@@ -14,6 +14,10 @@
 "ELECTRIC_ROADS_TIP","When this is enabled, roads will conduct electricy as though they are powerlines.","Tooltip in options panel."
 "NO_PIPES","Enable water, sewage, and heating transmission without pipes","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","When this is enabled, buildings no longer need to be conencted with water or heating pipes (you will still need to provide water and sewage treatment, and heating plants if desired).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Ignore original water buildings","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","When this is selected, water buildings on the original map (placed in the map editor) will be ignored by the 'no pipes' functionality.
+
+This option should be enabled when the map contains water buildings used only for decorative purposes (e.g. Bringer of Fire's Yangtze and Revelstoke maps) to prevent gigantic water surges and/or water pollution.","Tooltip in options panel."
 "RESCUE_OPTIONS","Emergency rescue options - USE WITH CAUTION","Option header in options panel".
 "IGNORE_EXPANDED","Ignore expanded 81 tiles data when next loading a save."
 "IGNORE_EXPANDED_TIP","Use this as an emergency fallback option if you're having issues when loading games saved by earlier 81 tile mods (especially any issues with disappearing districts or areas).

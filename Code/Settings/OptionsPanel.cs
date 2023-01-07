@@ -66,6 +66,13 @@ namespace EightyOne2
             noPipesCheck.tooltipBox = UIToolTips.WordWrapToolTip;
             currentY += CheckboxMargin;
 
+            UICheckBox exceptOriginalCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin + LeftMargin, currentY, Translations.Translate("EXCEPT_ORIGINAL"));
+            exceptOriginalCheck.isChecked = WaterFacilityAIPatches.IgnoreOriginal;
+            exceptOriginalCheck.eventCheckChanged += (c, isChecked) => WaterFacilityAIPatches.IgnoreOriginal = isChecked;
+            exceptOriginalCheck.tooltip = Translations.Translate("EXCEPT_ORIGINAL_TIP");
+            exceptOriginalCheck.tooltipBox = UIToolTips.WordWrapToolTip;
+            currentY += CheckboxMargin;
+
             // Unlocking options.
             currentY += 20f;
             UISpacers.AddTitleSpacer(this, 0f, currentY, OptionsPanelManager<OptionsPanel>.PanelWidth, Translations.Translate("UNLOCK"));

@@ -1,4 +1,7 @@
-﻿Version 0.9.9.1 -
+﻿- Add option to exclude original water buildings from 'no pipes' functionality (for Bringer of Fire's dam maps)
+
+
+Version 0.9.9.1 -
 
 - Fix random disasters not occuring evenly across the 81-tile area
 

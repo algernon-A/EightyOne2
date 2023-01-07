@@ -52,6 +52,12 @@ namespace EightyOne2
         public bool XMLNoPipes { get => NoPipesPatches.NoPipesEnabled; set => NoPipesPatches.NoPipesEnabled = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'no powerlines' functionality is enabled.
+        /// </summary>
+        [XmlElement("IgnoreOriginalWater")]
+        public bool XMLIgnoreOriginalWater { get => WaterFacilityAIPatches.IgnoreOriginal; set => WaterFacilityAIPatches.IgnoreOriginal = value; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether expanded data should be ignored on next load.
         /// </summary>
         [XmlElement("IgnoreExpanded")]
