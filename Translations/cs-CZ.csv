@@ -14,6 +14,10 @@
 "ELECTRIC_ROADS_TIP","Pokud je to povoleno, budou silnice rozvádět elektrickou energii, jako by se jednalo o elektrické vedení.","Tooltip in options panel."
 "NO_PIPES","Povolit přenos vody, odpadní vody a vytápění bez potrubí","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Pokud je toto povoleno, budovy již nemusí být propojeny vodním nebo ohřevném potrubím (stále budete muset zajistit vodu, čištění odpadních vod a podle potřeby vytápění).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Ignore original water buildings","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","When this is selected, water buildings on the original map (placed in the map editor) will be ignored by the 'no pipes' functionality.
+
+This option should be enabled when the map contains water buildings used only for decorative purposes (e.g. Bringer of Fire's Yangtze and Revelstoke maps) to prevent gigantic water surges and/or water pollution.","Tooltip in options panel."
 "RESCUE_OPTIONS","Možnosti nouzové záchrany - POUŽÍT S OPATRNOSTÍ","Option header in options panel."
 "IGNORE_EXPANDED","Ignorovat rozšířené údaje z 81 Tiles při dalším načtení uložení."
 "IGNORE_EXPANDED_TIP","Použijte toto jako nouzovou záložní možnost, pokud máte problémy při načítání her uložených dřívějšími 81 Tiles módy (zejména problémy s mizejícími distrikty nebo oblastmi).

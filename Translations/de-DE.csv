@@ -14,6 +14,10 @@
 "ELECTRIC_ROADS_TIP","Wenn dies aktiviert ist, werden Straßen Elektrizität leiten, als wären sie Stromleitungen.","Tooltip in options panel."
 "NO_PIPES","Wasser-, Abwasser- und Heizwärmeübertragung ohne Rohrleitungen aktivieren","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Wenn dies aktiviert ist, müssen Gebäude nicht mehr mit Wasser- oder Heizrohren verbunden werden (Wasser-, Abwasser- und Heizanlagen müssen aber dennoch gebaut werden).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Ignoriere ursprüngliche Wassergebäude","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Wenn diese Option ausgewählt ist, werden Wasserbauten auf der ursprünglichen Karte (die im Karteneditor platziert) von der Funktionalität 'no pipes' ignoriert.
+
+Diese Option sollte aktiviert werden, wenn die Karte Wassergebäude enthält, die nur für dekorative Zwecke verwendet werden (z.B. Die Bringer of Fire's Yangtze und die Revelstoke Karten) um gigantischer Wasseranstiege und/oder Wasserverschmutzung zu verhindern.","Tooltip in options panel."
 "RESCUE_OPTIONS","Notfallrettungsoptionen - MIT VORSICHT BENUTZEN","Option header in options panel."
 "IGNORE_EXPANDED","Ignoriere erweiterte 81 Tiles 2 Daten beim nächsten Laden eines Spielstandes."
 "IGNORE_EXPANDED_TIP","Benutze diese Option als Notfall-Fallback-Option, wenn Probleme beim Laden eines Spielstands bestehen, die von früheren 81 Tiles-Mods gespeichert wurden (insbesondere bei Problemen mit verschwindenden Distrikten oder Gebieten).

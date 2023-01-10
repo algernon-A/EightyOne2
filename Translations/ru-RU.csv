@@ -1,26 +1,30 @@
 ﻿"LANGUAGE","Русский","Language name (in native language)."
-"MOD_DESCRIPTION","Открывает все 81 клетку в игре.","Mod description displayed in content manager."
+"MOD_DESCRIPTION","Открывает все 81 клетки в игре.","Mod description displayed in content manager."
 "UNLOCK","Разблокировка клеток"
 "IGNORE_UNLOCK","Разблокировать ограничение клеток","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","Когда эта опция включена, вы сможете купить все клетки, несмотря на ограничения развития вашего города.","Tooltip in options panel."
 "CROSS_THE_LINE","Разрешить строительство за пределами собственных участков","Option in options panel - permits building outside of owned area tiles."
 "CROSS_THE_LINE_TIP","Если это включено, вы можете строить за пределами собственных участков.","Tooltip in options panel."
-"UNLOCK_25","Разблокировать центральные 25 клеток","Button in options panel - unlocks 25-tile area"
+"UNLOCK_25","Разблокировать центральные 25 клетки","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","Разблокировать все клетки","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","Передача дорогами","Option header in options panel."
 "NO_POWERLINES","Включить электропередачу без ЛЭП","Option in options panel - activates 'no powerlines' functionality."
-"NO_POWERLINES_TIP","Если эта опция включена, зданиям больше не требуется соединение с ЛЭП (вам все равно нужно будет производить электричество).","Tooltip in options panel."
+"NO_POWERLINES_TIP","Если эта опция включена, зданиям больше не требуется соединение с ЛЭП (вам всё равно нужно будет производить электричество).","Tooltip in options panel."
 "ELECTRIC_ROADS","Включить электропередачу по дорогам","Option in options panel - activates 'electric roads' functionality."
 "ELECTRIC_ROADS_TIP","Если включено, дороги будут проводить электричество.","Tooltip in options panel."
-"NO_PIPES","Включить водные, канализационные и тепловые сети без трубопроводов","Option in options panel - activates 'no no pipes' functionality."
-"NO_PIPES_TIP","Если эта опция включена, зданиям больше не требуется соединение с трубами (вам все равно нужно будет обеспечить забор воды, очистки или сброса канализации, и отопительные установки, если потребуется).","Tooltip in options panel."
-"RESCUE_OPTIONS","Опции экстренного восстановления - ОПАСНАЯ ФУНКЦИЯ","Option header in options panel."
+"NO_PIPES","Включить водопровод, канализацию и отопление без трубопроводов","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES_TIP","Если эта опция включена, зданиям больше не требуются трубопроводы (вам всё равно нужно будет обеспечить работу водоснабжения, канализации, и отопления (если требуется)).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Игнорировать оригинальные водные постройки","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Если этот параметр выбран, водные здания на стандартной карте (размещённой в редакторе карт) будут игнорироваться функцией ""без труб"".
+
+Эта опция должна быть включена, если на карте есть водные здания, используемые только в декоративных целях (например, карты Bringer of Fire's Yangtze и Revelstoke), чтобы предотвратить гигантские приливы воды и/или загрязнение воды.","Tooltip in options panel."
+"RESCUE_OPTIONS","Аварийно-спасательные работы - ИСПОЛЬЗУЙТЕ С ОСТОРОЖНОСТЬЮ","Option header in options panel."
 "IGNORE_EXPANDED","Игнорировать данные из 81 tiles при следующей загрузке сохранения."
 "IGNORE_EXPANDED_TIP","Используйте эту опцию в качестве резервной копии экстренных ситуаций, если у вас возникли проблемы при загрузке игр, сохраненных на более ранних модов 81 tiles (особенно любые проблемы с исчезающими районами или площадями).
 
 ВНИМАНИЕ: использование этой опции приведет к появлению необоснованных районов за пределами центральной зоны 25-ти клеток.
 
 Эта опция автоматически очистится после завершения следующей загрузки города.","Tooltip in options panel."
-"LOAD_DISABLED","Кнопка ""Загрузить"" была отключена модом 81 Tiles для защиты сохранения от повреждения. Перезагружайте игру через рабочий стол перед запуском/загрузкой другого города.","Tooltip on 'load game' button when in-game."
+"LOAD_DISABLED","Кнопка ""Загрузить"" была отключена модом 81 Tiles для защиты сохранения от повреждения. Используйте кнопку ""Выйти из игры"" и полностью перезапускайте игру, прежде чем загрузить любой файл сохранения или начинать новый город.","Tooltip on 'load game' button when in-game."
 "MAIN_MENU_DISABLED","Кнопка ""Выход в Главное меню"" была отключена модом 81 Tiles для защиты сохранения от повреждения. Перезагружайте игру через рабочий стол перед запуском/загрузкой другого города.","Tooltip on 'exit to main menu' button when in-game."
 "EDITOR_DISABLED","Кнопка ""Инструменты"" была отключена модом 81 Tiles для нормального запуска. Отключите мод 81 Tiles перед заходом в инструменты.","Tooltip on disabled editor button in main menu."

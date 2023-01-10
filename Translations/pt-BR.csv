@@ -14,6 +14,10 @@
 "ELECTRIC_ROADS_TIP","Quando esta opção estiver habilitada, as estradas conduzirão a electricidade como se fossem linhas de força.","Tooltip in options panel."
 "NO_PIPES","Habilita água, esgotos e transmissão de aquecimento sem tubulações","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Quando isto está ativado, os edifícios não precisam mais ser conectados com água ou tubos de aquecimento (você ainda precisará fornecer tratamento de água e esgoto e plantas de aquecimento, se desejado).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Ignorar edifícios originais de água","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Quando isso é selecionado, as construções de água no mapa original (colocadas no editor de mapa) serão ignoradas pela funcionalidade 'sem canos'.
+
+Esta opção deve ser habilitada quando o mapa contiver edifícios aquáticos usados ​​apenas para fins decorativos (por exemplo, os mapas Yangtze e Revelstoke do Portador do Fogo) para evitar surtos gigantescos de água e/ou poluição da água.","Tooltip in options panel."
 "RESCUE_OPTIONS","Opções de resgate de emergência - USE COM CUIDADO","Option header in options panel."
 "IGNORE_EXPANDED","Ignore os dados expandidos de 81 blocos na próxima vez que carregar um salvamento."
 "IGNORE_EXPANDED_TIP","Use isso como uma opção de reserva de emergência se estiver tendo problemas ao carregar jogos anteriores salvos por mods de 81 blocos (especialmente quaisquer problemas com desaparecimentos de distritos ou áreas).

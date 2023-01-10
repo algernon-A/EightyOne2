@@ -4,7 +4,7 @@
 "IGNORE_UNLOCK","忽略区域解锁进度","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
 "IGNORE_UNLOCK_TIP","启用后，您将总是能够购买新的区域，忽略任何城市里程碑进度限制。","Tooltip in options panel."
 "CROSS_THE_LINE","允许在未解锁的地块建设","Option in options panel - permits building outside of owned area tiles."
-"CROSS_THE_LINE_TIP","如果启用该功能，您可以在未解锁的区域上建设。","Tooltip in options panel."
+"CROSS_THE_LINE_TIP","启用该功能后，您可以在未解锁的区域上建设。","Tooltip in options panel."
 "UNLOCK_25","解锁中央25格区域","Button in options panel - unlocks 25-tile area"
 "UNLOCK_ALL","解锁全部区域","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","传输网络","Option header in options panel."
@@ -14,6 +14,10 @@
 "ELECTRIC_ROADS_TIP","当此选项启用时，道路将会像电线一样传输电力","Tooltip in options panel."
 "NO_PIPES","启用水、污水、供暖无需水管即可传输","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","当此选项启用时，建筑无需和水管或供暖相连即可使用对应服务（你仍然需要提供水和污水处理，如果适用的话还有供暖设备）","Tooltip in options panel."
+"EXCEPT_ORIGINAL","忽略原始的水上建筑","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","当此选项启用时，“无需水管”功能将会忽略原始地图中（在地图编辑器中放置）的水上建筑。
+
+当地图包含仅用于装饰目的的水上建筑时（例如 Bringer of Fire 的 Yangtze 和 Revelstoke 地图），应当启用此选项，以防止其造成海啸和(或)水污染。","Tooltip in options panel."
 "RESCUE_OPTIONS","紧急恢复选项-谨慎使用","Option header in options panel."
 "IGNORE_EXPANDED","在下次加载存档时忽略扩展81格数据。"
 "IGNORE_EXPANDED_TIP","如果你在加载使用旧版本81格的存档出现问题（尤其是区域/地区消失的问题），请使用这个紧急备用选项。

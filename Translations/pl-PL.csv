@@ -14,6 +14,10 @@
 "ELECTRIC_ROADS_TIP","Kiedy ta opcja jest włączona, drogi będą przewodzić prąd tak, jakby były to linie energetyczne.","Tooltip in options panel."
 "NO_PIPES","Włącz przesył wody, ścieków i rur grzewczych bez rurociągów","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Gdy ta opcja jest włączona, budynki nie muszą być przyłączone do rur przesyłających wodę, ścieki i ogrzewanie (nadal będziesz musiał produkować energię elektryczną i ogrzewanie jeśli jest potrzebne).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Ignore original water buildings","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","When this is selected, water buildings on the original map (placed in the map editor) will be ignored by the 'no pipes' functionality.
+
+This option should be enabled when the map contains water buildings used only for decorative purposes (e.g. Bringer of Fire's Yangtze and Revelstoke maps) to prevent gigantic water surges and/or water pollution.","Tooltip in options panel."
 "RESCUE_OPTIONS","Awaryjne opcje – UŻYWAJ UWAŻNIE","Option header in options panel."
 "IGNORE_EXPANDED","Ignoruj rozszerzenie o 81 kafelków podczas następnego wczytywania zapisu."
 "IGNORE_EXPANDED_TIP","Użyj tej opcji jako opcji awaryjnej, jeśli masz problemy podczas ładowania gier zapisanych za pomocą wcześniejszych 81 modów kafelek (przedewszystkim problemy z zniknięciem terenu lub obszarów).

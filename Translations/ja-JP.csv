@@ -14,6 +14,10 @@
 "ELECTRIC_ROADS_TIP","有効時は、道路を送電線と同じように電力を伝搬させます。","Tooltip in options panel."
 "NO_PIPES","配管を無くして、上下水道/暖房熱の供給が可能","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","有効時は、建物に水道管や暖房管の接続が不要になります。 (注意: 上下水道の設備や暖房設備(要DLC) は必要です)","Tooltip in options panel."
+"EXCEPT_ORIGINAL","オリジナルの水上の建物を無視","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","選択すると主に自作マップ内にある水上の建物 (マップエディタで配置) は、「配管の不要化」機能によって無視されます。
+
+このオプションは巨大な水の柱や水質汚染を防ぐために、装飾目的で配置された水上の建物がマップ内にある場合は有効化して下さい。 (例: Bringer of FireのYangtzeやRevelstokeのマップなど)","Tooltip in options panel."
 "RESCUE_OPTIONS","緊急救助オプション - 使用上の注意","Option header in options panel."
 "IGNORE_EXPANDED","次回のセーブのロード時に、拡張された81タイルのデータを無視"
 "IGNORE_EXPANDED_TIP","以前の81 Tiles MODでセーブデータがロード出来ない場合は、 このオプションを有効化します。
