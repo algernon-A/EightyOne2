@@ -1,4 +1,6 @@
-﻿- Add option to exclude original water buildings from 'no pipes' functionality (for Bringer of Fire's dam maps)
+﻿Version 0.9.10 -
+
+- Add option to exclude original water buildings from 'no pipes' functionality (for Bringer of Fire's dam maps)
 
 
 Version 0.9.9.1 -
