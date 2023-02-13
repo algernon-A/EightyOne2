@@ -110,10 +110,16 @@ namespace EightyOne2
                             conflictingModNames.Add("Purchase It");
                             break;
 
-                        case "MaxArea":
+                        case "MaxArea1":
                             // All 25 Areas purchasable.
                             conflictDetected = true;
                             conflictingModNames.Add("All 25 Areas purchasable");
+                            break;
+
+                        case "BuildingAnarchy":
+                            // Building Anarchy.
+                            conflictDetected = true;
+                            conflictingModNames.Add("Building Anarchy");
                             break;
 
                         case "EManagersLib":
