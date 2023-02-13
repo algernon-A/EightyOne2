@@ -99,7 +99,7 @@ namespace EightyOne2
                             break;
 
                         case "BuildAnywhere":
-                            // Original WG mod.
+                            // Cross the Line.
                             conflictDetected = true;
                             conflictingModNames.Add("Cross the Line");
                             break;
@@ -108,6 +108,12 @@ namespace EightyOne2
                             // Purchase it.
                             conflictDetected = true;
                             conflictingModNames.Add("Purchase It");
+                            break;
+
+                        case "MaxArea":
+                            // All 25 Areas purchasable.
+                            conflictDetected = true;
+                            conflictingModNames.Add("All 25 Areas purchasable");
                             break;
 
                         case "EManagersLib":
