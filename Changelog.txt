@@ -1,4 +1,6 @@
-﻿- Add detailed debugging logging toggle
+﻿Version 1.0 -
+
+- Add detailed debugging logging toggle
 - Add additional mods to incompatibility checks
 
 
