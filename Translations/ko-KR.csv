@@ -14,10 +14,10 @@
 "ELECTRIC_ROADS_TIP","이것이 활성화되면 도로가 전선인 것처럼 행동할 것입니다.","Tooltip in options panel."
 "NO_PIPES","파이프 없이 수도, 하수도, 난방 전송 활성화","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","이것이 활성화되면 건물을 더 이상 물 또는 난방 파이프와 연결할 필요가 없습니다 (필요한 경우 여전히 상하수도 처리 및 난방열을 제공해야 합니다).","Tooltip in options panel."
-"EXCEPT_ORIGINAL","Ignore original water buildings","Option in options panel - enables/disables water buildings placed by the map creator."
-"EXCEPT_ORIGINAL_TIP","When this is selected, water buildings on the original map (placed in the map editor) will be ignored by the 'no pipes' functionality.
+"EXCEPT_ORIGINAL","기존 수도 건물을 무시","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","선택한 경우, (맵 편집기에서 배치한) 기존 수도 건물은 '배관 연결이 없는 것'으로 취급되어 무시됩니다.
 
-This option should be enabled when the map contains water buildings used only for decorative purposes (e.g. Bringer of Fire's Yangtze and Revelstoke maps) to prevent gigantic water surges and/or water pollution.","Tooltip in options panel."
+장식만을 목적으로 배치된 수도 건물(예: Bringer of Fire의 Yangtze, Revelstoke 맵)이 있다면, 거대한 물 쓰나미나 수질 오염이 발생하는 것을 막기 위해 이 설정을 켜야 합니다.","Tooltip in options panel."
 "RESCUE_OPTIONS","비상 복구 옵션 - 주의해서 사용하세요","Option header in options panel."
 "IGNORE_EXPANDED","다음에 세이브를 불러올 때 확장된 81타일 데이터를 무시합니다."
 "IGNORE_EXPANDED_TIP","전 81타일 모드로 저장된 게임을 불러올 때 문제가 발생하는 경우(특히 지구나 영역이 사라지는 것과 관련된 문제) 이 옵션을 비상 폴백 옵션으로 사용하십시오.
