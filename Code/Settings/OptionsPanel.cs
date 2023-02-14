@@ -40,6 +40,13 @@ namespace EightyOne2
             languageDropDown.parent.relativePosition = new Vector2(LeftMargin, currentY);
             currentY += 77f;
 
+            // Logging checkbox.
+            currentY += 20f;
+            UICheckBox loggingCheck = UICheckBoxes.AddPlainCheckBox(this, LeftMargin, currentY, Translations.Translate("DETAIL_LOGGING"));
+            loggingCheck.isChecked = Logging.DetailLogging;
+            loggingCheck.eventCheckChanged += (c, isChecked) => { Logging.DetailLogging = isChecked; };
+            currentY += CheckboxMargin;
+
             // Network options.
             currentY += 20f;
             UISpacers.AddTitleSpacer(this, 0f, currentY, OptionsPanelManager<OptionsPanel>.PanelWidth, Translations.Translate("NET_OPTIONS"));

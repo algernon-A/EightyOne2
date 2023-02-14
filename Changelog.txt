@@ -1,4 +1,8 @@
-﻿Version 0.9.10 -
+﻿- Add detailed debugging logging toggle
+- Add additional mods to incompatibility checks
+
+
+Version 0.9.10 -
 
 - Add option to exclude original water buildings from 'no pipes' functionality (for Bringer of Fire's dam maps)
 
