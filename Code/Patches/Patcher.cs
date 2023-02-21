@@ -14,6 +14,7 @@ namespace EightyOne2
     using static Patches.DisasterManagerPatches;
     using static Patches.DistrictManagerPatches;
     using static Patches.ElectricityManagerPatches;
+    using static Patches.GameAreaManagerPatches;
     using static Patches.ImmaterialResourceManagerPatches;
     using static Patches.NetManagerPatches;
     using static Patches.WaterManagerPatches;
@@ -34,6 +35,35 @@ namespace EightyOne2
 
             // If any of the managers have already been instantiated, we need to replace their overlay textures.
             Logging.Message("checking for manager instantiation");
+
+            // Game area manager.
+            if (Singleton<GameAreaManager>.exists)
+            {
+                Logging.Message("GameAreaManager already instantiated");
+
+                // Get game area texture instance.
+                GameAreaManager gameAreaManager = Singleton<GameAreaManager>.instance;
+                FieldInfo m_areaTex = AccessTools.Field(typeof(GameAreaManager), "m_areaTex");
+                Texture2D areaTexture = m_areaTex.GetValue(gameAreaManager) as Texture2D;
+
+                // Check texture size.
+                if (areaTexture.width != ExpandedAreaMapResolution)
+                {
+                    Logging.Error("invalid GameAreaManager texture size (conflicting mod?); correcting");
+
+                    // Texture size is not expanded - reset per DistrictManager.Awake.
+                    m_areaTex.SetValue(
+                        gameAreaManager,
+                        new Texture2D(ExpandedAreaMapResolution, ExpandedAreaMapResolution, TextureFormat.ARGB32, mipmap: false, linear: true)
+                        {
+                            wrapMode = TextureWrapMode.Clamp,
+                        });
+                }
+            }
+            else
+            {
+                Logging.Message("GameAreaManager not yet instantiated");
+            }
 
             // District manager.
             if (Singleton<DistrictManager>.exists)

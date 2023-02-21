@@ -43,6 +43,16 @@ namespace EightyOne2.Patches
         /// </summary>
         internal const int ExpandedMaxAreaCount = 81;
 
+        /// <summary>
+        /// Game area map (whole-map) resolution.
+        /// </summary>
+        internal const int GameAreaMapResolution = GameAreaManager.AREA_MAP_RESOLUTION;
+
+        /// <summary>
+        /// Expanded area map (whole-map) resolution.
+        /// </summary>
+        internal const int ExpandedAreaMapResolution = 10;
+
         // Half-widths.
         private const float GameGridHalfWidth = GameAreaGridResolution / 2f;
         private const float ExpandedGridHalfWidth = ExpandedAreaGridResolution / 2f;
@@ -53,10 +63,6 @@ namespace EightyOne2.Patches
         private const float ExpandedAreaGridCells = ExpandedAreaGridResolution * AreaGridCellResolution;
         private const float GameAreaGridHalfCells = GameGridHalfWidth * AreaGridCellResolution;
         private const float ExpandedAreaGridHalfCells = ExpandedGridHalfWidth * AreaGridCellResolution;
-
-        // Area map resolution.
-        private const int GameAreaMapResolution = GameAreaManager.AREA_MAP_RESOLUTION;
-        private const int ExpandedAreaMapResolution = 10;
 
         // Original game area limit.
         private const int GameMaxAreaCount = 9;
@@ -247,12 +253,12 @@ namespace EightyOne2.Patches
         {
             foreach (CodeInstruction instruction in instructions)
             {
-                if (instruction.LoadsConstant(GameAreaMapResolution))
+                /*if (instruction.LoadsConstant(GameAreaMapResolution))
                 {
                     // Need ldc.i4.s here.
                     yield return new CodeInstruction(OpCodes.Ldc_I4_S, ExpandedAreaMapResolution);
                 }
-                else
+                else*/
                 {
                     yield return instruction;
                 }
