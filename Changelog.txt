@@ -1,4 +1,6 @@
-﻿- Add mechanism to force-fix GameAreaManager.m_areaTex texture if another mod instantiates the manager before patches are applied
+﻿Version 1.0.1 -
+
+- Add mechanism to force-fix GameAreaManager.m_areaTex texture if another mod instantiates the manager before patches are applied
 
 
 Version 1.0 -
