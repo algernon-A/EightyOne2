@@ -14,10 +14,10 @@
 "ELECTRIC_ROADS_TIP","Keď je toto povolené, cesty budú viesť elektrinu, ako keby to boli elektrické vedenia.","Tooltip in options panel."
 "NO_PIPES","Povoliť prenos vody, odpadových vôd a tepla bez potrubia","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Keď je toto povolené, budovy už nemusia byť napojené na vodovodné alebo teplovodné potrubie (stále budete musieť zabezpečiť vodu a čistenie odpadových vôd a požadované teplárne).","Tooltip in options panel."
-"EXCEPT_ORIGINAL","Ignore original water buildings","Option in options panel - enables/disables water buildings placed by the map creator."
-"EXCEPT_ORIGINAL_TIP","When this is selected, water buildings on the original map (placed in the map editor) will be ignored by the 'no pipes' functionality.
+"EXCEPT_ORIGINAL","Ignorovať pôvodné vodné budovy","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Ak je táto možnosť vybraná, budú vodné budovy na pôvodnej mape (umiestnené v editore mapy) ignorované funkciou ""bez potrubia"".
 
-This option should be enabled when the map contains water buildings used only for decorative purposes (e.g. Bringer of Fire's Yangtze and Revelstoke maps) to prevent gigantic water surges and/or water pollution.","Tooltip in options panel."
+Táto možnosť by mala byť povolená, keď mapa obsahuje vodné budovy používané len na dekoratívne účely (napr. mapy Bringer of Fire's Yangtze a Revelstoke), aby sa zabránilo obrovským prílivom vody a/alebo znečisteniu vody.","Tooltip in options panel."
 "RESCUE_OPTIONS","Možnosti núdzovej záchrany – POUŽÍVAJTE OPATRNE","Option header in options panel."
 "IGNORE_EXPANDED","Ignorovať údaje rozšírených 81 oblastí pri ďalšom načítaní uloženia."
 "IGNORE_EXPANDED_TIP","Použite to ako núdzovú záložnú možnosť, ak máte problémy s načítaním hier uložených staršími módmi 81 oblastí (najmä akékoľvek problémy s miznúcimi štvrťami alebo oblasťami).

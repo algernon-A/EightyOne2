@@ -1,0 +1,28 @@
+﻿"LANGUAGE","Türkçe","Language name (in native language)."
+"MOD_DESCRIPTION","81 oyun alanının tümünün kilidini açar.","Mod description displayed in content manager."
+"UNLOCK","Alan kilidini aç"
+"IGNORE_UNLOCK","Alan kilidini açma ilerlemesini yoksay","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","Bu etkinleştirildiğinde, herhangi bir şehir dönüm noktası ilerleme kısıtlamasını olmadan, her zaman yeni oyun alanı satın alabileceksiniz.","Tooltip in options panel."
+"CROSS_THE_LINE","Sahip olunan alanın dışında da inşaat izni ver","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","Bu etkinleştirildiğinde, sahip olunan alanların dışında da inşa edebilirsiniz.","Tooltip in options panel."
+"UNLOCK_25","Merkezi 25 alanının kilidini aç","Button in options panel - unlocks 25-tile area"
+"UNLOCK_ALL","Tüm alanların kilidini aç","Button in options panel - unlocks all game areas"
+"NET_OPTIONS","İletim ağları","Option header in options panel."
+"NO_POWERLINES","Güç hatları olmadan elektrik iletimini etkinleştirin","Option in options panel - activates 'no powerlines' functionality."
+"NO_POWERLINES_TIP","Bu etkinleştirildiğinde, binaların artık elektrik direklerine bağlanması gerekmez (yine de elektrik tesisi gerekir).","Tooltip in options panel."
+"ELECTRIC_ROADS","Yol boyunca elektrik iletimini etkinleştirin","Option in options panel - activates 'electric roads' functionality."
+"ELECTRIC_ROADS_TIP","Bu etkinleştirildiğinde, yollar elektrik direği gibi gibi elektriği iletecektir.","Tooltip in options panel."
+"NO_PIPES","Borular olmadan su, kanalizasyon ve ısıtma iletimini etkinleştirin","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES_TIP","Bu etkinleştirildiğinde, binaların artık su veya ısıtma boruları ile bağlanmasına gerek yoktur (yine de su ve kanalizasyon arıtma ve istenirse ısıtma tesisleri sağlamanız gerekecektir).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Orijinal su tesislerini göz ardı et","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Bu seçildiğinde, orijinal haritadaki (harita düzenleyicide yer alan) su binalarında 'boru yok' işlevini göz ardı edecektir.
+
+Devasa su dalgalanmalarını ve/veya su kirliliğini önlemek için harita yalnızca dekoratif amaçlı kullanılan su binaları içerdiğinde (örn. Bringer of Fire'ın Yangtze ve Revelstoke haritaları) bu seçenek etkinleştirilmelidir.","Tooltip in options panel."
+"RESCUE_OPTIONS","Acil durum kurtarma seçenekleri - DİKKATLİ KULLANIN","Option header in options panel."
+"IGNORE_EXPANDED","Bir sonraki kaydetmeyi yüklerken genişletilmiş 81 alanın verilerini yok say."
+"IGNORE_EXPANDED_TIP","Daha önceki 81 alan modu tarafından kaydedilen oyunları yüklerken sorun yaşıyorsanız (özellikle kaybolan mahalleler veya alanlarla ilgili sorunlar) bunu acil bir geri dönüş seçeneği olarak kullanın.
+UYARI: Bu seçeneğin kullanılması, merkezi 25 karoluk alanın dışındaki bölgelerin hatalı biçimlendirilmesine neden olacaktır.
+Bir sonraki şehir yüklemesi tamamlandıktan sonra bu seçenek otomatik olarak silinecektir.","Tooltip in options panel."
+"LOAD_DISABLED","Kayıt dosyanızı bozulmaya karşı korumak için Oyunu Yükle düğmesi 81 Tiles modu tarafından devre dışı bırakıldı. Herhangi bir kayıtlı dosya yüklemeden veya yeni bir şehir başlatmadan önce Oyundan Çık düğmesini kullanın ve oyunu tamamen yeniden başlatın.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","Kayıt dosyanızı bozulmaya karşı korumak için Ana Menüden Çık düğmesi 81 Tiles modu tarafından devre dışı bırakıldı. Herhangi bir kayıtlı dosya yüklemeden veya yeni bir şehir başlatmadan önce Oyundan Çık düğmesini kullanın ve oyunu tamamen yeniden başlatın.","Tooltip on 'exit to main menu' button when in-game."
+"EDITOR_DISABLED","81 Titles modu aktif olduğu için editörler butonu devre dışı bırakıldı. Editörleri kullanmak için 81 Tiles modunu devre dışı bırakmalı ve oyunu yeniden başlatmalısınız.","Tooltip on disabled editor button in main menu."
