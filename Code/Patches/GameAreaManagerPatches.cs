@@ -253,12 +253,12 @@ namespace EightyOne2.Patches
         {
             foreach (CodeInstruction instruction in instructions)
             {
-                /*if (instruction.LoadsConstant(GameAreaMapResolution))
+                if (instruction.LoadsConstant(GameAreaMapResolution))
                 {
                     // Need ldc.i4.s here.
                     yield return new CodeInstruction(OpCodes.Ldc_I4_S, ExpandedAreaMapResolution);
                 }
-                else*/
+                else
                 {
                     yield return instruction;
                 }
