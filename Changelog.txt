@@ -1,4 +1,9 @@
-﻿Version 1.0.1 -
+﻿Version 1.0.2 -
+
+- Compatibility updates for game version 1.16.1
+
+
+Version 1.0.1 -
 
 - Add mechanism to force-fix GameAreaManager.m_areaTex texture if another mod instantiates the manager before patches are applied
 
