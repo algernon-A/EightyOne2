@@ -1,4 +1,9 @@
-﻿Version 1.0.2 -
+﻿Version 1.0.2.1 -
+
+- Fix 'resume game' button in pause menu being (incorrectly) disabled
+
+
+Version 1.0.2 -
 
 - Compatibility updates for game version 1.16.1
 

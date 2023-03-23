@@ -36,15 +36,6 @@ namespace EightyOne2
             }
 
             // Disable pause menu 'return to main menu' button (if another mod hasn't already disabled it).
-            UIButton resumeButton = UIView.library.Get<PauseMenu>("PauseMenu")?.Find<UIPanel>("Menu")?.Find<UIButton>("Resume");
-            if (resumeButton != null && resumeButton.enabled)
-            {
-                resumeButton.tooltip = Translations.Translate("LOAD_DISABLED");
-                resumeButton.tooltipBox = UIToolTips.WordWrapToolTip;
-                resumeButton.Disable();
-            }
-
-            // Disable pause menu 'return to main menu' button (if another mod hasn't already disabled it).
             UIButton mainMenuButton = UIView.library.Get<ExitConfirmPanel>("ExitConfirmPanel")?.Find<UIButton>("ToMainMenu");
             if (mainMenuButton != null && mainMenuButton.enabled)
             {
