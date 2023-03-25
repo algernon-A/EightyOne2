@@ -1,4 +1,6 @@
-﻿- Stop tourists and residents trying to catch taxis from the map edge in unlocked edge tiles
+﻿Version 1.0.2.2 -
+
+- Stop tourists and residents trying to catch taxis from the map edge in unlocked edge tiles
 
 
 Version 1.0.2.1 -
