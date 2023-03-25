@@ -53,6 +53,11 @@ namespace EightyOne2.Patches
         /// </summary>
         internal const int ExpandedAreaMapResolution = 10;
 
+        /// <summary>
+        /// Whole-map resolution in grid cells (9 * 1,920 = 17,280).
+        /// </summary>
+        internal const float ExpandedAreaGridCells = ExpandedAreaGridResolution * AreaGridCellResolution;
+
         // Half-widths.
         private const float GameGridHalfWidth = GameAreaGridResolution / 2f;
         private const float ExpandedGridHalfWidth = ExpandedAreaGridResolution / 2f;
@@ -60,7 +65,6 @@ namespace EightyOne2.Patches
         // Cell resolution.
         private const float AreaGridCellResolution = GameAreaManager.AREAGRID_CELL_SIZE;
         private const float GameAreaGridCells = GameAreaGridResolution * AreaGridCellResolution;
-        private const float ExpandedAreaGridCells = ExpandedAreaGridResolution * AreaGridCellResolution;
         private const float GameAreaGridHalfCells = GameGridHalfWidth * AreaGridCellResolution;
         private const float ExpandedAreaGridHalfCells = ExpandedGridHalfWidth * AreaGridCellResolution;
 
