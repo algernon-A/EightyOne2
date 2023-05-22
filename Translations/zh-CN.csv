@@ -1,28 +1,28 @@
 ﻿"LANGUAGE","简体中文","Language name (in native language)."
-"MOD_DESCRIPTION","解锁所有81格游戏区域。","Mod description displayed in content manager."
-"UNLOCK","解锁区域"
-"IGNORE_UNLOCK","忽略区域解锁进度","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
-"IGNORE_UNLOCK_TIP","启用后，您将总是能够购买新的区域，忽略任何城市里程碑进度限制。","Tooltip in options panel."
+"MOD_DESCRIPTION","解锁全部81格游戏地块。","Mod description displayed in content manager."
+"UNLOCK","解锁地块"
+"IGNORE_UNLOCK","忽略地块解锁进度","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","启用此选项后，您可以忽略里程碑解锁进度的限制，任意购买新的地块。","Tooltip in options panel."
 "CROSS_THE_LINE","允许在未解锁的地块建设","Option in options panel - permits building outside of owned area tiles."
-"CROSS_THE_LINE_TIP","启用该功能后，您可以在未解锁的区域上建设。","Tooltip in options panel."
-"UNLOCK_25","解锁中央25格区域","Button in options panel - unlocks 25-tile area"
-"UNLOCK_ALL","解锁全部区域","Button in options panel - unlocks all game areas"
+"CROSS_THE_LINE_TIP","启用此选项后，您可以在未解锁的地块上建设。","Tooltip in options panel."
+"UNLOCK_25","解锁中央25格地块","Button in options panel - unlocks 25-tile area"
+"UNLOCK_ALL","解锁全部地块","Button in options panel - unlocks all game areas"
 "NET_OPTIONS","传输网络","Option header in options panel."
 "NO_POWERLINES","启用电力无需电线即可传输","Option in options panel - activates 'no powerlines' functionality."
-"NO_POWERLINES_TIP","当此选项启用时，建筑无需和电线相连也能获得电力（你仍然需要生产电力）","Tooltip in options panel."
+"NO_POWERLINES_TIP","启用此选项后，建筑无需连接电线也能通电（仍然需要发电）","Tooltip in options panel."
 "ELECTRIC_ROADS","启用道路通电","Option in options panel - activates 'electric roads' functionality."
-"ELECTRIC_ROADS_TIP","当此选项启用时，道路将会像电线一样传输电力","Tooltip in options panel."
+"ELECTRIC_ROADS_TIP","启用此选项后，道路将会像电线一样传输电力。","Tooltip in options panel."
 "NO_PIPES","启用水、污水、供暖无需水管即可传输","Option in options panel - activates 'no no pipes' functionality."
-"NO_PIPES_TIP","当此选项启用时，建筑无需和水管或供暖相连即可使用对应服务（你仍然需要提供水和污水处理，如果适用的话还有供暖设备）","Tooltip in options panel."
+"NO_PIPES_TIP","启用此选项后，建筑无需与水管/供暖管道相连，即可使用对应服务（仍然需要水和污水处理设施，可能还需要供暖设施）","Tooltip in options panel."
 "EXCEPT_ORIGINAL","忽略原始的水上建筑","Option in options panel - enables/disables water buildings placed by the map creator."
-"EXCEPT_ORIGINAL_TIP","当此选项启用时，“无需水管”功能将会忽略原始地图中（在地图编辑器中放置）的水上建筑。
+"EXCEPT_ORIGINAL_TIP","启用此选项后，“无需水管”功能将会忽略原始地图中（在地图编辑器中放置）的水上建筑。
 
 当地图包含仅用于装饰目的的水上建筑时（例如 Bringer of Fire 的 Yangtze 和 Revelstoke 地图），应当启用此选项，以防止其造成海啸和(或)水污染。","Tooltip in options panel."
 "RESCUE_OPTIONS","紧急恢复选项-谨慎使用","Option header in options panel."
-"IGNORE_EXPANDED","在下次加载存档时忽略扩展81格数据。"
-"IGNORE_EXPANDED_TIP","如果你在加载使用旧版本81格的存档出现问题（尤其是区域/地区消失的问题），请使用这个紧急备用选项。
-警告：这个选项会导致25格以外的任何区域会出现畸形。
-该选项将在下次加载的时候自动关闭。","Tooltip in options panel."
+"IGNORE_EXPANDED","在下次加载存档时忽略 81 Tiles 2 模组扩展的数据。"
+"IGNORE_EXPANDED_TIP","如果你在加载使用过旧版本81格的存档时出现问题（尤其是区域/地区消失的问题），请使用这个紧急恢复功能。
+警告：该选项可能会导致中央25格以外的地块出现错误（例如蓝洞或者道路扭曲）。
+该选项将在下次加载完成时自动关闭。","Tooltip in options panel."
 "LOAD_DISABLED","为了保护您的存档免受损坏，加载游戏按钮已被 81 Tiles 2 模组禁用。在加载任何存档或开始一个新城市之前，请选择“退出到桌面”按钮，并完全重新启动游戏。","Tooltip on 'load game' button when in-game."
 "MAIN_MENU_DISABLED","为了保护您的存档免受损坏，返回主菜单按钮已被 81 Tiles 2 模组禁用。在加载任何存档或开始一个新城市之前，请选择“退出到桌面”按钮，并完全重新启动游戏。","Tooltip on 'exit to main menu' button when in-game."
 "EDITOR_DISABLED","编辑器按钮已被禁用，因为 81 Tiles 2 模组处于启用状态。 若要使用编辑器，您必须禁用 81 Tiles 2 模组并重启游戏。","Tooltip on disabled editor button in main menu."

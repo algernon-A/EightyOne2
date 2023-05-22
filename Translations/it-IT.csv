@@ -14,10 +14,10 @@
 "ELECTRIC_ROADS_TIP","Quando questa opzione è abilitata, le strade conducono energia elettrica come se fossero linee elettriche.","Tooltip in options panel."
 "NO_PIPES","Attivare la conduzione di acqua, liquami e riscaldamento senza tubature","Option in options panel - activates 'no no pipes' functionality."
 "NO_PIPES_TIP","Quando questa opzione è abilitata, gli edifici non necessitano di connessione con tubature d'acqua o di riscaldamento (sarà ancora necessario garantire la fornitura d'acqua e lo smaltimento dei liquami, nonché di impianti di riscaldamento se si desidera).","Tooltip in options panel."
-"EXCEPT_ORIGINAL","Ignore original water buildings","Option in options panel - enables/disables water buildings placed by the map creator."
-"EXCEPT_ORIGINAL_TIP","When this is selected, water buildings on the original map (placed in the map editor) will be ignored by the 'no pipes' functionality.
+"EXCEPT_ORIGINAL","Ignora gli edifici idrici originali","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Quando questa opzione è selezionata, gli edifici idrici sulla mappa originale (posizionati nell'editor della mappa) saranno ignorati dalla funzionalità 'no pipes'.
 
-This option should be enabled when the map contains water buildings used only for decorative purposes (e.g. Bringer of Fire's Yangtze and Revelstoke maps) to prevent gigantic water surges and/or water pollution.","Tooltip in options panel."
+Questa opzione dovrebbe essere abilitata quando la mappa contiene edifici idrici utilizzati solo per scopi decorativi (es. Bringer of Fire's Yangtze and Revelstoke maps) per prevenire giganteschi sbalzi d'acqua e/o inquinamento idrico.","Tooltip in options panel."
 "RESCUE_OPTIONS","Opzioni di soccorso in caso di emergenza - USARE CON ATTENZIONE","Option header in options panel."
 "IGNORE_EXPANDED","Ignora i dati estesi di 81 Tiles al prossimo caricamento di un salvataggio."
 "IGNORE_EXPANDED_TIP","Usalo come opzione di emergenza se stai avendo problemi durante il caricamento di partite salvate da precedenti mod per 81 aree (specialmente qualsiasi problema con sparizioni di distretti o aree).

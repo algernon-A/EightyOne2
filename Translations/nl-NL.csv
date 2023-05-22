@@ -1,0 +1,28 @@
+﻿"LANGUAGE","Nederlands","Language name (in native language)."
+"MOD_DESCRIPTION","Ontgrendelt alle 81 spelgebieden.","Mod description displayed in content manager."
+"UNLOCK","Gebied ontgrendelen"
+"IGNORE_UNLOCK","Negeer ontgrendelingsvoortgang voor gebieden","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","Als deze optie is ingeschakeld, kun je altijd nieuwe spelgebieden kopen en negeer je de beperkingen van de mijlpaalvoortgang.","Tooltip in options panel."
+"CROSS_THE_LINE","Bouwen buiten de verworven tegels toestaan","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","Als deze optie is ingeschakeld, kun je buiten de reeds verworven tegels bouwen.","Tooltip in options panel."
+"UNLOCK_25","Ontgrendel de 25 centrale gebieden","Button in options panel - unlocks 25-tile area"
+"UNLOCK_ALL","Ontgrendel alle gebieden","Button in options panel - unlocks all game areas"
+"NET_OPTIONS","Transmissienetwerken","Option header in options panel."
+"NO_POWERLINES","Elektriciteitstransmissie zonder elektriciteitskabels inschakelen","Option in options panel - activates 'no powerlines' functionality."
+"NO_POWERLINES_TIP","Als deze optie is ingeschakeld, hoeven gebouwen niet langer te worden aangesloten op elektriciteitskabels (maar moet er nog wel stroom worden geleverd).","Tooltip in options panel."
+"ELECTRIC_ROADS","Elektriciteitstransmissie via de wegen inschakelen","Option in options panel - activates 'electric roads' functionality."
+"ELECTRIC_ROADS_TIP","Als deze optie is ingeschakeld, geleiden de wegen elektriciteit alsof het elektriciteitskabels zijn.","Tooltip in options panel."
+"NO_PIPES","Water, riolering en verwarming zonder leidingen inschakelen","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES_TIP","Als deze optie is ingeschakeld, hoeven gebouwen niet langer te worden aangesloten op water- of verwarmingsleidingen (maar moeten er nog wel water-, riool- en verwarmingsinstallaties worden gebouwd).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Negeer originele watergebouwen","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Als deze optie is ingeschakeld, worden watergebouwen op de originele kaart (geplaatst in de kaarteditor) genegeerd door de 'geen leidingen' functionaliteit.
+
+Deze optie moet worden ingeschakeld wanneer de kaart watergebouwen bevat die alleen voor decoratieve doeleinden worden gebruikt (bijv. Yangtze en Revelstoke kaarten van Bringer of Fire) om enorme watergolven en/of watervervuiling te voorkomen.","Tooltip in options panel."
+"RESCUE_OPTIONS","Reddingsopties voor noodgevallen - VOORZICHTIG GEBRUIKEN","Option header in options panel."
+"IGNORE_EXPANDED","Negeer de uitgebreide 81 Tiles gegevens de volgende keer dat een spel wordt geladen."
+"IGNORE_EXPANDED_TIP","Gebruik dit als een noodoptie als je problemen hebt met het laden van spellen die zijn opgeslagen met eerdere 81 tile mods (vooral problemen met verdwijnende districten of gebieden).
+WAARSCHUWING: Als je deze optie gebruikt, worden alle districten buiten het centrale gebied van 25 tegels misvormd.
+Deze optie wordt automatisch uitgeschakeld na het laden van de volgende stad.","Tooltip in options panel."
+"LOAD_DISABLED","De Spel Laden knop is uitgeschakeld door de 81 Tiles mod om je opgeslagen spel te beschermen tegen corruptie. Gebruik de Verlaat Spel knop en herstart het spel volledig voordat je een opgeslagen spel laadt of een nieuwe stad start.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","De ""Return to Main Menu"" knop is uitgeschakeld door de 81 Tiles Mod om het opgeslagen spel te beschermen tegen corruptie. Gebruik de ""Exit Game"" knop en herstart het spel volledig voordat je een opgeslagen spel laadt of een nieuwe stad start.","Tooltip on 'exit to main menu' button when in-game."
+"EDITOR_DISABLED","De editor knop is uitgeschakeld omdat de 81 Tiles mod actief is. Om de editors te gebruiken, moet je de 81 Tiles mod uitschakelen en het spel opnieuw opstarten.","Tooltip on disabled editor button in main menu."
