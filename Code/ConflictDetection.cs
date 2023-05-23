@@ -122,6 +122,12 @@ namespace EightyOne2
                             conflictingModNames.Add("Building Anarchy");
                             break;
 
+                        case "FontSelector":
+                            // Font selector.
+                            conflictDetected = true;
+                            conflictingModNames.Add("Font Selector");
+                            break;
+
                         case "EManagersLib":
                             // Extended Managers library - check for Beta.
                             if (assembly.GetName().Version == new Version("1.1.1.0"))
