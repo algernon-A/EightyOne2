@@ -1,0 +1,28 @@
+﻿"LANGUAGE","ภาษาไทย","Language name (in native language)."
+"MOD_DESCRIPTION","ปลดล็อกพื้นที่เกมทั้งหมด 81 ช่อง","Mod description displayed in content manager."
+"UNLOCK","ปลดล็อกพื้นที่"
+"IGNORE_UNLOCK","ไม่สนใจความคืบหน้าระดับการปลดล็อดพื้นที่","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","เมื่อใช้ตัวเลือกนี้ คุณจะสามารถซื้อพื้นที่ใหม่ได้ตลอดเวลา โดยไม่สนใจว่าความคืบหน้าของเมืองจะอยู่ในระดับใด","Tooltip in options panel."
+"CROSS_THE_LINE","อนุญาตให้สร้างนอกพื้นที่ที่เป็นเจ้าของได้","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","เมื่อใช้ตัวเลือกนี้ จะสามารถก่อสร้างนอกพื้นที่ที่เป็นเจ้าของได้","Tooltip in options panel."
+"UNLOCK_25","ปลดล็อกเฉพาะพื้นที่ตรงกลาง 25 ช่อง","Button in options panel - unlocks 25-tile area"
+"UNLOCK_ALL","ปลดล็อกพื้นที่ทั้งหมด","Button in options panel - unlocks all game areas"
+"NET_OPTIONS","เครือข่ายสาธารณูปโภค","Option header in options panel."
+"NO_POWERLINES","เปิดใช้งาน การส่งพลังงานไฟฟ้าได้โดยไม่ต้องมีสายไฟ","Option in options panel - activates 'no powerlines' functionality."
+"NO_POWERLINES_TIP","เมื่อใช้ตัวเลือกนี้ อาคารต่าง ๆ จะสามารถรับกระแสไฟฟ้าได้โดยไม่ต้องเชื่อมต่อสายไฟ (แต่ยังต้องมีโรงผลิตไฟฟ้า)","Tooltip in options panel."
+"ELECTRIC_ROADS","เปิดใช้งาน การส่งกระแสไฟฟ้าไปตามเส้นถนน","Option in options panel - activates 'electric roads' functionality."
+"ELECTRIC_ROADS_TIP","เมื่อใช้ตัวเลือกนี้ ถนนจะเป็นตัวกลางในการส่งกระแสไฟฟ้าได้เหมือนกับสายไฟฟ้า","Tooltip in options panel."
+"NO_PIPES","เปิดใช้งาน การส่งน้ำประปา น้ำเสีย และน้ำร้อนได้โดยไม่ต้องต่อท่อประปา","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES_TIP","เมื่อใช้ตัวเลือกนี้ อาคารต่าง ๆ จะสามารถรับน้ำประปา ส่งน้ำเสีย รับน้ำร้อนได้ โดยไม่ต้องต่อท่อประปา (แต่ยังต้องมีสถานีสูบน้ำ สถานีบำบัดน้ำเสีย และสถานีทำความร้อน)","Tooltip in options panel."
+"EXCEPT_ORIGINAL","ไม่สนใจอาคารแหล่งน้ำดั้งเดิม","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","เมื่อใช้ตัวเลือกนี้ อาคารเกี่ยวกับการประปาดั่งเดิมในแผนที่ (ที่ผู้สร้างแผนที่วางไว้) จะถูกละเว้นฟังก์ชัน 'ไม่ต้องต่อท่อ'
+
+ควรเปิดใช้งานตัวเลือกนี้ เมื่อแผนนั้น ๆ มีสิ่งปลูกสร้างทางน้ำเพื่อการตกแต่ง (ยกตัวอย่างเช่น แผนที่ Bringer of Fire ของ Yangtze และ แผนที่ Revelstoke) เพื่อป้องกันไม่ให้เกิดสึนามิ หรือ มลพิษทางน้ำ","Tooltip in options panel."
+"RESCUE_OPTIONS","ตัวเลือกการกู้คืนฉุกเฉิน - ใช้ด้วยความระมัดระวัง","Option header in options panel."
+"IGNORE_EXPANDED","ละเว้นข้อมูลส่วนที่ขยายเป็น 81 ช่อง เมื่อโหลดเซฟครั้งถัดไป"
+"IGNORE_EXPANDED_TIP","ใช้ตัวเลือกฉุกเฉินนี้หากคุณมีปัญหาในการโหลดการเซฟเกมที่ใช้ 81 ช่อง เวอร์ชันก่อนหน้า (โดยเฉพาะปัญหาที่ทำให้มองไม่เห็นเขต/พื้นที่) 
+คำเตือน: การใช้ตัวเลือกนี้จะทำเขตใด ๆ ที่อยู่นอกพื้นที่ส่วนกลาง 25 ช่อง ผิดรูปผิดส่วน
+ตัวเลือกนี้จะปิดโดยอัตโนมัติหลังจากโหลดแมพครั้งถัดไปสำเร็จแล้ว","Tooltip in options panel."
+"LOAD_DISABLED","เพื่อป้องกันไม่ให้เซฟเกมเกิดความเสียหาย ปุ่ม 'โหลดเกม' จึงถูกปิดใช้งานโดย '81 ช่อง' ก่อนโหลดเซฟใด ๆ หรือเริ่มเมืองใหม่ โปรดออกและเริ่มเกมใหม่เท่านั้น","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","เพื่อป้องกันไม่ให้เซฟเกมเกิดความเสียหาย ปุ่ม 'กลับสู่เมนูหลัก' จึงถูกปิดใช้งานโดย '81 ช่อง' ก่อนโหลดเซฟใด ๆ หรือเริ่มเมืองใหม่ โปรดออกและเริ่มเกมใหม่เท่านั้น","Tooltip on 'exit to main menu' button when in-game."
+"EDITOR_DISABLED","เมนูเครื่องมือแก้ไขแผนที่ถูกปิดใช้งานโดย '81 ช่อง' หากต้องการใช้งานเครื่องมือ ให้ปิดการใช้งานม็อด แล้วเริ่มเกมใหม่อีกครั้ง","Tooltip on disabled editor button in main menu."
