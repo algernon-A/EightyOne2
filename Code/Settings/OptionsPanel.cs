@@ -11,7 +11,6 @@ namespace EightyOne2
     using ColossalFramework;
     using ColossalFramework.UI;
     using EightyOne2.Patches;
-    using ICities;
     using UnityEngine;
 
     /// <summary>
