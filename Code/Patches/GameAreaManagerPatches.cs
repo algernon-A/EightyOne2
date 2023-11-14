@@ -94,7 +94,7 @@ namespace EightyOne2.Patches
 
         /// <summary>
         /// Replication ofGameAreaManager.GetStartTile to implement new area grid size.
-        /// Needed as a separate method due to JITter inlining of original method.
+        /// Needed as a separate method due to JITter in-lining of original method.
         /// </summary>
         /// <param name="__instance">GameAreaManager instance (from original instance call).</param>
         /// <param name="x">Tile x-position.</param>
@@ -110,7 +110,7 @@ namespace EightyOne2.Patches
 
         /// <summary>
         /// Replication of GameAreaManager.GetTileIndex to implement new area grid size.
-        /// Needed as a separate method due to JITter inlining of original method.
+        /// Needed as a separate method due to JITter in-lining of original method.
         /// </summary>
         /// <param name="__instance">GameAreaManager instance (from original instance call).</param>
         /// <param name="x">Tile x-position.</param>
@@ -125,7 +125,7 @@ namespace EightyOne2.Patches
 
         /// <summary>
         /// Replication of GameAreaManager.GetTileXZ that implements new area grid size.
-        /// Needed as a separate method due to JITter inlining of original method.
+        /// Needed as a separate method due to JITter in-lining of original method.
         /// </summary>
         /// <param name="__instance">GameAreaManager instance (from original instance call).</param>
         /// <param name="tile">Tile index.</param>
@@ -141,7 +141,7 @@ namespace EightyOne2.Patches
 
         /// <summary>
         /// Replication of GameAreaManager.GetTileXZ that implements new area grid size.
-        /// Needed as a separate method due to JITter inlining of original method.
+        /// Needed as a separate method due to JITter in-lining of original method.
         /// </summary>
         /// <param name="__instance">GameAreaManager instance (from original instance call).</param>
         /// <param name="p">Position.</param>
@@ -174,11 +174,11 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Pre-emptive Harmony prefix patch to GameAreaManager.MaxAreaCount to implement new area grid size.
+        /// Preemptive Harmony prefix patch to GameAreaManager.MaxAreaCount to implement new area grid size.
         /// </summary>
         /// <param name="__instance">GameAreaManager instance (from original instance call).</param>
         /// <param name="__result">Method result.</param>
-        /// <returns>Always false (pre-empt original game method).</returns>
+        /// <returns>Always false (preempt original game method).</returns>
         [HarmonyPatch(nameof(GameAreaManager.MaxAreaCount), MethodType.Getter)]
         [HarmonyPrefix]
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -188,7 +188,7 @@ namespace EightyOne2.Patches
             __instance.m_maxAreaCount = ExpandedMaxAreaCount;
             __result = ExpandedMaxAreaCount;
 
-            // Always pre-empt original method.
+            // Always preempt original method.
             return false;
         }
 
@@ -196,9 +196,8 @@ namespace EightyOne2.Patches
         /// Replaces ldc.i4.2 with ldc.i4.0; used to correct area grid offset counts in code (change +2 to +0).
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
-        internal static IEnumerable<CodeInstruction> Replace2with0(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        internal static IEnumerable<CodeInstruction> Replace2with0(IEnumerable<CodeInstruction> instructions)
         {
             // Look for and replace any calls to the target method.
             foreach (CodeInstruction instruction in instructions)
@@ -216,7 +215,7 @@ namespace EightyOne2.Patches
 
         /// <summary>
         /// Replaces any calls to GameAreaManager.ReplaceGetTileIndex with a call to our custom replacement.
-        /// Needed due to JITter inlining of original method.
+        /// Needed due to JITter in-lining of original method.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <param name="original">Method being patched.</param>
@@ -232,7 +231,7 @@ namespace EightyOne2.Patches
 
         /// <summary>
         /// Replaces any calls to GameAreaManager.GetTileXZ with a call to our custom replacement.
-        /// Needed due to JITter inlining of original method.
+        /// Needed due to JITter in-lining of original method.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <param name="original">Method being patched.</param>
@@ -242,7 +241,7 @@ namespace EightyOne2.Patches
             return ReplaceCall(
                 instructions,
                 AccessTools.Method(typeof(GameAreaManager), nameof(GameAreaManager.GetTileXZ), new Type[] { typeof(int), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() }),
-                AccessTools.Method(typeof(GameAreaManagerPatches), nameof(GameAreaManagerPatches.GetTileXZ), new Type[] { typeof(GameAreaManager), typeof(int), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() }),
+                AccessTools.Method(typeof(GameAreaManagerPatches), nameof(GetTileXZ), new Type[] { typeof(GameAreaManager), typeof(int), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() }),
                 original);
         }
 
@@ -340,7 +339,7 @@ namespace EightyOne2.Patches
             // Adjacency check.
             __result = IsUnlocked(__instance, x, z - 1) || IsUnlocked(__instance, x - 1, z) || IsUnlocked(__instance, x + 1, z) || IsUnlocked(__instance, x, z + 1);
 
-            // Game checks that are overriden by forced unlocking.
+            // Game checks that are overridden by forced unlocking.
             if (!ForceUnlocking)
             {
                 // Milestone unlock check.
@@ -364,11 +363,10 @@ namespace EightyOne2.Patches
         /// Harmony transpiler for GameAreaManager.ClampPoint to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(GameAreaManager.ClampPoint))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> ClampPointTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => Replace2with0(ReplaceAreaConstants(instructions), original);
+        private static IEnumerable<CodeInstruction> ClampPointTranspiler(IEnumerable<CodeInstruction> instructions) => Replace2with0(ReplaceAreaConstants(instructions));
 
         /// <summary>
         /// Harmony transpiler for GameAreaManager.GetArea to update code constants.
@@ -554,7 +552,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Pre-emptive Harmony prefix for GameAreaManager.UpdateAreaTexture due to the complexity of transpiling this one.
+        /// Preemptive Harmony prefix for GameAreaManager.UpdateAreaTexture due to the complexity of transpiling this one.
         /// </summary>
         /// <param name="__instance">GameAreaManager instance.</param>
         /// <param name="___m_areasUpdated">GameAreaManager private field - m_areasUpdated (updated indicator flag).</param>
@@ -705,41 +703,10 @@ namespace EightyOne2.Patches
         /// Harmony transpiler for GameAreaManager.UnlockArea to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(GameAreaManager.UnlockArea))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> UnlockAreaTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => Replace2with0(ReplaceAreaConstants(instructions), original);
-
-        /*
-        /// <summary>
-        /// Harmony transpiler for GameAreaManager.GetTileIndex to update code constants.
-        /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <returns>Patched ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.GetTileIndex))]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetTileIndex(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
-
-        /// <summary>
-        /// Harmony transpiler for GameAreaManager.GetStartTile to update code constants.
-        /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <returns>Patched ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.GetStartTile))]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetStartTileTranspiler(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
-
-
-        /// <summary>
-        /// Harmony transpiler for GameAreaManager.GetTileXZ to update code constants.
-        /// </summary>
-        /// <param name="instructions">Original ILCode.</param>
-        /// <returns>Patched ILCode.</returns>
-        [HarmonyPatch(nameof(GameAreaManager.GetTileXZ), new Type[] { typeof(int), typeof(int), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref, ArgumentType.Ref })]
-        [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetTileXZ1(IEnumerable<CodeInstruction> instructions) => ReplaceAreaConstants(instructions);
-        */
+        private static IEnumerable<CodeInstruction> UnlockAreaTranspiler(IEnumerable<CodeInstruction> instructions) => Replace2with0(ReplaceAreaConstants(instructions));
 
         /// <summary>
         /// Replaces any references to default constants in the provided code with updated 81 tile values.
@@ -800,7 +767,7 @@ namespace EightyOne2.Patches
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <param name="targetMethod">Target method (calls to this will be replaced).</param>
-        /// <param name="replacementMethod">Replacment method.</param>
+        /// <param name="replacementMethod">Replacement method.</param>
         /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         private static IEnumerable<CodeInstruction> ReplaceCall(IEnumerable<CodeInstruction> instructions, MethodInfo targetMethod, MethodInfo replacementMethod, MethodBase original)
@@ -854,7 +821,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Adjusts the starting tile coordinates from 25 to 81 tile cooredinates.
+        /// Adjusts the starting tile coordinates from 25 to 81 tile coordinates.
         /// </summary>
         /// <param name="startTile">Original (25-tile) starting coordinates.</param>
         /// <returns>81 tile coordinates.</returns>

@@ -26,7 +26,7 @@ namespace EightyOne2.Patches
     {
         /// <summary>
         /// Harmony transpiler for GameAreaManager.Data.Deserialize to insert call to custom deserialize method.
-        /// Done this way instead of via PostFix as we need the original GameAreaManager instance (Harmomy Postfix will only give GameAreaManager.Data instance).
+        /// Done this way instead of via PostFix as we need the original GameAreaManager instance (Harmony Postfix will only give GameAreaManager.Data instance).
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
         /// <returns>Modified ILCode.</returns>
@@ -89,7 +89,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Performs deserialization activites when loading game data.
+        /// Performs deserialization activities when loading game data.
         /// Converts loaded data into 81 tiles format and ensures correct 81-tile array sizes.
         /// </summary>
         /// <param name="instance">GameAreaManager instance.</param>
@@ -106,7 +106,7 @@ namespace EightyOne2.Patches
             }
             else
             {
-                Logging.Message("no expanded area data found - coverting vanilla data");
+                Logging.Message("no expanded area data found - converting vanilla data");
 
                 // New area grid for 81 tiles.
                 int[] newAreaGrid = new int[ExpandedMaxAreaCount];
@@ -128,7 +128,7 @@ namespace EightyOne2.Patches
         }
 
         /// <summary>
-        /// Performs deserialization activites when loading game data.
+        /// Performs deserialization activates when loading game data.
         /// Saves the 25-tile subset of 81-tile data.
         /// </summary>
         /// <param name="encodedArray">Encoded array to write to.</param>

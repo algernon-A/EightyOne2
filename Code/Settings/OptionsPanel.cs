@@ -126,7 +126,7 @@ namespace EightyOne2
         /// <summary>
         /// Unlocks game tiles.
         /// </summary>
-        /// <param name="unlockWidth">Grid with to unlock (centered); e.g. 5 to unock 25-tile area, 9 to unlock 81.</param>
+        /// <param name="unlockWidth">Grid with to unlock (centered); e.g. 5 to unlock 25-tile area, 9 to unlock 81.</param>
         private void Unlock(int unlockWidth)
         {
             int tileCount = unlockWidth * unlockWidth;
