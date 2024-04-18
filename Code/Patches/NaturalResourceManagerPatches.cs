@@ -6,7 +6,6 @@
 namespace EightyOne2.Patches
 {
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Runtime.CompilerServices;
     using HarmonyLib;
 
@@ -20,31 +19,28 @@ namespace EightyOne2.Patches
         /// Harmony transpiler for NaturalResourceManager.GetTileResources to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(NaturalResourceManager.GetTileResources))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> GetTileResourcesTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => GameAreaManagerPatches.Replace2with0(instructions, original);
+        private static IEnumerable<CodeInstruction> GetTileResourcesTranspiler(IEnumerable<CodeInstruction> instructions) => GameAreaManagerPatches.Replace2with0(instructions);
 
         /// <summary>
         /// Harmony transpiler for NaturalResourceManager.CalculateUnlockedResources to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(NaturalResourceManager.CalculateUnlockedResources))]
         [HarmonyTranspiler]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static IEnumerable<CodeInstruction> CalculateUnlockedResourcesTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => GameAreaManagerPatches.Replace2with0(instructions, original);
+        private static IEnumerable<CodeInstruction> CalculateUnlockedResourcesTranspiler(IEnumerable<CodeInstruction> instructions) => GameAreaManagerPatches.Replace2with0(instructions);
 
         /// <summary>
         /// Harmony transpiler for NaturalResourceManager.CalculateUnlockableResources to update code constants.
         /// </summary>
         /// <param name="instructions">Original ILCode.</param>
-        /// <param name="original">Method being patched.</param>
         /// <returns>Modified ILCode.</returns>
         [HarmonyPatch(nameof(NaturalResourceManager.CalculateUnlockableResources))]
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> CalculateUnlockableResourcesTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original) => GameAreaManagerPatches.Replace2with0(instructions, original);
+        private static IEnumerable<CodeInstruction> CalculateUnlockableResourcesTranspiler(IEnumerable<CodeInstruction> instructions) => GameAreaManagerPatches.Replace2with0(instructions);
     }
 }
