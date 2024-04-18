@@ -1,0 +1,28 @@
+﻿"LANGUAGE","Bahasa Indonesia","Language name (in native language)."
+"MOD_DESCRIPTION","Membuka seluruh 81 petak area game.","Mod description displayed in content manager."
+"UNLOCK","Membuka Area"
+"IGNORE_UNLOCK","Mengabaikan perkembangan membuka area","Option in options panel - activates option to ignore city milestone progress restrictions on the number of game area tiles."
+"IGNORE_UNLOCK_TIP","Ketika ini diaktifkan, kamu selalu bisa untuk membeli petak area game yang baru, mengabaikan setiap batasan pencapaian kota.","Tooltip in options panel."
+"CROSS_THE_LINE","Izin membangun di luar petak yang dimiliki","Option in options panel - permits building outside of owned area tiles."
+"CROSS_THE_LINE_TIP","Ketika ini diaktifkan, kamu bisa membangun di luar petak yang dimiliki.","Tooltip in options panel."
+"UNLOCK_25","Membuka 25 petak area tengah","Button in options panel - unlocks 25-tile area"
+"UNLOCK_ALL","Membuka seluruh area","Button in options panel - unlocks all game areas"
+"NET_OPTIONS","Jaringan transmisi","Option header in options panel."
+"NO_POWERLINES","Aktifkan transmisi listrik tanpa tiang listrik","Option in options panel - activates 'no powerlines' functionality."
+"NO_POWERLINES_TIP","Ketika ini diaktifkan, bangunan tidak pelu lagi dihubungkan dengan tiang listrik (kamu tetap perlu menghasilkan listrik).","Tooltip in options panel."
+"ELECTRIC_ROADS","Aktifkan transmisi listrik di sepanjang jalan","Option in options panel - activates 'electric roads' functionality."
+"ELECTRIC_ROADS_TIP","Saat ini diaktifkan, jalan akan menghantarkan listrik seolah-olah itu tiang listrik.","Tooltip in options panel."
+"NO_PIPES","Aktifkan transmisi air, limbah, dan pemanas tanpa pipa","Option in options panel - activates 'no no pipes' functionality."
+"NO_PIPES_TIP","Ketika ini diaktifkan, bangunan tidak perlu lagi dihubungkan dengan pipa air atau pemanas (kamu masih perlu menyediakan pengolahan air dan limbah, bangunan pemanas jika dibutuhkan).","Tooltip in options panel."
+"EXCEPT_ORIGINAL","Mengabaikan bangunan air yang asli","Option in options panel - enables/disables water buildings placed by the map creator."
+"EXCEPT_ORIGINAL_TIP","Saat ini dipilih, bangunan air di peta asli (ditempatkan di editor peta) akan diabaikan oleh fungsi 'tanpa pipa'.
+
+Opsi ini harus diaktifkan ketika peta berisi bangunan air yang digunakan hanya untuk tujuan dekoratif (misalnya peta Bringer of Fire's Yangtze and Revelstoke) untuk mencegah gelombang air yang sangat besar dan/atau polusi air.","Tooltip in options panel."
+"RESCUE_OPTIONS","Opsi penyelamatan darurat - GUNAKAN DENGAN HATI-HATI","Option header in options panel."
+"IGNORE_EXPANDED","Mengabaikan data 81 tiles yang diperluas saat memuat save selanjutnya."
+"IGNORE_EXPANDED_TIP","Gunakan ini sebagai opsi cadangan darurat jika kamu mengalami masalah saat memuat game yang disimpan oleh 81 tiles mod sebelumnya (terutama masalah apa pun dengan distrik atau area yang menghilang).
+PERINGATAN: menggunakan opsi ini akan menyebabkan distrik mana pun di luar area 25-petak tengah menjadi salah bentuk.
+Opsi ini akan dihapus secara otomatis setelah pemuatan kota berikutnya selesai.","Tooltip in options panel."
+"LOAD_DISABLED","Tombol Load Game telah dinonaktifkan oleh mod 81 Tiles untuk melindungi file save kamu dari kerusakan data. Gunakan tombol Keluar dari Game dan memulai kembali game sepenuhnya sebelum memuat file save apa pun atau memulai kota baru.","Tooltip on 'load game' button when in-game."
+"MAIN_MENU_DISABLED","Tombol Keluar ke Menu Utama telah dinonaktifkan oleh mod 81 Tiles untuk melindungi file save kamu dari kerusakan. Gunakan tombol Keluar dari Game dan memulai kembali game sepenuhnya sebelum memuat file save apa pun atau memulai kota baru.","Tooltip on 'exit to main menu' button when in-game."
+"EDITOR_DISABLED","Tombol editor telah dinonaktifkan karena mod 81 Tiles aktif. Untuk menggunakan editor, Anda harus menonaktifkan mod 81 Tiles dan memulai ulang game.","Tooltip on disabled editor button in main menu."
