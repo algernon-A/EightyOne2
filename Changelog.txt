@@ -1,4 +1,9 @@
-﻿ Version 1.0.3 -
+﻿Version 1.0.4 -
+
+- Update translations
+
+
+ Version 1.0.3 -
 
 - Compatibility with game version 1.17
 - Update AlgernonCommons

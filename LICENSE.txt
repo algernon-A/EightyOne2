@@ -1,6 +1,6 @@
 ﻿MIT License
 
-Copyright (c) 2022-23 algernon (K. Algernon A. Sheppard).
+Copyright (c) 2022-24 algernon (K. Algernon A. Sheppard).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
